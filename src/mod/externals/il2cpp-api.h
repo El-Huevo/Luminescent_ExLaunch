@@ -10,7 +10,6 @@ extern void (*system_load_typeinfo)(long obj);
 extern void* (*system_array_new_raw)(Il2CppClass* type, long length);
 extern void* (*il2cpp_object_new_raw)(Il2CppClass* klass);
 extern void (*il2cpp_runtime_class_init_raw)(Il2CppClass* klass);
-extern void (*system_array_init)(void* ptr, void* obj);
 
 template <typename T>
 inline T::Array* system_array_new(typename T::Class* type, long length) { return reinterpret_cast<T::Array*(*)(Il2CppClass*, long)>(system_array_new_raw)(type, length); }
@@ -50,14 +49,8 @@ public:
         T::Object m_Items[1];
 
         inline void copyInto(T::Object* dst) {
-            for (uint64_t i = 0; i < max_length; i++) {
+            for (long i = 0; i < max_length; i++) {
                 dst[i] = m_Items[i];
-            }
-        }
-
-        inline void fillWith(T::Object value) {
-            for (uint64_t i = 0; i < max_length; i++) {
-                m_Items[i] = value;
             }
         }
 
@@ -141,14 +134,8 @@ public:
         T::Object* m_Items[1];
 
         inline void copyInto(T::Object** dst) {
-            for (uint64_t i = 0; i < max_length; i++) {
+            for (long i = 0; i < max_length; i++) {
                 dst[i] = m_Items[i];
-            }
-        }
-
-        inline void fillWith(T::Object value) {
-            for (uint64_t i = 0; i < max_length; i++) {
-                *m_Items[i] = value;
             }
         }
 
@@ -207,10 +194,6 @@ public:
         static_assert(TypeInfo != 0, "TypeInfo address not set");
         return *reinterpret_cast<T::Class**>(exl::util::modules::GetTargetOffset(TypeInfo));
     }
-
-    static Class* getClass(long ti) {
-        return *reinterpret_cast<T::Class**>(exl::util::modules::GetTargetOffset(ti));
-    }
 };
 
 #define PRIMITIVE_ARRAY(name)                               \
@@ -222,11 +205,6 @@ struct name##_array {                                       \
     inline void copyInto(name* dst) {                       \
         for (uint64_t i = 0; i < max_length; i++) {         \
             dst[i] = m_Items[i];                            \
-        }                                                   \
-    }                                                       \
-    inline void fillWith(name value) {                      \
-        for (uint64_t i = 0; i < max_length; i++) {         \
-            m_Items[i] = value;                             \
         }                                                   \
     }                                                       \
 };

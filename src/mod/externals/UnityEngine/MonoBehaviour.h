@@ -5,7 +5,7 @@
 
 namespace UnityEngine {
     struct MonoBehaviour : ILClass<MonoBehaviour> {
-        struct Fields : UnityEngine::Behaviour::Fields {
+        struct Fields : public UnityEngine::Behaviour::Fields {
 
         };
     };

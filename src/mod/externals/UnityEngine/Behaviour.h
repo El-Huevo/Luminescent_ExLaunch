@@ -6,7 +6,7 @@
 
 namespace UnityEngine {
     struct Behaviour : ILClass<Behaviour> {
-        struct Fields : UnityEngine::Component::Fields {
+        struct Fields : public UnityEngine::Component::Fields {
 
         };
 

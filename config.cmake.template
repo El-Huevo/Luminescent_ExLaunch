@@ -22,22 +22,15 @@ add_module(
         EMBED_BINARIES embedded_files/shaders/imgui.bin
 )
 add_module_variant(
-        RomBase                         # Module name
-        Diamond                         # Variant name
-        0100000011D90000                # Variant Title ID
-        "Pokemon Brilliant Diamond"     # Variant Game Name
+        RomBase                                      # Module name
+        DX                                           # Variant name
+        01003d200baa2000                             # Variant Title ID
+        "Pokemon Mystery Dungeon Rescue Team DX"     # Variant Game Name
 )
-# add_module_variant(
-#         TestMod
-#         Pearl
-#         010018E011D92000
-#         "Pokemon Shining Pearl"
-# )
 
 # Extra cmake code
 add_compile_definitions(
-    DIAMOND=0x0100000011D90000
-    PEARL=0x010018E011D92000
+    DX=0x01003D200BAA2000
     # Disable saving to test save migration and changelog
     #DEBUG_DISABLE_SAVE
     DEBUG_BUILD=$<CONFIG:Debug>

@@ -72,25 +72,7 @@ ELEMENT_SUPPORTS_CHILD(SliderInt)           \
 ELEMENT_SUPPORTS_CHILD(Spacing)             \
 ELEMENT_SUPPORTS_CHILD(Text)                \
 ELEMENT_SUPPORTS_CHILD(TextUnformatted)     \
-ELEMENT_SUPPORTS_CHILD(FileSelector)        \
-ELEMENT_SUPPORTS_CHILD(ElementInspector)    \
-ELEMENT_SUPPORTS_CHILD(DataViewer)          \
 ELEMENT_SUPPORTS_CHILD(StringView)
-
-#define TOOL_ELEMENTS()                     \
-ELEMENT_SUPPORTS_CHILD(ItemTool)            \
-ELEMENT_SUPPORTS_CHILD(PokemonTool)         \
-ELEMENT_SUPPORTS_CHILD(ArenaTool)           \
-ELEMENT_SUPPORTS_CHILD(WarpTool)            \
-ELEMENT_SUPPORTS_CHILD(VariablesTool)       \
-ELEMENT_SUPPORTS_CHILD(ColorVariationTool)  \
-ELEMENT_SUPPORTS_CHILD(SaveTool)            \
-ELEMENT_SUPPORTS_CHILD(AnimationTool)       \
-ELEMENT_SUPPORTS_CHILD(ModelTool)           \
-ELEMENT_SUPPORTS_CHILD(MaterialTool)        \
-ELEMENT_SUPPORTS_CHILD(PokemonInfoTool)     \
-ELEMENT_SUPPORTS_CHILD(PoffinTool)          \
-ELEMENT_SUPPORTS_CHILD(MiscTool)
 
     template<typename T>
     class Factory : public virtual ui::Drawable {

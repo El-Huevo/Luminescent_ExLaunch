@@ -6,7 +6,6 @@
 #include "oe.h"
 #include "checks.hpp"
 #include "features/features.h"
-#include "save/save.h"
 #include "nn/err.h"
 #include "features/activated_features.h"
 #include "data/features.h"
@@ -85,9 +84,9 @@ HOOK_DEFINE_REPLACE(NoAction) {
 extern "C" void exl_main(void* x0, void* x1) {
     exl::hook::Initialize();
 
-    if (!is_game_version(DIAMOND, "1.3.0")) {
+    if (!is_game_version(DX, "1.0.2")) {
         nn::err::ApplicationErrorArg err(nn::err::MakeErrorCode(nn::err::ErrorCodeCategoryType::unk1, 0x420), "Unsupported game version!",
-                                         "Please make sure you are running Pokemon Brilliant Diamond version 1.3.0.",
+                                         "Please make sure you are running Pokemon Mystery Dungeon Rescue Team DX 1.0.2",
                                          nn::settings::LanguageCode::Make(nn::settings::Language::Language_English));
         nn::err::ShowApplicationError(err);
         svcSleepThread(2000000000);
@@ -98,16 +97,15 @@ extern "C" void exl_main(void* x0, void* x1) {
     NoAction::InstallAtSymbol("_ZN2nn2fs12SetAllocatorEPFPvmEPFvS1_mE");
 
     // We initialize nn::socket before the game does; make the game not call it
-    NoAction::InstallAtOffset(0x01733d88);
-    NoAction::InstallAtOffset(0x01733d78);
+    NoAction::InstallAtOffset(0x02947568);
+    NoAction::InstallAtOffset(0x02947558);
 
     MainInitHook::InstallAtSymbol("nnMain");
 
 #if DEBUG_BUILD
-    exl_imgui_main();
+    //exl_imgui_main();
     exl_debug_menu_main();
 #endif
-    exl_save_main();
     exl_features_main();
 }
 

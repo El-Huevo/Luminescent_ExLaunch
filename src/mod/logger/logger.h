@@ -4,6 +4,7 @@
 #include <cstdarg>
 
 #include "memory/vector.h"
+#include "result.h"
 
 typedef std::function<void(const char*)> LogCallback;
 
@@ -18,4 +19,6 @@ public:
     static void log(const char *fmt, va_list args);
     static void addListener(const LogCallback& callback);
     [[deprecated]] Logger() = default;
+
+    nn::Result init(const char *ip, unsigned short port);
 };

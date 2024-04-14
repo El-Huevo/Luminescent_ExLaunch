@@ -1,5 +1,7 @@
 #include "logger.h"
 #include "util.h"
+#include "result.h"
+#include "socket.h"
 
 static Logger logger; // do not move inside, something something concurrency
 Logger& Logger::instance() {

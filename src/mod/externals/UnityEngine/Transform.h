@@ -1,13 +1,12 @@
 #pragma once
 
 #include "externals/il2cpp-api.h"
-
-#include "externals/System/String.h"
 #include "externals/UnityEngine/Component.h"
-#include "externals/UnityEngine/Vector3.h"
+#include "Vector3.h"
+
 
 namespace UnityEngine {
-    struct Transform : ILClass<Transform, 0x4c57e80> {
+    struct Transform : ILClass<Transform> {
         struct Fields : UnityEngine::Component::Fields {
 
         };
@@ -32,57 +31,10 @@ namespace UnityEngine {
             return external<UnityEngine::Transform::Object*>(0x0299f7d0, this, index);
         }
 
-        inline UnityEngine::Transform::Object* Find(System::String* name) {
-            return external<UnityEngine::Transform::Object*>(0x0299f500, this, name);
-        }
-        
         inline void Translate(UnityEngine::Vector3* translation) {
             external<void>(0x0299e630, this, translation);
         }
 
-        inline UnityEngine::Vector3::Object get_position() {
-            return {
-                .fields = external<UnityEngine::Vector3::Fields>(0x0299d1c0, this)
-            };
-        }
-
-        inline void set_position(UnityEngine::Vector3::Object value) {
-            UnityEngine::Vector3::Fields valueProxy = { .x = value.fields.x, .y = value.fields.y, .z = value.fields.z };
-            external<void>(0x0299d270, this, valueProxy);
-        }
-
-        inline UnityEngine::Vector3::Object get_localPosition() {
-            return {
-                .fields = external<UnityEngine::Vector3::Fields>(0x0299d320, this)
-            };
-        }
-
-        inline void set_localPosition(UnityEngine::Vector3::Object value) {
-            UnityEngine::Vector3::Fields valueProxy = { .x = value.fields.x, .y = value.fields.y, .z = value.fields.z };
-            external<void>(0x0299d3d0, this, valueProxy);
-        }
-
-        inline UnityEngine::Vector3::Object get_localEulerAngles() {
-            return {
-                .fields = external<UnityEngine::Vector3::Fields>(0x0299d690, this)
-            };
-        }
-
-        inline void set_localEulerAngles(UnityEngine::Vector3::Object value) {
-            UnityEngine::Vector3::Fields valueProxy = { .x = value.fields.x, .y = value.fields.y, .z = value.fields.z };
-            external<void>(0x0299d770, this, valueProxy);
-        }
-
-        inline UnityEngine::Vector3::Object get_localScale() {
-            return {
-                .fields = external<UnityEngine::Vector3::Fields>(0x0299df50, this)
-            };
-        }
-
-        inline void set_localScale(UnityEngine::Vector3::Object value) {
-            UnityEngine::Vector3::Fields valueProxy = { .x = value.fields.x, .y = value.fields.y, .z = value.fields.z };
-            external<void>(0x0299e000, this, valueProxy);
-        }
 
         // utility functions
         UnityEngine::Transform::Object* GetChild(std::initializer_list<std::int32_t> index) {

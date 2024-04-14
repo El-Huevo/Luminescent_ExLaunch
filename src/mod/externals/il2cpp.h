@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
-#include "memory/nn_allocator.h"
+#include "imgui.h"
 #include "exlaunch.hpp"
 
 typedef void(*Il2CppMethodPointer)();
@@ -37,7 +37,7 @@ struct MethodInfo {
     uint8_t bitflags;
 
     MethodInfo* copyWith(Il2CppMethodPointer method) {
-        auto m = (MethodInfo*)nn_malloc(sizeof(MethodInfo));
+        auto m = new MethodInfo;
         memcpy(m, this, sizeof(MethodInfo));
         m->methodPointer = method;
         return m;
@@ -120,16 +120,6 @@ struct Il2CppClass {
     void* rgctx_data;
     Il2CppClass_2 _2;
     void* vtable;
-
-    bool isOfClass(Il2CppClass* otherKlass) {
-        if ((otherKlass->_2).typeHierarchyDepth > (this->_2).typeHierarchyDepth) // Hierarchy depth is not deep enough
-            return false;
-
-        if ((this->_2).typeHierarchy[(otherKlass->_2).typeHierarchyDepth - 1] != otherKlass) // Class at same depth doesn't match
-            return false;
-        else
-            return true;
-    }
 };
 
 struct Il2CppArrayBounds {
