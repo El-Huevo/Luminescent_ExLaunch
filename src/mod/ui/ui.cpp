@@ -109,6 +109,7 @@ static Window mainWindow = Window::single([](Window &_) {
     _.PokemonInfoTool();
     _.PoffinTool();
     _.MiscTool();
+    _.FrontierTool();
 });
 
 void setup_ui() {

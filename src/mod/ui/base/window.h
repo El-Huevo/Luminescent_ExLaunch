@@ -23,6 +23,7 @@
 #include "ui/tools/animation_tool.h"
 #include "ui/tools/arena_tool.h"
 #include "ui/tools/color_variation_tool.h"
+#include "ui/tools/frontier_tool.h"
 #include "ui/tools/item_tool.h"
 #include "ui/tools/material_tool.h"
 #include "ui/tools/misc_tool.h"
