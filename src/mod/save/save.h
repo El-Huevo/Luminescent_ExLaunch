@@ -14,6 +14,7 @@
 #include "save/data/sysflag/sysflag.h"
 #include "save/data/trainer/trainer.h"
 #include "save/data/work/work.h"
+#include "save/data/frontier/frontier.h"
 
 #include "logger/logger.h"
 
@@ -36,6 +37,7 @@ struct CustomSaveData {
     ItemSaveData<SaveItemCount> items;
     BerrySaveData<BerryCount> berries;
     ColorVariationSaveData playerColorVariation;
+    HallSaveData battleHall;
 };
 
 CustomSaveData* getCustomSaveData();

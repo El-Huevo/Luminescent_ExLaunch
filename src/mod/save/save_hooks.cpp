@@ -37,6 +37,7 @@ HOOK_DEFINE_TRAMPOLINE(PatchExistingSaveData__Load) {
             loadItems(isBackup);
             loadBerries(isBackup);
             loadColorVariations(isBackup);
+            loadHallData(isBackup);
 
             // Perform migration loop
             migrate(playerWork);
@@ -86,6 +87,7 @@ HOOK_DEFINE_TRAMPOLINE(PatchExistingSaveData__Save) {
         saveItems(isMain, isBackup);
         saveBerries(isMain, isBackup);
         saveColorVariations(isMain, isBackup);
+        saveHallData(isMain, isBackup);
 #endif
 
         // Save base save file

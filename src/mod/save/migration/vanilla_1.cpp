@@ -33,6 +33,8 @@ void migrateFromVanilla(PlayerWork::Object* playerWork) {
     savedata.saveItem->copyInto(save->items.items);
     kinomigrow.kinomiGrows->copyInto(save->berries.items);
 
+    save->battleHall.Clear();
+
     // Set player color to the one in the vanilla save
     save->playerColorVariation.playerColorID = myStatus.body_type;
 
