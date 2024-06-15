@@ -4,6 +4,7 @@
 #include "ui/base/window.h"
 #include "ui/components/data_viewer.h"
 #include "ui/components/element_inspector.h"
+#include "ui/components/battle_hall_grid.h"
 #include "ui/ui.h"
 
 #include "logger/logger.h"
@@ -26,6 +27,10 @@ static ElementInspector inspector = ElementInspector::single([](ElementInspector
 });
 
 static DataViewer dataViewer = DataViewer::single([](DataViewer &_) {
+
+});
+
+static BattleHallGrid battleHallGrid = BattleHallGrid::single([](BattleHallGrid &_) {
 
 });
 
@@ -65,6 +70,16 @@ static Window dataViewerWindow = Window::single([](Window &_) {
     _.addChild(&dataViewer);
 });
 
+static Window battleHallWindow = Window::single([](Window &_) {
+    _.title = "Battle Hall";
+    _.flags |= ImGuiWindowFlags_MenuBar;
+    _.initialPos = ImVec2(550, 50);
+    _.initialSize = ImVec2(150, 150);
+    _.allow_static = true;
+    _.addChild(&battleHallGrid);
+
+});
+
 static Window mainWindow = Window::single([](Window &_) {
     _.title = "BDSP Toolbox";
     _.toggleable = false;
@@ -93,6 +108,10 @@ static Window mainWindow = Window::single([](Window &_) {
                 _.label = "Data Viewer";
                 _.checked = &dataViewerWindow.open;
             });
+            _.MenuItem([](MenuItem &_) {
+                _.label = "Battle Hall";
+                _.checked = &battleHallWindow.open;
+            });
         });
     });
 
@@ -117,4 +136,5 @@ void setup_ui() {
     ROOT->addChild(&debugLogWindow);
     ROOT->addChild(&inspectorWindow);
     ROOT->addChild(&dataViewerWindow);
+    ROOT->addChild(&battleHallWindow);
 }
