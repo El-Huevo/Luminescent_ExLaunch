@@ -181,5 +181,13 @@ namespace Pml::PokePara {
         inline uint8_t GetRareType() {
             return external<uint8_t>(0x0204a5a0, this);
         }
+
+        inline void ChangeEffortPower(int32_t powerId, uint32_t value) {
+            external<void>(0x02044da0, this, powerId, value);
+        }
+
+        inline void ChangeTalentPower(int32_t powerId, uint32_t value) {
+            external<void>(0x020446e0, this, powerId, value);
+        }
     };
 }

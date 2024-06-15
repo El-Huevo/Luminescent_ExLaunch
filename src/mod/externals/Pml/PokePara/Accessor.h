@@ -105,5 +105,17 @@ namespace Pml::PokePara {
         inline uint16_t GetFormNo() {
             return external<uint16_t>(0x024a64e0, this);
         }
+
+        inline void SetTokusei1Flag(bool flag) {
+            external<void>(0x024a9e20, this, flag);
+        }
+
+        inline void SetTokusei2Flag(bool flag) {
+            external<void>(0x024a9ea0, this, flag);
+        }
+
+        inline void SetSeikaku(uint32_t seikaku) {
+            external<void>(0x024a9ca0, this, seikaku);
+        }
     };
 }

@@ -35,6 +35,7 @@
 #include "externals/DPData/ZUKAN_WORK.h"
 #include "externals/Dpr/BallDeco/SaveBallDecoData.h"
 #include "externals/Dpr/BallDeco/SaveBallDecoExtraData.h"
+#include "externals/Dpr/Battle/Logic/BATTLE_SETUP_PARAM.h"
 #include "externals/Dpr/Box/SaveBoxData.h"
 #include "externals/Dpr/Box/SaveBoxTrayData.h"
 #include "externals/Dpr/Item/ItemInfo.h"
@@ -293,5 +294,9 @@ struct PlayerWork : ILClass<PlayerWork, 0x04c59b58> {
 
     static inline int32_t get_supportPokeType() {
         return external<int32_t>(0x02cf1910);
+    }
+
+    static inline Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object* get_battleSetupParam() {
+        return external<Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object*>(0x02ce2a00);
     }
 };
