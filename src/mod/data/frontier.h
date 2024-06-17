@@ -1,5 +1,4 @@
 #pragma once
-#include "externals/il2cpp-api.h"
 
 enum Rank : int32_t {
     RANK_1,
@@ -14,3 +13,6 @@ enum Rank : int32_t {
     RANK_10,
     RANK_COUNT
 };
+
+extern const char* frontierFolderPath;
+

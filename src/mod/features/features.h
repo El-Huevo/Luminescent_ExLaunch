@@ -19,6 +19,8 @@ void exl_save_data_expansion_main();
 // Applies multiple small one-line patches.
 void exl_patches_main();
 
+void exl_battle_hall_main();
+
 
 // Applies some basic ability changes.
 void exl_ability_changes_main();
