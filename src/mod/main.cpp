@@ -48,6 +48,12 @@ void logFeatures() {
         if (IsActivatedSaveFeature(i))
             Logger::log(" %s\n", SAVE_FEATURES[i]);
     Logger::log("\n");
+
+    Logger::log("Frontier Features:\n");
+    for (int i=0; i<FRONTIER_FEATURE_COUNT; i++)
+        if (IsActivatedSaveFeature(i))
+            Logger::log(" %s\n", FRONTIER_FEATURES[i]);
+    Logger::log("\n");
 }
 
 static Socket gSocket {};

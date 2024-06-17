@@ -1,9 +1,9 @@
 #pragma once
-
 #include "externals/il2cpp-api.h"
 #include "data/types.h"
 #include "data/frontier.h"
 #include "data/utils.h"
+
 
 struct HallSaveData {
     static constexpr const char *fileName = "SaveData:/Lumi_Battle_Hall.bin";
@@ -14,11 +14,7 @@ struct HallSaveData {
 //    bool silverSealObtained; //ToDo
 //    bool goldSealObtained; //ToDo
 
-
-
-
-
-    static long GetByteCount();
+    long GetByteCount();
 
     long FromBytes(char* buffer, long buffer_size, long index);
 
@@ -35,6 +31,7 @@ struct HallSaveData {
     [[nodiscard]] int32_t getRound() const;
 
     nn::vector<std::pair<const char*, Rank>> getAllTypeRanks();
+
 };
 
 void loadHallData(bool isBackup);

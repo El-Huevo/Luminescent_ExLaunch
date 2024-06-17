@@ -13,6 +13,7 @@
 #include "externals/UnityEngine/SceneManagement/SceneManager.h"
 #include "externals/Dpr/UI/UIManager.h"
 #include "externals/Dpr/Battle/View/BattleViewCore.h"
+#include "features/frontier/BattleHallPool.h"
 
 
 namespace ui {
@@ -21,17 +22,19 @@ namespace ui {
         void draw() override {
                 if (ImGui::BeginTable("ButtonGrid", 3, ImGuiTableFlags_Borders)) {
                     nn::vector<std::pair<const char*, Rank>> typeRanks = getCustomSaveData()->battleHall.getAllTypeRanks();
-                    int typeIndex = 0;
+                    int32_t typeIndex = 0;
                     for (int row = 0; row < 6; ++row) {
                         ImGui::TableNextRow();
                         for (int column = 0; column < 3; ++column) {
                             ImGui::TableSetColumnIndex(column);
                             if (typeIndex < TYPE_COUNT) {
-                                std::string buttonLabel = std::string(typeRanks[typeIndex].first) + " (" + std::to_string(typeRanks[typeIndex].second) + ")";
+                                std::string buttonLabel = std::string(typeRanks[typeIndex].first) + " (" + std::to_string(typeRanks[typeIndex].second + 1) + ")";
                                 if (ImGui::Button(buttonLabel.c_str())) {
                                     // Handle button click
                                     // For example, you could increment the value for demonstration
                                     getCustomSaveData()->battleHall.setRank(typeRanks[typeIndex].first, static_cast<Rank>(typeRanks[typeIndex].second + 1));
+                                    FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, typeIndex);
+
                                 }
                                 typeIndex++;
                             }

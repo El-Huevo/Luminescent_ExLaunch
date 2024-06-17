@@ -94,6 +94,7 @@ void CallFeatureHooks()
     exl_key_items_main();
     exl_save_data_expansion_main();
     exl_patches_main();
+    exl_battle_hall_main();
 }
 
 void exl_features_main() {
@@ -168,6 +169,8 @@ void exl_features_main() {
     SetActivatedSmallPatchFeature(array_index(SMALL_PATCH_FEATURES, "Affection Toggle"));
     SetActivatedSmallPatchFeature(array_index(SMALL_PATCH_FEATURES, "Global Exp. Share Toggle"));
     SetActivatedSmallPatchFeature(array_index(SMALL_PATCH_FEATURES, "Catch Rate Fix"));
+
+    SetActivatedFrontierFeature(array_index(FRONTIER_FEATURES, "Battle Hall"));
 
     // Install all activated hooks
     CallFeatureHooks();

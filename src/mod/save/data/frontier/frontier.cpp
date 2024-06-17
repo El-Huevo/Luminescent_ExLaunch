@@ -8,6 +8,7 @@ long HallSaveData::GetByteCount() {
     count += sizeof(Rank) * TYPE_COUNT;
     count += sizeof(int32_t);
 //    count += sizeof(bool) * 2;
+
     return count;
 }
 
@@ -25,8 +26,13 @@ void HallSaveData::Clear() {
     for (auto& rank : currentRank) {
         rank = RANK_1;
     }
+    Logger::log("[Battle Hall] Ranks cleared.\n");
     currentRound = 0;
-};
+    Logger::log("[Battle Hall] Round cleared.\n");
+    //availablePokemonIndices.clear();
+    //Logger::log("[Battle Hall] Indices cleared.\n");
+}
+
 
 int32_t HallSaveData::getRound() const {
     return currentRound;
@@ -37,30 +43,29 @@ void HallSaveData::setRound(int32_t round) {
 }
 
 long HallSaveData::FromBytes(char* buffer, long buffer_size, long index) {
-    Clear();
     if (buffer_size >= GetByteCount() + index) {
-        auto strData = (void*)(buffer+index);
-        for (auto& rank : currentRank) {
-            memcpy(&rank, strData, sizeof(Rank));
-            index += sizeof(Rank);
-        }
+        auto strData = (void *) (buffer + index);
+        memcpy(currentRank, strData, sizeof(Rank) * TYPE_COUNT);
+        index += sizeof(Rank) * TYPE_COUNT;
 
         memcpy(&currentRound, strData, sizeof(int32_t));
         index += sizeof(int32_t);
-    }
 
-    return index;
+        return index;
+    }
+    return index + HallSaveData::GetByteCount();
 }
 
 long HallSaveData::ToBytes(char* buffer, long index) {
     auto strData = (void*)(buffer+index);
-    for (auto& rank : currentRank) {
-        memcpy(strData, &rank, sizeof(Rank));
-        index += sizeof(Rank);
-    }
+    memcpy(strData, currentRank, sizeof(Rank) * TYPE_COUNT);
+    index += sizeof(Rank) * TYPE_COUNT;
 
     memcpy(strData, &currentRound, sizeof(int32_t));
     index += sizeof(int32_t);
+
+
+    Logger::log("[Battle Hall] Serialization complete.\n");
 
     return index;
 }
@@ -74,7 +79,6 @@ nn::vector<std::pair<const char *, Rank>> HallSaveData::getAllTypeRanks() {
     }
     return ranks;
 }
-
 
 void loadHallData(bool isBackup)
 {
@@ -117,3 +121,9 @@ void saveHallData(bool isMain, bool isBackup) {
     if (isBackup)
         FsHelper::writeFileToPath(buffer, sizeof(buffer), getCustomSaveData()->battleHall.backupFileName);
 }
+
+/* Battle Hall ExeFS List */
+// Done SaveData structure - [Functional]
+// ToDo - Custom SetupTowerTrainer
+// ToDo - Custom Script Commands
+// ToDo - Pokemon Pool from JSON [Partially Functional]
