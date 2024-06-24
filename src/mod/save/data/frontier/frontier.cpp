@@ -2,8 +2,7 @@
 #include "helpers/fsHelper.h"
 #include "save/save.h"
 
-
-long HallSaveData::GetByteCount() {
+long HallSaveData::GetByteCount() const {
     long count = 0;
     count += sizeof(Rank) * TYPE_COUNT;
     count += sizeof(int32_t);
@@ -26,11 +25,7 @@ void HallSaveData::Clear() {
     for (auto& rank : currentRank) {
         rank = RANK_1;
     }
-    Logger::log("[Battle Hall] Ranks cleared.\n");
     currentRound = 0;
-    Logger::log("[Battle Hall] Round cleared.\n");
-    //availablePokemonIndices.clear();
-    //Logger::log("[Battle Hall] Indices cleared.\n");
 }
 
 
@@ -58,12 +53,12 @@ long HallSaveData::FromBytes(char* buffer, long buffer_size, long index) {
 
 long HallSaveData::ToBytes(char* buffer, long index) {
     auto strData = (void*)(buffer+index);
+    Logger::log("[Battle Hall] currentRank.\n");
     memcpy(strData, currentRank, sizeof(Rank) * TYPE_COUNT);
     index += sizeof(Rank) * TYPE_COUNT;
-
+    Logger::log("[Battle Hall] Current Round.\n");
     memcpy(strData, &currentRound, sizeof(int32_t));
     index += sizeof(int32_t);
-
 
     Logger::log("[Battle Hall] Serialization complete.\n");
 
@@ -116,12 +111,13 @@ void saveHallData(bool isMain, bool isBackup) {
     char buffer[getCustomSaveData()->battleHall.GetByteCount()];
     getCustomSaveData()->battleHall.ToBytes((char*)buffer, 0);
 
-    if (isMain)
+    if (isMain) {
         FsHelper::writeFileToPath(buffer, sizeof(buffer), getCustomSaveData()->battleHall.fileName);
+        //getCustomSaveData()->battleHall.hallPool->saveState();
+    }
     if (isBackup)
         FsHelper::writeFileToPath(buffer, sizeof(buffer), getCustomSaveData()->battleHall.backupFileName);
 }
-
 /* Battle Hall ExeFS List */
 // Done SaveData structure - [Functional]
 // ToDo - Custom SetupTowerTrainer

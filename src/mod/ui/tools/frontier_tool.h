@@ -45,6 +45,18 @@ namespace ui {
 
                     };
                 });
+
+                _.Button([type](Button &_) {
+                    _.label = "Get Active Pool";
+                    _.onClick = [type]() {
+                        auto activePool = BattleHallPool::getTypePool(TYPES[type->selected], GROUP_1);
+                        Logger::log("Type %s activePool element 0: %d\n", TYPES[type->selected], activePool.at(0));
+                        //auto typeList = activePool->getActivePool("Normal", 1);
+                        //Logger::log("Type Normal activePool element 0: %d\n", typeList.at(0));
+//                        Logger::log("Type %s activePool element 0: %d\n", TYPES[type->selected], typeList.at(0));
+
+                    };
+                });
             });
 
             addChild(header);

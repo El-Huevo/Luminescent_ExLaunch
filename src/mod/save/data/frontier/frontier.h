@@ -3,18 +3,21 @@
 #include "data/types.h"
 #include "data/frontier.h"
 #include "data/utils.h"
+#include "features/frontier/BattleHallPool.h"
+#include "externals/FlagWork_Enums.h"
+#include "externals/FlagWork.h"
 
 
 struct HallSaveData {
     static constexpr const char *fileName = "SaveData:/Lumi_Battle_Hall.bin";
     static constexpr const char *backupFileName = "SaveData:/Lumi_Battle_Hall_BK.bin";
 
-    Rank currentRank[TYPE_COUNT];
+    Rank currentRank[TYPE_COUNT]{};
     int32_t currentRound;
 //    bool silverSealObtained; //ToDo
 //    bool goldSealObtained; //ToDo
 
-    long GetByteCount();
+    long GetByteCount() const;
 
     long FromBytes(char* buffer, long buffer_size, long index);
 

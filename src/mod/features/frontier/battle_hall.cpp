@@ -19,8 +19,15 @@
 #include "externals/Dpr/Battle/Logic/BTL_FIELD_SITUATION.h"
 #include "externals/Dpr/Battle/Logic/Setup.h"
 #include "externals/Dpr/Battle/Logic/BattleEffectComponentData.h"
+#include <random>
+#include "features/frontier/BattleHallPool.h"
+#include "save/data/frontier/frontier.h"
+#include "data/species.h"
 
 using namespace Dpr::Battle::Logic;
+
+static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+static std::mt19937 rng(seed);
 
 
 void SetupBattleFrontierTrainer(Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object* battleSetupParam,
@@ -49,27 +56,31 @@ void SetupBattleFrontierTrainer(Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object* 
 
 static bool EvCmd_FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* __this) {
     Pml::PokeParty::Object* trainerParty = Pml::PokeParty::newInstance();
-    auto selectedPoke = BattleHallPool::indexLookup(1, 1);
-    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Selected Poke.\n");
+    auto currentType = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);
+    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] currentType: %s.\n", TYPES[currentType]);
+    auto activePool = BattleHallPool::getTypePool(TYPES[currentType], GROUP_1);
+    std::uniform_int_distribution<int> distribution(0, activePool.size()-1);
+    int index = distribution(rng);
+
+    auto selectedPoke = BattleHallPool::indexLookup(activePool[index], GROUP_1);
+    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generated Pokemon = %d | %s.\n", activePool[index], SPECIES[activePool[index]]);
     trainerParty->AddMember(Frontier::GeneratePokemon(selectedPoke));
-    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Added to party.\n");
     //PokeRegulation::getClass()->initIfNeeded();
     //PokeRegulation::ModifyLevelPokeParty(trainerParty, 1, 50);
     //Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Party level modified to 50.\n");
 
     GameManager::getClass()->initIfNeeded();
     auto mapInfo = GameManager::get_mapInfo();
-    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Retrieved mapInfo.\n");
 
     PlayerWork::getClass()->initIfNeeded();
     auto zoneID = PlayerWork::get_zoneID();
-    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Retrieved zoneID.\n");
+    auto playerParty = PlayerWork::get_playerParty();
 
     auto battleBG = mapInfo->get_Item(zoneID)->fields.BattleBg;
 
     auto iVar8 = battleBG->m_Items[0];
     auto battleSetupParam = PlayerWork::get_battleSetupParam();
-    SetupBattleFrontierTrainer(battleSetupParam, trainerParty, 0, 40, 0, 32,
+    SetupBattleFrontierTrainer(battleSetupParam, playerParty, 0, 40, 0, 32,
                                trainerParty, (void*) nullptr, -1,
                                (Pml::PokeParty::Object*) nullptr, (void*) nullptr);
 

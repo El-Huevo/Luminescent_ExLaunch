@@ -14,5 +14,13 @@ enum Rank : int32_t {
     RANK_COUNT
 };
 
+enum Group : int32_t {
+    GROUP_1,
+    GROUP_2,
+    GROUP_3,
+    GROUP_4,
+    GROUP_COUNT
+};
+
 extern const char* frontierFolderPath;
 

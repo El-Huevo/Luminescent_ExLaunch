@@ -14,6 +14,9 @@
 #include "externals/Dpr/UI/UIManager.h"
 #include "externals/Dpr/Battle/View/BattleViewCore.h"
 #include "features/frontier/BattleHallPool.h"
+#include "externals/FlagWork_Enums.h"
+#include "externals/FlagWork.h"
+#include "save/save.h"
 
 
 namespace ui {
@@ -32,8 +35,8 @@ namespace ui {
                                 if (ImGui::Button(buttonLabel.c_str())) {
                                     // Handle button click
                                     // For example, you could increment the value for demonstration
-                                    getCustomSaveData()->battleHall.setRank(typeRanks[typeIndex].first, static_cast<Rank>(typeRanks[typeIndex].second + 1));
                                     FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, typeIndex);
+                                    Logger::log("[Battle Hall] Setting currentType to %s.\n", TYPES[typeIndex]);
 
                                 }
                                 typeIndex++;

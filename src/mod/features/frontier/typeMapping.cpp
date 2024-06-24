@@ -4,6 +4,7 @@
 #include "helpers/fsHelper.h"
 #include <string>
 #include "BattleHallPool.h"
+#include "data/frontier.h"
 
 
 const PokemonTypeInfo& getTypeInfo(int32_t monsNo) {
@@ -19,7 +20,7 @@ const PokemonTypeInfo& getTypeInfo(int32_t monsNo) {
 
 void loadTypeMapping() {
     nn::string frontierFilePath(frontierFolderPath);
-    frontierFilePath.append("/TypeMapping.json");
+    frontierFilePath.append("/hall_type_list.json");
     nn::json j = FsHelper::loadJsonFileFromPath(frontierFilePath.c_str());
 
     if (j != nullptr && !j.is_discarded()){
