@@ -3254,6 +3254,7 @@ enum class FlagWork_Work : int32_t {
     SCWK_WK_SAVE_SIZE = 500,
 
     WK_BATTLE_HALL_CURRENT_TYPE = 3000,
+    WK_BATTLE_HALL_SELECTED_MON = 3001,
 
     // Debug works, can be replaced at any time
     WORK_4000 = 4000,

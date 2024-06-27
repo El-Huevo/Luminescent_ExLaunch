@@ -26,6 +26,8 @@ void HallSaveData::Clear() {
         rank = RANK_1;
     }
     currentRound = 0;
+
+    poolManager.initializeTypeLists();
 }
 
 

@@ -97,3 +97,9 @@ bool RivalStarterMonsNoFormNo(Dpr::EvScript::EvDataManager::Object* manager);
 //   [Work] monsno: The work in which to put the monsno in.
 //   [Work] formno: The work in which to put the formno in.
 bool SupportStarterMonsNoFormNo(Dpr::EvScript::EvDataManager::Object* manager);
+
+bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager);
+
+bool FTR_HALL_SET_RANK(Dpr::EvScript::EvDataManager::Object* manager);
+
+bool FTR_HALL_POOL_REMOVE(Dpr::EvScript::EvDataManager::Object* manager);

@@ -1256,6 +1256,11 @@ namespace Dpr::EvScript {
             _RIVAL_MONSNO_FORMNO = 1246,
             _SUPPORT_MONSNO_FORMNO = 1247,
 
+            _FTR_SUB_LOCAL_BTL_CALL = 1300,
+            _FTR_HALL_SET_RANK = 1301,
+            _FTR_HALL_GET_ROUND = 1302,
+            _FTR_HALL_POOL_REMOVE = 1303,
+
             CUSTOM_CMD_END = 1500,
         };
     };

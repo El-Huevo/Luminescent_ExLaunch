@@ -10,11 +10,11 @@ namespace Frontier {
         return randNo;
     }
 
-    Pml::PokePara::PokemonParam::Object* GeneratePokemon(frontierIndex pokeInfo) {
+    Pml::PokePara::PokemonParam::Object* GeneratePokemon(frontierIndex pokeInfo, int32_t IV, uint16_t lvl) {
         auto initialSpec = Pml::PokePara::InitialSpec::newInstance();
         initialSpec->fields.monsno = pokeInfo.monsNo;
         initialSpec->fields.formno = pokeInfo.formNo;
-        initialSpec->fields.level = 50;
+        initialSpec->fields.level = lvl;
         initialSpec->fields.sex = 0;
 
         auto pokeParam = Pml::PokePara::PokemonParam::newInstance(initialSpec);
@@ -42,7 +42,7 @@ namespace Frontier {
 
         for (int i = 0; i < 6; i++) {
             core->ChangeEffortPower(i, pokeInfo.effort[i]);
-            core->ChangeTalentPower(i, 0);
+            core->ChangeTalentPower(i, IV);
         }
 
         core->SetItem(pokeInfo.item);

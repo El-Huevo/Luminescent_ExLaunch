@@ -6,7 +6,7 @@
 #include "features/frontier/BattleHallPool.h"
 #include "externals/FlagWork_Enums.h"
 #include "externals/FlagWork.h"
-
+#include "features/Frontier/PoolManager.h"
 
 struct HallSaveData {
     static constexpr const char *fileName = "SaveData:/Lumi_Battle_Hall.bin";
@@ -14,6 +14,7 @@ struct HallSaveData {
 
     Rank currentRank[TYPE_COUNT]{};
     int32_t currentRound;
+    BattleHallPool::PoolManager poolManager;
 //    bool silverSealObtained; //ToDo
 //    bool goldSealObtained; //ToDo
 
