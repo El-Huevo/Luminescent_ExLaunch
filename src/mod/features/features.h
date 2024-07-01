@@ -38,6 +38,9 @@ void exl_balls_main();
 // Defaults to flag 2591, as Luminescent does it.
 void exl_battle_escape_flag_main();
 
+// Activates the battle frontier and all its bells and whistles.
+void exl_battle_frontier_main();
+
 // Makes the battle menu scroll instead of the cursor.
 void exl_battle_revolver_main();
 

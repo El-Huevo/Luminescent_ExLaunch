@@ -1258,8 +1258,11 @@ namespace Dpr::EvScript {
 
             _FTR_SUB_LOCAL_BTL_CALL = 1300,
             _FTR_HALL_SET_RANK = 1301,
-            _FTR_HALL_GET_ROUND = 1302,
+            _FTR_HALL_GET_NOW_ROUND = 1302,
             _FTR_HALL_POOL_REMOVE = 1303,
+            _FTR_HALL_INC_ROUND = 1304,
+
+            _FTR_SET_CURRENT_FACILITY = 1350,
 
             CUSTOM_CMD_END = 1500,
         };

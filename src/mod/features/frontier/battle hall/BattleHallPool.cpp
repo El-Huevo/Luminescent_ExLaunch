@@ -1,5 +1,4 @@
 
-#include <random>
 #include "BattleHallPool.h"
 #include "externals/FlagWork.h"
 #include "externals/FlagWork_Enums.h"
@@ -16,6 +15,10 @@ namespace BattleHallPool {
         nn::string frontierFilePath(frontierFolderPath);
         frontierFilePath.append(path);
         return frontierFilePath;
+    }
+
+    std::mt19937 getRNG() {
+        return rng;
     }
 
     frontierIndex indexLookup(int32_t monsNo, Group groupNo) {
@@ -64,14 +67,41 @@ namespace BattleHallPool {
         return groupNo;
     }
 
-    uint16_t calculateEnemyLvl(Rank rank) {
-        int32_t pLvl = 50; // Todo Dynamic Lvl
+    Group calculateMatronGroup(int32_t playerMonsNo) {
+        for (int32_t groupIndex = 0; groupIndex < GROUP_COUNT; ++groupIndex) {
+            nn::json j = FsHelper::loadJsonFileFromPath(
+                    appendJsonPath("/Group_" + nn::to_string(groupIndex + 1) + ".json").c_str());
+
+            if (j != nullptr && !j.is_discarded()) {
+                for (const auto& item : j) {
+                    int32_t monsNo = item["monsNo"];
+                    if (monsNo == playerMonsNo) {
+                        Logger::log("[BHP] monsNo %d found in Group_%d.\n", playerMonsNo, groupIndex + 1);
+                        return static_cast<Group>(groupIndex);
+                    }
+                }
+            } else {
+                Logger::log("[BHP] Failed to load JSON file or file is discarded for Group_%d.\n", groupIndex + 1);
+            }
+        }
+    }
+
+    uint16_t calculateEnemyLvl(Rank rank, uint32_t pLvl, int32_t currentTypeIndex, const nn::vector<std::pair<const char *, Rank>>& allTypeRanks) {
         double lvlBase = pLvl - (3 * sqrt(pLvl));
         int32_t currentTypeRank = rank + 1;
-        double types = 17;
+        double types = 0;
+
+        for (const auto& typeRank : allTypeRanks) {
+            if (strcmp(typeRank.first, TYPES[currentTypeIndex]) == 0 && typeRank.second >= RANK_2) {
+                ++types;
+            }
+        }
+
+        Logger::log("[EnemyLvl] Types >= Rank 2: %d\n", types);
+
         double increment = sqrt(pLvl) / 5;
         double oLvlCalc = lvlBase + (types / 2) + (currentTypeRank - 1) * increment;
-        return (uint16_t) fmin(pLvl, round(oLvlCalc));
+        return (uint16_t) fmin(pLvl, static_cast<uint32_t>(round(oLvlCalc)));
     }
 
     int32_t rankIVLookup(Rank rank) {

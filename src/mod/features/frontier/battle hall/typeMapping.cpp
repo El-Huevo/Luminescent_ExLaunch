@@ -3,7 +3,7 @@
 #include "memory/json.h"
 #include "helpers/fsHelper.h"
 #include <string>
-#include "BattleHallPool.h"
+#include "features/frontier/battle hall/BattleHallPool.h"
 #include "data/frontier.h"
 
 

@@ -51,7 +51,7 @@ void logFeatures() {
 
     Logger::log("Frontier Features:\n");
     for (int i=0; i<FRONTIER_FEATURE_COUNT; i++)
-        if (IsActivatedSaveFeature(i))
+        if (IsActivatedFrontierFeature(i))
             Logger::log(" %s\n", FRONTIER_FEATURES[i]);
     Logger::log("\n");
 }

@@ -6,6 +6,7 @@ long HallSaveData::GetByteCount() const {
     long count = 0;
     count += sizeof(Rank) * TYPE_COUNT;
     count += sizeof(int32_t);
+    count += sizeof(BattleHallPool::PoolManager);
 //    count += sizeof(bool) * 2;
 
     return count;
@@ -35,18 +36,16 @@ int32_t HallSaveData::getRound() const {
     return currentRound;
 }
 
-void HallSaveData::setRound(int32_t round) {
-    currentRound = round;
-}
-
 long HallSaveData::FromBytes(char* buffer, long buffer_size, long index) {
     if (buffer_size >= GetByteCount() + index) {
-        auto strData = (void *) (buffer + index);
-        memcpy(currentRank, strData, sizeof(Rank) * TYPE_COUNT);
+        memcpy(&currentRank, (void*)(buffer + index), sizeof(Rank) * TYPE_COUNT);
         index += sizeof(Rank) * TYPE_COUNT;
 
-        memcpy(&currentRound, strData, sizeof(int32_t));
+        memcpy(&currentRound, (void*)(buffer + index), sizeof(int32_t));
         index += sizeof(int32_t);
+
+        memcpy(&poolManager, (void*)(buffer + index), sizeof(BattleHallPool::PoolManager));
+        index += sizeof(BattleHallPool::PoolManager);
 
         return index;
     }
@@ -54,14 +53,12 @@ long HallSaveData::FromBytes(char* buffer, long buffer_size, long index) {
 }
 
 long HallSaveData::ToBytes(char* buffer, long index) {
-    auto strData = (void*)(buffer+index);
-    Logger::log("[Battle Hall] currentRank.\n");
-    memcpy(strData, currentRank, sizeof(Rank) * TYPE_COUNT);
+    memcpy((void*)(buffer + index), &currentRank, sizeof(Rank) * TYPE_COUNT);
     index += sizeof(Rank) * TYPE_COUNT;
-    Logger::log("[Battle Hall] Current Round.\n");
-    memcpy(strData, &currentRound, sizeof(int32_t));
+    memcpy((void*)(buffer + index), &currentRound, sizeof(int32_t));
     index += sizeof(int32_t);
-
+    memcpy((void*)(buffer + index), &poolManager, sizeof(BattleHallPool::PoolManager));
+    index += sizeof(BattleHallPool::PoolManager);
     Logger::log("[Battle Hall] Serialization complete.\n");
 
     return index;
@@ -75,6 +72,10 @@ nn::vector<std::pair<const char *, Rank>> HallSaveData::getAllTypeRanks() {
         ++index;
     }
     return ranks;
+}
+
+HallRound HallSaveData::getNowRound() const {
+    return static_cast<HallRound>(currentRound % ROUND_COUNT);
 }
 
 void loadHallData(bool isBackup)

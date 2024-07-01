@@ -94,6 +94,7 @@ void CallFeatureHooks()
     exl_key_items_main();
     exl_save_data_expansion_main();
     exl_patches_main();
+    exl_battle_frontier_main();
 }
 
 void exl_features_main() {

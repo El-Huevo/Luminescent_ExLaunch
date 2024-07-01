@@ -3,10 +3,10 @@
 #include "data/types.h"
 #include "data/frontier.h"
 #include "data/utils.h"
-#include "features/frontier/BattleHallPool.h"
+#include "features/frontier/battle hall/BattleHallPool.h"
 #include "externals/FlagWork_Enums.h"
 #include "externals/FlagWork.h"
-#include "features/Frontier/PoolManager.h"
+#include "features/frontier/battle hall/PoolManager.h"
 
 struct HallSaveData {
     static constexpr const char *fileName = "SaveData:/Lumi_Battle_Hall.bin";
@@ -30,9 +30,9 @@ struct HallSaveData {
 
     void Clear();
 
-    void setRound(int32_t round = 1);
-
     [[nodiscard]] int32_t getRound() const;
+
+    [[nodiscard]] HallRound getNowRound() const;
 
     nn::vector<std::pair<const char*, Rank>> getAllTypeRanks();
 

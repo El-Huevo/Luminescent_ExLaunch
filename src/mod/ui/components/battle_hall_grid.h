@@ -13,7 +13,7 @@
 #include "externals/UnityEngine/SceneManagement/SceneManager.h"
 #include "externals/Dpr/UI/UIManager.h"
 #include "externals/Dpr/Battle/View/BattleViewCore.h"
-#include "features/frontier/BattleHallPool.h"
+#include "features/frontier/battle hall/BattleHallPool.h"
 #include "externals/FlagWork_Enums.h"
 #include "externals/FlagWork.h"
 #include "save/save.h"

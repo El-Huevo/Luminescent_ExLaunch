@@ -7,15 +7,14 @@
 #include "externals/Dpr/Battle/Logic/BATTLE_SETUP_PARAM.h"
 #include "externals/GameManager.h"
 #include "externals/FieldManager.h"
-#include "features/frontier/BattleHallPool.h"
+#include "features/frontier/battle hall/BattleHallPool.h"
 #include "externals/Dpr/Battle/Logic/BTL_FIELD_SITUATION.h"
 #include "externals/Dpr/Battle/Logic/Setup.h"
 #include "externals/FlagWork_Enums.h"
 #include "externals/FlagWork.h"
 #include "save/save.h"
 #include "features/frontier/frontier_helpers.h"
-
-static std::mt19937 rng(std::random_device{}());
+#include "externals/Dpr/BattleMatching/BattleMatchingWork.h"
 
 void SetupBattleFrontierTrainer(Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object* battleSetupParam,
                                 Pml::PokeParty::Object* playerParty, int32_t rule, int32_t arenaID, int32_t weatherType,
@@ -44,16 +43,27 @@ void SetupBattleFrontierTrainer(Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object* 
 using namespace BattleHallPool;
 
 bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
-    Pml::PokeParty::Object* trainerParty = Pml::PokeParty::newInstance();
     Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generating Poke...\n");
 
     auto save = &getCustomSaveData()->battleHall;
     auto currentType = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);
     auto currentRank = save->currentRank[currentType];
 
+    BattleMatchingWork::getClass()->initIfNeeded();
+    auto pokeParam = BattleMatchingWork::getClass()->static_fields->pokemonParams;
+    auto orderIndexList = BattleMatchingWork::getClass()->static_fields->orderIndexList;
+    Pml::PokeParty::Object* playerParty = Pml::PokeParty::newInstance();
+    auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
+    playerParty->AddMember(playerPoke);
+
     int32_t IV = rankIVLookup(currentRank);
     Group groupNo = calculateGroup(currentRank);
-    uint16_t level = calculateEnemyLvl(currentRank);
+
+    nn::vector<std::pair<const char *, Rank>> allTypeRanks = save->getAllTypeRanks();
+
+    uint16_t level = calculateEnemyLvl(currentRank, playerPoke->fields.m_accessor->GetLevel(), currentType,
+                                       allTypeRanks);
+    std::mt19937 rng = getRNG();
 
 
     auto activePool = getTypePool(TYPES[currentType], groupNo);
@@ -69,17 +79,14 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     auto selectedPoke = indexLookup(activePool[index], groupNo);
     Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generated Pokemon = %d | %s.\n", activePool[index], SPECIES[activePool[index]]);
 
+    Pml::PokeParty::Object* trainerParty = Pml::PokeParty::newInstance();
     trainerParty->AddMember(Frontier::GeneratePokemon(selectedPoke, IV, level));
-    //PokeRegulation::getClass()->initIfNeeded();
-    //PokeRegulation::ModifyLevelPokeParty(trainerParty, 1, 50);
-    //Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Party level modified to 50.\n");
 
     GameManager::getClass()->initIfNeeded();
     auto mapInfo = GameManager::get_mapInfo();
 
     PlayerWork::getClass()->initIfNeeded();
     auto zoneID = PlayerWork::get_zoneID();
-    auto playerParty = PlayerWork::get_playerParty();
 
     auto battleBG = mapInfo->get_Item(zoneID)->fields.BattleBg;
 

@@ -57,8 +57,14 @@ HOOK_DEFINE_TRAMPOLINE(RunEvCmdCustom) {
                     return FTR_SUB_LOCAL_BTL_CALL(__this);
                 case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SET_RANK:
                     return FTR_HALL_SET_RANK(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_GET_NOW_ROUND:
+                    return FTR_HALL_GET_NOW_ROUND(__this);
                 case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_POOL_REMOVE:
                     return FTR_HALL_POOL_REMOVE(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_INC_ROUND:
+                    return FTR_HALL_INC_ROUND(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_SET_CURRENT_FACILITY:
+                    return FTR_SET_CURRENT_FACILITY(__this);
                 default:
                     break;
             }
@@ -94,5 +100,9 @@ void exl_commands_main() {
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_SUPPORT_MONSNO_FORMNO);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_SUB_LOCAL_BTL_CALL);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SET_RANK);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_GET_NOW_ROUND);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_POOL_REMOVE);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_INC_ROUND);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_SET_CURRENT_FACILITY);
+
 }

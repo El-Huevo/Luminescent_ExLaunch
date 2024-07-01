@@ -8,6 +8,7 @@
 #include "externals/Pml/PokePara/PokemonParam.h"
 #include "data/species.h"
 #include "PoolManager.h"
+#include <random>
 
 namespace BattleHallPool {
 
@@ -52,9 +53,11 @@ namespace BattleHallPool {
     * @brief Calculates the enemy level using the Battle Hall level formula.
     *
     * @param rank The current type rank.
-    * @return The level of the enemy Pokémon as an int8_t.
+    * @param pLvl The level of the player's Pokémon.
+    * @return The level of the enemy Pokémon as an int16_t.
     */
-    uint16_t calculateEnemyLvl(Rank rank);
+    uint16_t calculateEnemyLvl(Rank rank, uint32_t pLvl, int32_t currentTypeIndex,
+                               const nn::vector<std::pair<const char *, Rank>>& allTypeRanks);
 
     /**
      * @brief Looks up the IVs for a given rank.
@@ -65,5 +68,9 @@ namespace BattleHallPool {
     int32_t rankIVLookup(Rank rank);
 
     bool duplicateCheck(PoolManager* poolManager, int32_t monsNo, int32_t typeIndex);
+
+    std::mt19937 getRNG();
+
+    Group calculateMatronGroup(int32_t playerMonsNo);
 
 }

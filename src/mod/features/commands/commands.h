@@ -103,3 +103,12 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager);
 bool FTR_HALL_SET_RANK(Dpr::EvScript::EvDataManager::Object* manager);
 
 bool FTR_HALL_POOL_REMOVE(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Returns the current set's round based on total round count between 0-9.
+// Arguments:
+//   [Work] result: The work in which to put the result in.
+bool FTR_HALL_GET_NOW_ROUND(Dpr::EvScript::EvDataManager::Object* manager);
+
+bool FTR_HALL_INC_ROUND(Dpr::EvScript::EvDataManager::Object* manager);
+
+bool FTR_SET_CURRENT_FACILITY(Dpr::EvScript::EvDataManager::Object* manager);
