@@ -45,10 +45,11 @@
 #include "externals/Pml/PokePara/SavePokeParty.h"
 #include "externals/Pml/PokeParty.h"
 #include "externals/ReBuffnameData.h"
-#include "externals/SmartPoint/Components/PlayerPrefsProvider_PlayerWork_.h"
+#include "externals/SmartPoint/Components/PlayerPrefsProvider.h"
 #include "externals/System/Nullable.h"
 #include "externals/System/Primitives.h"
 #include "externals/System/String.h"
+#include "externals/Dpr/Box/SaveBoxData.h"
 
 struct PlayerWork : ILClass<PlayerWork, 0x04c59b58> {
     struct SaveData : ILStruct<SaveData> {
@@ -168,7 +169,7 @@ struct PlayerWork : ILClass<PlayerWork, 0x04c59b58> {
 
     static_assert(offsetof(StaticFields, _SafariBallNum_k__BackingField) == 72);
 
-    struct Fields : SmartPoint::Components::PlayerPrefsProvider_PlayerWork_::Fields {
+    struct Fields : SmartPoint::Components::PlayerPrefsProvider<PlayerWork>::Fields {
         PlayerWork::SaveData::Object _saveData;
         int32_t _transitionZoneID;
         int32_t _locatorIndex;
@@ -297,6 +298,10 @@ struct PlayerWork : ILClass<PlayerWork, 0x04c59b58> {
     }
 
     static inline Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object* get_battleSetupParam() {
-        return external<Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object*>(0x02ce2a00);
+        return external<Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object *>(0x02ce2a00);
+    }
+
+    static inline Dpr::Box::SaveBoxData::Object* GetBoxData() {
+        return external<Dpr::Box::SaveBoxData::Object*>(0x02cf0180);
     }
 };
