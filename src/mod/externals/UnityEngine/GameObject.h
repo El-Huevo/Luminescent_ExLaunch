@@ -8,13 +8,23 @@
 #include "externals/UnityEngine/SkinnedMeshRenderer.h"
 #include "externals/UnityEngine/Transform.h"
 
+namespace Dpr::Demo {
+    struct DemoSceneManager;
+}
+
 namespace UnityEngine {
-    struct GameObject : ILClass<GameObject> {
+    struct GameObject : ILClass<GameObject, 0x04c57d90> {
         struct Fields : UnityEngine::_Object::Fields {
 
         };
 
         static inline StaticILMethod<0x04c67678, UnityEngine::SkinnedMeshRenderer> Method$$SkinnedMeshRenderer$$GetComponentsInChildren {};
+
+        static inline StaticILMethod<0x04c66b10, Dpr::Demo::DemoSceneManager> Method$$DemoSceneManager$$AddComponent {};
+
+        inline void ctor(System::String::Object* name) {
+            external<void>(0x026b1bd0, this, name);
+        }
 
         inline UnityEngine::Transform::Object* get_transform() {
             return external<UnityEngine::Transform::Object*>(0x026b18d0, this);
@@ -64,6 +74,11 @@ namespace UnityEngine {
         template <typename T>
         inline T::Array* GetComponentsInChildren(bool includeInactive, ILMethod<T>& method) {
             return external<typename T::Array*>(0x02bed170, this, includeInactive, *method);
+        }
+
+        template <typename T>
+        inline T::Object* AddComponent(ILMethod<T>& method) {
+            return external<typename T::Object*>(0x01f48870, this, *method);
         }
     };
 }

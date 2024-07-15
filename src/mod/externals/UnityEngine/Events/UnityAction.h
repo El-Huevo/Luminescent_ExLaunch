@@ -19,6 +19,8 @@ namespace UnityEngine::Events {
         static const inline long UIWindow_TypeInfo = 0x04c59e60;
 
         static inline StaticILMethod<0x04c7d008> Method$$Dpr_EvScript_EvDataManager__EvCmdBTowerAppSetProc__b__1143_0 {};
+        static inline StaticILMethod<0x04c81d88> Method$$__c__DisplayClass9_0__OpenSelectPlayerVisual__b__0 {};
+        static inline StaticILMethod<0x04c7d030> Method$$Dpr_EvScript_EvDataManager__EvCmdBoxSetProc__b__742_0 {};
 
 
         template <typename T, typename... Args>

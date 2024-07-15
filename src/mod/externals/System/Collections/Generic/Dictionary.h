@@ -3,6 +3,7 @@
 #include "externals/il2cpp-api.h"
 #include "externals/System/Primitives.h"
 #include "externals/System/String.h"
+#include "externals/UnityEngine/Coroutine.h"
 
 namespace System::Collections::Generic {
     template <typename T, typename K, typename V>
@@ -28,5 +29,15 @@ namespace System::Collections::Generic {
             void* values;
             Il2CppObject* _syncRoot;
         };
+
+        inline void Add(typename K::Object* key, typename V::Object* value, MethodInfo* mi) {
+            this->template external<void>(0x02881030, this, key, value, mi);
+        }
     };
+
+    struct Dictionary$$Coroutine : ILClass<Dictionary<Dictionary$$Coroutine, UnityEngine::Coroutine, UnityEngine::Coroutine>> {
+        static inline StaticILMethod<0x04c884a8> Method$System_Collections_Generic_Dictionary__Coroutine_Coroutine__$$Add_ {};
+    };
+
+
 }

@@ -20,6 +20,8 @@ namespace Dpr::UI {
     struct UIWazaManage;
     struct BattleTowerRecordWindow;
     struct BoxWindow;
+    struct SelectPlayerVisualWindow;
+    struct UIKinomi;
 }
 
 namespace Dpr::UI {
@@ -106,7 +108,11 @@ namespace Dpr::UI {
 
         static inline StaticILMethod<0x04c8ff30, Dpr::UI::BoxWindow> Method$$CreateUIWindow_BoxWindow_ {};
 
+        static inline StaticILMethod<0x04c8ffd0, Dpr::UI::SelectPlayerVisualWindow> Method$$CreateUIWindow_SelectPlayerVisualWindow_ {};
+
         static inline StaticILMethod<0x04c8ffe8, Dpr::UI::ShopBoutiqueChange> Method$$CreateUIWindow_ShopBoutiqueChange_ {};
+
+        static inline StaticILMethod<0x04c90058, Dpr::UI::UIKinomi> Method$$CreateUIWindow_UIKinomi_ {};
 
         static inline StaticILMethod<0x04c90098, Dpr::UI::UIWazaManage> Method$$CreateUIWindow_UIWazaManage_ {};
 

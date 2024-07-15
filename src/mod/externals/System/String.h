@@ -8,13 +8,6 @@
 #include "externals/System/Primitives.h"
 #include "externals/System/Text/Encoding.h"
 
-
-namespace SmartPoint::AssetAssistant {
-    struct AssetBundleDownloadManifest;
-
-    struct AssetBundleRecord;
-}
-
 namespace System {
     struct String : ILClass<String> {
         struct Fields {
@@ -96,6 +89,10 @@ namespace System {
             arr->m_Items[size+1] = 0;
             return arr;
         }
+
+        String::Array* Split(Char_array* separator) {
+            return external<String::Array*>(0x026f3a60, this, separator);
+        }
     };
 }
 
@@ -103,21 +100,5 @@ namespace System::Collections::Generic {
     struct List$$String : List<List$$String, System::String> {
         static inline StaticILMethod<0x04c8a528> Method$$Add {};
         static inline StaticILMethod<0x04c8a538> Method$$Clear {};
-    };
-
-    struct Dictionary$$String__AssetBundleDownloadManifest : Dictionary<Dictionary$$String__AssetBundleDownloadManifest, System::String, SmartPoint::AssetAssistant::AssetBundleDownloadManifest> {
-
-        static inline StaticILMethod<0x04bf1eb0> Method$$get_Values {};
-
-        inline long get_Values() {
-            return external<long>(0x02880ea0, this, Method$$get_Values);
-        }
-
-    };
-
-    struct Dictionary$$String__AssetBundleRecord : Dictionary<Dictionary$$String__AssetBundleRecord, System::String, SmartPoint::AssetAssistant::AssetBundleRecord> {
-
-        static inline StaticILMethod<0x04c6ee18> Method$$TryGetValue {};
-
     };
 }

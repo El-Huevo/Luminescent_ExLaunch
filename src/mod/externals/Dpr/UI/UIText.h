@@ -5,6 +5,7 @@
 #include "externals/System/String.h"
 #include "externals/TMPro/TextMeshProUGUI.h"
 #include "externals/System/Collections/Generic/List.h"
+#include "externals/UnityEngine/Events/UnityAction.h"
 
 namespace Dpr::UI {
     struct UIText : ILClass<UIText> {
@@ -28,6 +29,11 @@ namespace Dpr::UI {
 
         inline void SetupMessage(System::String::Object* messageFile, int32_t messageIndex) {
             external<void>(0x01dd1940, this, messageFile, messageIndex);
+        }
+
+        inline void SetFormattedText(UnityEngine::Events::UnityAction::Object* onSet,
+                                     System::String::Object* messageFile, System::String::Object* messageId) {
+            external<void>(0x01dc76c0, this, onSet, messageFile, messageId);
         }
     };
 }

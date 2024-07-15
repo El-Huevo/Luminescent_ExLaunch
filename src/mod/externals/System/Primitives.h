@@ -22,6 +22,9 @@ namespace System {
         return *reinterpret_cast<Il2CppClass**>(exl::util::modules::GetTargetOffset(0x04c552e0));
     }
     PRIMITIVE_ARRAY(Char);
+    static Il2CppClass* Char_array_TypeInfo() {
+        return *reinterpret_cast<Il2CppClass**>(exl::util::modules::GetTargetOffset(0x04c55340));
+    }
     PRIMITIVE_ARRAY(UInt16);
     PRIMITIVE_ARRAY(Int32);
     static Il2CppClass* Int32_array_TypeInfo() {
