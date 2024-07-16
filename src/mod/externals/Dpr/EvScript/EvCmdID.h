@@ -1261,6 +1261,11 @@ namespace Dpr::EvScript {
             _FTR_HALL_GET_NOW_ROUND = 1302,
             _FTR_HALL_POOL_REMOVE = 1303,
             _FTR_HALL_INC_ROUND = 1304,
+            _FTR_HALL_SET_STREAK_MON = 1305,
+            _FTR_HALL_GET_STREAK_MON = 1306,
+            _FTR_HALL_STREAK_MON_NAME = 1307,
+            _FTR_HALL_SELECTED_MON_NAME = 1308,
+            _FTR_HALL_RANK_NUM_NAME = 1309,
 
             _FTR_SET_CURRENT_FACILITY = 1350,
 

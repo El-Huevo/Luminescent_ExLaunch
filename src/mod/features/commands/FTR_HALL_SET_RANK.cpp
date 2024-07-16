@@ -10,7 +10,7 @@
 
 #include "exlaunch.hpp"
 
-bool FTR_HALL_SET_RANK(Dpr::EvScript::EvDataManager::Object* manager) {
+bool FTR_HALL_SET(Dpr::EvScript::EvDataManager::Object* manager) {
     Logger::log("[_FTR_HALL_SET_RANK] \n");
     auto save = &getCustomSaveData()->battleHall;
     auto currentType = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);

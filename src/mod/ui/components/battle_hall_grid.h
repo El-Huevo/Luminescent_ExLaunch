@@ -13,7 +13,7 @@
 #include "externals/UnityEngine/SceneManagement/SceneManager.h"
 #include "externals/Dpr/UI/UIManager.h"
 #include "externals/Dpr/Battle/View/BattleViewCore.h"
-#include "features/frontier/battle hall/BattleHallPool.h"
+#include "features/frontier/BattleHall/BattleHallPool.h"
 #include "externals/FlagWork_Enums.h"
 #include "externals/FlagWork.h"
 #include "save/save.h"
@@ -33,8 +33,6 @@ namespace ui {
                             if (typeIndex < TYPE_COUNT) {
                                 std::string buttonLabel = std::string(typeRanks[typeIndex].first) + " (" + std::to_string(typeRanks[typeIndex].second + 1) + ")";
                                 if (ImGui::Button(buttonLabel.c_str())) {
-                                    // Handle button click
-                                    // For example, you could increment the value for demonstration
                                     FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, typeIndex);
                                     Logger::log("[Battle Hall] Setting currentType to %s.\n", TYPES[typeIndex]);
 

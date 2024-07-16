@@ -3,10 +3,10 @@
 #include "data/types.h"
 #include "data/frontier.h"
 #include "data/utils.h"
-#include "features/frontier/battle hall/BattleHallPool.h"
+#include "features/frontier/BattleHall/BattleHallPool.h"
 #include "externals/FlagWork_Enums.h"
 #include "externals/FlagWork.h"
-#include "features/frontier/battle hall/PoolManager.h"
+#include "features/frontier/BattleHall/PoolManager.h"
 
 struct HallSaveData {
     static constexpr const char *fileName = "SaveData:/Lumi_Battle_Hall.bin";
@@ -14,6 +14,7 @@ struct HallSaveData {
 
     Rank currentRank[TYPE_COUNT]{};
     int32_t currentRound;
+    int32_t streakPokePID;
     BattleHallPool::PoolManager poolManager;
 //    bool silverSealObtained; //ToDo
 //    bool goldSealObtained; //ToDo

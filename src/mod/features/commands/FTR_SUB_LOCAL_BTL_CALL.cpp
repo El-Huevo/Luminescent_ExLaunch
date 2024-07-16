@@ -7,7 +7,7 @@
 #include "externals/Dpr/Battle/Logic/BATTLE_SETUP_PARAM.h"
 #include "externals/GameManager.h"
 #include "externals/FieldManager.h"
-#include "features/frontier/battle hall/BattleHallPool.h"
+#include "features/frontier/BattleHall/BattleHallPool.h"
 #include "externals/Dpr/Battle/Logic/BTL_FIELD_SITUATION.h"
 #include "externals/Dpr/Battle/Logic/Setup.h"
 #include "externals/FlagWork_Enums.h"
@@ -15,6 +15,10 @@
 #include "save/save.h"
 #include "features/frontier/frontier_helpers.h"
 #include "externals/Dpr/BattleMatching/BattleMatchingWork.h"
+
+bool MatronCheck() {
+    return FlagWork::GetFlag(FlagWork_Flag::FLAG_FTR_HALL_MATRON_INBOUND);
+}
 
 void SetupBattleFrontierTrainer(Dpr::Battle::Logic::BATTLE_SETUP_PARAM::Object* battleSetupParam,
                                 Pml::PokeParty::Object* playerParty, int32_t rule, int32_t arenaID, int32_t weatherType,
@@ -44,10 +48,15 @@ using namespace BattleHallPool;
 
 bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generating Poke...\n");
+    uint16_t level;
+    int32_t IV;
+    Group groupNo;
+    int32_t enemy1;
 
     auto save = &getCustomSaveData()->battleHall;
     auto currentType = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);
     auto currentRank = save->currentRank[currentType];
+    auto currentRound = save->currentRound;
 
     BattleMatchingWork::getClass()->initIfNeeded();
     auto pokeParam = BattleMatchingWork::getClass()->static_fields->pokemonParams;
@@ -56,15 +65,34 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
     playerParty->AddMember(playerPoke);
 
-    int32_t IV = rankIVLookup(currentRank);
-    Group groupNo = calculateGroup(currentRank);
+    if (MatronCheck()) {
+        if (currentRound == 49) {
+            IV = rankIVLookup(RANK_10);
+            groupNo = calculateMatronGroup(playerPoke->fields.m_accessor->GetMonsNo());
+        }
 
-    nn::vector<std::pair<const char *, Rank>> allTypeRanks = save->getAllTypeRanks();
+        else if (currentRound == 169) {
+            IV = rankIVLookup(RANK_10);
+            groupNo = GROUP_4;
 
-    uint16_t level = calculateEnemyLvl(currentRank, playerPoke->fields.m_accessor->GetLevel(), currentType,
-                                       allTypeRanks);
+        }
+
+        level = playerPoke->fields.m_accessor->GetLevel();
+        enemy1 = 305;
+    }
+
+    else {
+        IV = rankIVLookup(currentRank);
+        groupNo = calculateGroup(currentRank);
+
+        nn::vector<std::pair<const char *, Rank>> allTypeRanks = save->getAllTypeRanks();
+
+        level = calculateEnemyLvl(currentRank, playerPoke->fields.m_accessor->GetLevel(),
+                                  currentType, allTypeRanks);
+        enemy1 = 32;
+    }
+
     std::mt19937 rng = getRNG();
-
 
     auto activePool = getTypePool(TYPES[currentType], groupNo);
     std::uniform_int_distribution<int> distribution(0, activePool.size()-1);
@@ -92,7 +120,7 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
 
     auto iVar8 = battleBG->m_Items[0];
     auto battleSetupParam = PlayerWork::get_battleSetupParam();
-    SetupBattleFrontierTrainer(battleSetupParam, playerParty, 0, 40, 0, 32,
+    SetupBattleFrontierTrainer(battleSetupParam, playerParty, 0, 40, 0, enemy1,
                                trainerParty, (void*) nullptr, -1,
                                (Pml::PokeParty::Object*) nullptr, (void*) nullptr);
 
@@ -110,3 +138,4 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     manager->fields._isBattleTowerBtl = true;
     return true;
 }
+

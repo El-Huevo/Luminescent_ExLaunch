@@ -27,6 +27,13 @@ namespace ui {
                     };
                 });
 
+                _.Button([](Button &_) {
+                    _.label = "Crash game";
+                    _.onClick = []() {
+                        OpenSelectPlayerVisual();
+                    };
+                });
+
                 _.Checkbox([](Checkbox &_) {
                     _.label = "Fly anywhere";
                     _.enabled = false;

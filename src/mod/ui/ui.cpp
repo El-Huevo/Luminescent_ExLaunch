@@ -74,7 +74,7 @@ static Window battleHallWindow = Window::single([](Window &_) {
     _.title = "Battle Hall";
     _.flags |= ImGuiWindowFlags_MenuBar;
     _.initialPos = ImVec2(550, 50);
-    _.initialSize = ImVec2(150, 150);
+    _.initialSize = ImVec2(650, 450);
     _.allow_static = true;
     _.addChild(&battleHallGrid);
 

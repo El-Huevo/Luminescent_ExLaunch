@@ -33,16 +33,39 @@ namespace ui {
                     _.label = "Set Rank";
                     _.onClick = [type, rank]() {
                         Logger::log("Setting type %s to Rank: %d\n", TYPES[type->selected], rank->value);
-                        getCustomSaveData()->battleHall.setRank(TYPES[type->selected], (Rank) rank->value);
+                        (&getCustomSaveData()->battleHall)->setRank(TYPES[type->selected], (Rank) rank->value);
                     };
                 });
 
                 _.Button([type](Button &_) {
                     _.label = "Get Rank";
                     _.onClick = [type]() {
-                        auto currentRank = getCustomSaveData()->battleHall.getRank(TYPES[type->selected]);
+                        auto currentRank = (&getCustomSaveData()->battleHall)->getRank(TYPES[type->selected]);
                         Logger::log("Type %s is currently Rank: %d\n", TYPES[type->selected], currentRank);
 
+                    };
+                });
+
+                auto *round = _.InputInt([](InputInt &_) {
+                    _.label = "Round";
+                    _.min = 0;
+                    _.max = 169;
+                    _.value = (&getCustomSaveData()->battleHall)->currentRound;
+                });
+
+                _.Button([round](Button &_) {
+                    _.label = "Set Round";
+                    _.onClick = [round]() {
+                        Logger::log("Setting Round to %d.\n", round->value);
+                        (&getCustomSaveData()->battleHall)->currentRound = round->value;
+                    };
+                });
+
+                _.Button([](Button &_) {
+                    _.label = "Reset Streak Mon";
+                    _.onClick = []() {
+                        Logger::log("Setting Streak Mon to -1.\n");
+                        (&getCustomSaveData()->battleHall)->streakPokePID = -1;
                     };
                 });
 

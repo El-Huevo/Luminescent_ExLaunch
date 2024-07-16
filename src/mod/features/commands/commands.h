@@ -112,3 +112,26 @@ bool FTR_HALL_GET_NOW_ROUND(Dpr::EvScript::EvDataManager::Object* manager);
 bool FTR_HALL_INC_ROUND(Dpr::EvScript::EvDataManager::Object* manager);
 
 bool FTR_SET_CURRENT_FACILITY(Dpr::EvScript::EvDataManager::Object* manager);
+
+bool FTR_HALL_SET_STREAK_MON(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Compares the saved streak MonsNo and places the result into a work.
+// Arguments:
+//   [Work] result: The work in which to put the result in.
+bool FTR_HALL_GET_STREAK_MON(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Inserts the string of the current streak Pokémon into a message label.
+// Arguments:
+//   [Number] tagIndex: The value of the tagIndex in the message label to insert the string into.
+bool FTR_HALL_STREAK_MON_NAME(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Inserts the string of the current selected Pokémon into a message label.
+// Arguments:
+//   [Number] tagIndex: The value of the tagIndex in the message label to insert the string into.
+bool FTR_HALL_SELECTED_MON_NAME(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Retrieves the current rank of the specified type.
+// Arguments:
+//   [Number] typeIndex: The index of the type to retrieve.
+//   [Number] tagIndex: The value of the tagIndex in the message label to insert the string into.
+bool FTR_HALL_RANK_NUM_NAME(Dpr::EvScript::EvDataManager::Object* manager);

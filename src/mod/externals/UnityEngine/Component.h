@@ -23,6 +23,7 @@ namespace Dpr::UI {
     struct SelectLanguageItem;
     struct SettingMenuItem;
     struct UIText;
+    struct UINavigator;
 }
 
 namespace UnityEngine {
@@ -39,6 +40,7 @@ namespace UnityEngine {
 
         static inline StaticILMethod<0x04c667c0, Dpr::UI::SelectLanguageItem> Method$$SelectLanguageItem$$GetComponent {};
         static inline StaticILMethod<0x04c667d0, Dpr::UI::SettingMenuItem> Method$$SettingMenuItem$$GetComponent {};
+        static inline StaticILMethod<0x04c667d8, Dpr::UI::UINavigator> Method$$UINavigator$$GetComponent {};
         static inline StaticILMethod<0x04c667e0, Dpr::UI::UIText> Method$$UIText$$GetComponent {};
         static inline StaticILMethod<0x04c66a18, Dpr::UI::UIText> Method$$UIText$$GetComponentInChildren {};
         static inline StaticILMethod<0x04c66970, UnityEngine::UI::HorizontalLayoutGroup> Method$$HorizontalLayoutGroup$$GetComponent {};

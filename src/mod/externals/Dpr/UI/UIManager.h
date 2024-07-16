@@ -15,7 +15,7 @@
 
 namespace Dpr::UI {
     struct UIWindow;
-
+    struct ContextMenuWindow;
     struct ShopBoutiqueChange;
     struct UIWazaManage;
     struct BattleTowerRecordWindow;
@@ -108,6 +108,8 @@ namespace Dpr::UI {
 
         static inline StaticILMethod<0x04c8ff30, Dpr::UI::BoxWindow> Method$$CreateUIWindow_BoxWindow_ {};
 
+        static inline StaticILMethod<0x04c8ff48, Dpr::UI::ContextMenuWindow> Method$$CreateUIWindow_ContextMenuWindow_ {};
+
         static inline StaticILMethod<0x04c8ffd0, Dpr::UI::SelectPlayerVisualWindow> Method$$CreateUIWindow_SelectPlayerVisualWindow_ {};
 
         static inline StaticILMethod<0x04c8ffe8, Dpr::UI::ShopBoutiqueChange> Method$$CreateUIWindow_ShopBoutiqueChange_ {};
@@ -139,6 +141,10 @@ namespace Dpr::UI {
         inline System::Collections::IEnumerator::Object* OpLoadWindows(
                 System::Collections::Generic::List$$int32_t::Object* windowIDs, bool isVariant) {
             return external<System::Collections::IEnumerator::Object*>(0x017b0380, this, windowIDs, isVariant);
+        }
+
+        inline void _ReleaseUIWindow(Il2CppObject* window) {
+            external<void>(0x017a58a0, this, window);
         }
     };
 }

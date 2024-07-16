@@ -6,6 +6,7 @@ long HallSaveData::GetByteCount() const {
     long count = 0;
     count += sizeof(Rank) * TYPE_COUNT;
     count += sizeof(int32_t);
+    count += sizeof(int32_t);
     count += sizeof(BattleHallPool::PoolManager);
 //    count += sizeof(bool) * 2;
 
@@ -27,7 +28,7 @@ void HallSaveData::Clear() {
         rank = RANK_1;
     }
     currentRound = 0;
-
+    streakPokePID = -1;
     poolManager.initializeTypeLists();
 }
 
@@ -44,6 +45,9 @@ long HallSaveData::FromBytes(char* buffer, long buffer_size, long index) {
         memcpy(&currentRound, (void*)(buffer + index), sizeof(int32_t));
         index += sizeof(int32_t);
 
+        memcpy(&streakPokePID, (void*)(buffer + index), sizeof(uint32_t));
+        index += sizeof(int32_t);
+
         memcpy(&poolManager, (void*)(buffer + index), sizeof(BattleHallPool::PoolManager));
         index += sizeof(BattleHallPool::PoolManager);
 
@@ -56,6 +60,8 @@ long HallSaveData::ToBytes(char* buffer, long index) {
     memcpy((void*)(buffer + index), &currentRank, sizeof(Rank) * TYPE_COUNT);
     index += sizeof(Rank) * TYPE_COUNT;
     memcpy((void*)(buffer + index), &currentRound, sizeof(int32_t));
+    index += sizeof(int32_t);
+    memcpy((void*)(buffer + index), &streakPokePID, sizeof(int32_t));
     index += sizeof(int32_t);
     memcpy((void*)(buffer + index), &poolManager, sizeof(BattleHallPool::PoolManager));
     index += sizeof(BattleHallPool::PoolManager);

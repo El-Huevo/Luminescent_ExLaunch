@@ -63,6 +63,16 @@ HOOK_DEFINE_TRAMPOLINE(RunEvCmdCustom) {
                     return FTR_HALL_POOL_REMOVE(__this);
                 case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_INC_ROUND:
                     return FTR_HALL_INC_ROUND(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SET_STREAK_MON:
+                    return FTR_HALL_SET_STREAK_MON(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_GET_STREAK_MON:
+                    return FTR_HALL_GET_STREAK_MON(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_STREAK_MON_NAME:
+                    return FTR_HALL_STREAK_MON_NAME(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SELECTED_MON_NAME:
+                    return FTR_HALL_SELECTED_MON_NAME(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_RANK_NUM_NAME:
+                    return FTR_HALL_RANK_NUM_NAME(__this);
                 case Dpr::EvScript::EvCmdID::NAME::_FTR_SET_CURRENT_FACILITY:
                     return FTR_SET_CURRENT_FACILITY(__this);
                 default:
@@ -103,6 +113,10 @@ void exl_commands_main() {
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_GET_NOW_ROUND);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_POOL_REMOVE);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_INC_ROUND);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SET_STREAK_MON);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_GET_STREAK_MON);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_STREAK_MON_NAME);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SELECTED_MON_NAME);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_RANK_NUM_NAME);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_SET_CURRENT_FACILITY);
-
 }

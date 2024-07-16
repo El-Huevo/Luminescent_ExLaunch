@@ -126,4 +126,7 @@ enum class ContextMenuID : int32_t {
     INCENSE_HISUI = 118,
     INCENSE_GALAR = 119,
     INCENSE_CANCEL = 120,
+
+    FTR_HALL_YES = 121,
+    FTR_HALL_NO = 122,
 };

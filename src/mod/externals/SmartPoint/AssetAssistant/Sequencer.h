@@ -13,10 +13,14 @@ namespace SmartPoint::AssetAssistant {
             };
         };
 
-        struct TickCallback : ILClass<TickCallback> {
+        struct TickCallback : ILClass<TickCallback, 0x04c58980> {
             struct Fields : System::MulticastDelegate::Fields {
 
             };
+
+            inline void ctor(Il2CppObject* target, MethodInfo* method) {
+                external<void>(0x02bc04e0, this, target, method);
+            }
         };
 
         struct __RunCoroutine_d__69_ : ILClass<__RunCoroutine_d__69_, 0x04c58ab0> {

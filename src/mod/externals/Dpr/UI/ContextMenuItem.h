@@ -24,6 +24,10 @@ namespace Dpr::UI {
             inline void ctor() {
                 external<void>(0x01ebee30, this);
             }
+
+            static Il2CppClass* ContextMenuItem_Param_TypeInfo() {
+                return *reinterpret_cast<Il2CppClass**>(exl::util::modules::GetTargetOffset(0x04c5e788));
+            }
         };
 
         struct Fields : UnityEngine::MonoBehaviour::Fields {

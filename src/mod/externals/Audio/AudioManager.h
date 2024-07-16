@@ -6,6 +6,7 @@
 #include "externals/System/String.h"
 #include "externals/UnityEngine/GameObject.h"
 #include "externals/UnityEngine/Transform.h"
+#include "externals/Audio/AudioInstance.h"
 
 namespace Audio {
     struct AudioManager : ILClass<AudioManager, 0x04c59b78> {
@@ -30,8 +31,12 @@ namespace Audio {
             return SmartPoint::AssetAssistant::SingletonMonoBehaviour::get_Instance(SmartPoint::AssetAssistant::SingletonMonoBehaviour::Method$$AudioManager$$get_Instance);
         }
 
-        inline UnityEngine::Transform::Object* PlaySe(uint32_t playEventId, void *onFinished) {
-            return external<UnityEngine::Transform::Object*>(0x021eb8d0, this, playEventId, onFinished);
+        inline Audio::AudioInstance::Object* PlaySe(uint32_t playEventId, void *onFinished) {
+            return external<Audio::AudioInstance::Object*>(0x021eb8d0, this, playEventId, onFinished);
+        }
+
+        inline void SetBgmEvent(uint32_t eventId, bool isThroughSameEvent) {
+            external<void>(0x021eb840, this, eventId, isThroughSameEvent);
         }
     };
 }

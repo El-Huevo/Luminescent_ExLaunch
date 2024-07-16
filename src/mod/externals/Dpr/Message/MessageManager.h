@@ -4,6 +4,7 @@
 
 #include "externals/Dpr/Message/MessageGlossaryParseDataModel.h"
 #include "externals/SmartPoint/AssetAssistant/SingletonMonoBehaviour.h"
+#include "externals/Dpr/Message/MessageMsgFile.h"
 
 namespace Dpr::Message {
     struct MessageManager : ILClass<MessageManager> {
@@ -24,6 +25,10 @@ namespace Dpr::Message {
 
         inline Dpr::Message::MessageGlossaryParseDataModel::Object* GetNameMessageDataModel(System::String::Object* fileName, int32_t labelIndex) {
             return external<Dpr::Message::MessageGlossaryParseDataModel::Object*>(0x02109230, this, fileName, labelIndex);
+        }
+
+        inline Dpr::Message::MessageMsgFile::Object* GetMsgFile(System::String::Object* fileName) {
+            return external<Dpr::Message::MessageMsgFile::Object*>(0x0210c050, this, fileName);
         }
     };
 }

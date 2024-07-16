@@ -5,6 +5,9 @@
 #include "BoxTray.h"
 #include "externals/DG/Tweening/Tween.h"
 #include "externals/System/Action.h"
+#include "externals/Dpr/UI/Cursor.h"
+#include "externals/Dpr/UI/UINavigator.h"
+#include "ContextMenuWindow.h"
 
 namespace Dpr::UI {
     struct BoxWindow : ILClass<BoxWindow, 0x04c5ca38> {
@@ -16,7 +19,7 @@ namespace Dpr::UI {
             };
         };
 
-        struct __OpOpen_d__200 : ILClass<__OpOpen_d__200> {
+        struct __OpOpen_d__200 : ILClass<__OpOpen_d__200, 0x04c617c0> {
             struct Fields {
                 int32_t __1__state;
                 Il2CppObject* __2__current;
@@ -24,7 +27,58 @@ namespace Dpr::UI {
                 int32_t prevWindowId;
                 __c__DisplayClass200_0::Object* __8__1;
             };
+
+            inline void ctor(int32_t __1__state) {
+                external<void>(0x01a25830, this, __1__state);
+            }
         };
+
+        struct NaviParam : ILClass<NaviParam, 0x04c616f8> {
+            struct Fields {
+                int32_t itemType;
+                int32_t index;
+            };
+
+            inline void ctor() {
+                external<void>(0x01a27540, this);
+            }
+        };
+
+        struct OpenParam : ILClass<OpenParam, 0x04c5ef90> {
+            struct Fields {
+                int32_t dispMode;
+                int32_t tray;
+                int32_t index;
+                int32_t teamIndex;
+                bool isSelectParty;
+                int32_t openType;
+                int32_t selectCount;
+                int32_t targetLevel;
+                bool isEnableDying;
+                bool isEnableEgg;
+                bool isEnableTeam;
+                bool isEnableParty;
+                bool isShowSelectCount;
+                bool isEnableKeyboard;
+                bool isOpenFromBattleTeam;
+                bool isDisableUseful;
+                bool isDisableDuplicate;
+                bool isDontDuckOffBGM;
+                bool isExternalTrade;
+                bool isGMS;
+                System::Int32_array* targetsPokeNo;
+                System::Int32_array* selectNgPokeNos;
+                System::String::Object* tradeName;
+                void* selected;
+                void* searchData;
+            };
+
+            inline void ctor() {
+                external<void>(0x01a27970, this);
+            }
+        };
+
+        static inline StaticILMethod<0x04c7ecf0> Method$$Dpr_UI_BoxWindow_OnUpdate {};
 
         struct Fields : Dpr::UI::UIWindow::Fields {
             UnityEngine::UI::Image::Object* _displayTitle; // 0x70
@@ -53,7 +107,7 @@ namespace Dpr::UI {
             void* _boxListPanel; // 0x128 // Todo Implement Dpr::UI::BoxListPanel::Object*
             void* _swapRootPrefab; // 0x130
             UnityEngine::RectTransform::Object* _contextMenuRoot; // 0x138
-            void* _cursor; // 0x140
+            Cursor::Object* _cursor; // 0x140
             UnityEngine::Transform::Object* _cursorBody; // 0x148
             UnityEngine::UI::Image::Object* _rangeCursor; // 0x150
             UnityEngine::UI::Image::Object* _rangePlate; // 0x158
@@ -86,7 +140,7 @@ namespace Dpr::UI {
             int32_t _statusType; // 0x21C
             void* _battleTeam; // 0x220
             BoxTray::Object* _boxTray; // 0x228
-            void* _navigator; // 0x230
+            Dpr::UI::UINavigator::Object* _navigator; // 0x230
             void* _swapIcon; // 0x238
             void* _currentPokeParam; // 0x240
             System::String::Object* _currentMsgID; // 0x248
@@ -114,7 +168,7 @@ namespace Dpr::UI {
             int32_t _searchType; // 0x2D8
             void* _searchData; // 0x2E0
             bool _isDuckOn; // 0x2E8
-            void* _param; // 0x2F0
+            OpenParam::Object* _param; // 0x2F0
             void* _selected; // 0x2F8
             System::Action::Object* _onSelected; // 0x300
             System::Action::Object* _onDecide; // 0x308
@@ -130,7 +184,7 @@ namespace Dpr::UI {
             UnityEngine::Material::Object* _matSearchButton; // 0x358
             UnityEngine::Material::Object* _matBoxButton; // 0x360
             void* _twSequence; // 0x368
-            void* _contextMenu; // 0x370
+            ContextMenuWindow::Object* _contextMenu; // 0x370
             float _waitSave; // 0x378
             void* _formChangeEffectInstance; // 0x380
             bool isCancelFormChange; // 0x388
@@ -154,5 +208,56 @@ namespace Dpr::UI {
             bool _isControlEnable; // 0x3DC
             bool _isForceClosing; // 0x3DD
         };
+
+        struct VirtualInvokeData_OpPlayOpenWindowAnimation {
+            typedef System::Collections::IEnumerator::Object*(*Il2CppMethodPointer)(UIWindow::Object*,
+                    int32_t, UnityEngine::Events::UnityAction::Object*, const MethodInfo*);
+            Il2CppMethodPointer methodPtr;
+            const MethodInfo* method;
+        };
+
+        struct VTable {
+            VirtualInvokeData _0_Equals;
+            VirtualInvokeData _1_Finalize;
+            VirtualInvokeData _2_GetHashCode;
+            VirtualInvokeData _3_ToString;
+            VirtualInvokeData _4_OnCreate;
+            VirtualInvokeData _5_OnDestroy;
+            VirtualInvokeData _6_OnTransition;
+            VirtualInvokeData _7_OnTransitionComplete;
+            VirtualInvokeData _8_OnOpen;
+            VirtualInvokeData _9_PlayOpenWindowAnimation;
+            VirtualInvokeData_OpPlayOpenWindowAnimation _10_OpPlayOpenWindowAnimation;
+            VirtualInvokeData _11_GetWindowAnimationConnectId;
+            VirtualInvokeData _12_OpPlayCloseWindowAnimationAndWaiting;
+            VirtualInvokeData _13_EnableMainCameraByUiMode;
+            VirtualInvokeData _14_OnCloseKeyGuide;
+            VirtualInvokeData _15_OpenMessageWindow;
+            VirtualInvokeData _16_CloseMessageWindow;
+            VirtualInvokeData _17_IsActiveMessageWindow;
+            VirtualInvokeData _18_CreateContextMenuYesNo;
+            VirtualInvokeData _19_CreateContextMenuYesNo;
+            VirtualInvokeData _20_OnAddContextMenuYesNoItemParams;
+        };
+
+        static_assert(sizeof(VTable) == 0x150, "Size of VTable is not 0x150\n");
+        static_assert(offsetof(VTable, _10_OpPlayOpenWindowAnimation) == 0xa0,
+                "Offset of _10_OpPlayOpenWindowAnimation is not 0xa0\n");
+
+        inline void Open(int32_t prevWindowId, bool isDuckOn) {
+            external<void>(0x01cb6080, this, prevWindowId, isDuckOn);
+        }
+
+        inline void Close(UnityEngine::Events::UnityAction::Object* onClosed, int32_t nextWindowId) {
+            external<void>(0x01cb5cc0, this, onClosed, nextWindowId);
+        }
+
+        inline void Awake() {
+            external<void>(0x01cb6020, this);
+        }
+
+        inline void SetupKeyguide() {
+            external<void>(0x01cb7e30, this);
+        }
     };
 }

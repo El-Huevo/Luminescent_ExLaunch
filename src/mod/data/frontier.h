@@ -10,17 +10,17 @@ enum Facility : int32_t {
 };
 
 enum Rank : int32_t {
-    RANK_1,
-    RANK_2,
-    RANK_3,
-    RANK_4,
-    RANK_5,
-    RANK_6,
-    RANK_7,
-    RANK_8,
-    RANK_9,
-    RANK_10,
-    RANK_COUNT
+    RANK_1 = 0,
+    RANK_2 = 1,
+    RANK_3 = 2,
+    RANK_4 = 3,
+    RANK_5 = 4,
+    RANK_6 = 5,
+    RANK_7 = 6,
+    RANK_8 = 7,
+    RANK_9 = 8,
+    RANK_10 = 9,
+    RANK_COUNT = 10
 };
 
 enum Group : int32_t {
