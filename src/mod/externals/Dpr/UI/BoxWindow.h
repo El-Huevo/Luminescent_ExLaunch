@@ -19,6 +19,16 @@ namespace Dpr::UI {
             };
         };
 
+        struct __c__DisplayClass204_0 : ILClass<__c__DisplayClass204_0, 0x04c619b0> {
+            struct Fields {
+                bool isModelClosed;
+            };
+
+            inline void ctor() {
+                external<void>(0x01a212d0, this);
+            }
+        };
+
         struct __OpOpen_d__200 : ILClass<__OpOpen_d__200, 0x04c617c0> {
             struct Fields {
                 int32_t __1__state;
@@ -30,6 +40,21 @@ namespace Dpr::UI {
 
             inline void ctor(int32_t __1__state) {
                 external<void>(0x01a25830, this, __1__state);
+            }
+        };
+
+        struct __OpClose_d__204 : ILClass<__OpClose_d__204, 0x04c617d0> {
+            struct Fields {
+                int32_t __1__state;
+                Il2CppObject* __2__current;
+                BoxWindow::Object* __4__this;
+                __c__DisplayClass204_0::Object* __8__1;
+                int32_t nextWindowId;
+                UnityEngine::Events::UnityAction::Object* onClosed_;
+            };
+
+            inline void ctor(int32_t __1__state) {
+                external<void>(0x01a252d0, this, __1__state);
             }
         };
 
@@ -208,6 +233,8 @@ namespace Dpr::UI {
             bool _isControlEnable; // 0x3DC
             bool _isForceClosing; // 0x3DD
         };
+
+        static_assert(offsetof(Fields, _isForceClosing) == 0x3CD);
 
         struct VirtualInvokeData_OpPlayOpenWindowAnimation {
             typedef System::Collections::IEnumerator::Object*(*Il2CppMethodPointer)(UIWindow::Object*,

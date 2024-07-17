@@ -143,7 +143,7 @@ namespace Dpr::UI {
             return external<System::Collections::IEnumerator::Object*>(0x017b0380, this, windowIDs, isVariant);
         }
 
-        inline void _ReleaseUIWindow(Il2CppObject* window) {
+        inline void _ReleaseUIWindow(UIWindow* window) {
             external<void>(0x017a58a0, this, window);
         }
     };

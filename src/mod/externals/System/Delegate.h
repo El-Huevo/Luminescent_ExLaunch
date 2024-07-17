@@ -21,5 +21,9 @@ namespace System {
         static inline Delegate::Object* Combine(Delegate::Object* a, Delegate::Object* b) {
             return external<Delegate::Object*>(0x024897f0, a, b);
         }
+
+        static inline Delegate::Object* Remove(Delegate::Object* source, Delegate::Object* value) {
+            return external<Delegate::Object*>(0x02489ab0, source, value);
+        }
     };
 }

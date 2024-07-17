@@ -65,6 +65,10 @@ namespace Dpr::UI {
             return external<System::Collections::IEnumerator::Object*>(0x01a35390, this, prevWindowId, onOpen);
         }
 
+        inline System::Collections::IEnumerator::Object* OpPlayCloseWindowAnimationAndWaiting(int32_t nextWindowId) {
+            return external<System::Collections::IEnumerator::Object*>(0x01a35530, this, nextWindowId);
+        }
+
         inline Dpr::UI::ContextMenuWindow* CreateContextMenuYesNo(void* onClicked, uint32_t SeDecide) {
             return external<Dpr::UI::ContextMenuWindow*>(0x01a35c50, this, onClicked, SeDecide);
         }

@@ -23,6 +23,8 @@ namespace UnityEngine::Events {
         static inline StaticILMethod<0x04c7d030> Method$$Dpr_EvScript_EvDataManager__EvCmdBoxSetProc__b__742_0 {};
         static inline StaticILMethod<0x04c80cf0> Method$$Dpr_UI_UIWindow__c__CreateContextMenuYesNo__b__54_0 {};
 
+        static inline StaticILMethod<0x04c8e658, Dpr::UI::UIWindow> Method$$Invoke$$UIWindow {};
+
 
         template <typename T, typename... Args>
         inline void ctor(T* owner, ILMethod<T, Args...>& mi) {
@@ -36,6 +38,12 @@ namespace UnityEngine::Events {
 
         inline void Invoke() {
             external<void>(0x026a3140, this);
+        }
+
+        // Maybe there's a way to generalize this more?
+        template <typename T>
+        inline void Invoke(T* arg0, ILMethod<T>& mi) {
+            external<void>(0x0253ded0, this, arg0, *mi);
         }
 
         inline void ctor() {
