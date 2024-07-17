@@ -26,6 +26,7 @@
 #include "externals/Dpr/UI/ContextMenuWindow.h"
 #include "externals/Dpr/UI/SelectLanguageWindow.h"
 #include "externals/System/Func.h"
+#include "externals/Dpr/Message/MessageWordSetHelper.h"
 
 const int32_t typeSelectorRowNum = 5;
 const int32_t typeSelectorColNum = 4;
@@ -183,6 +184,7 @@ bool OpenConfirmMessageWindowHandler2(Dpr::UI::UIWindow::Object* window, Dpr::UI
 }
 
 void OpenConfirmMessageWindowHandler(Dpr::UI::UIWindow::Object* window) {
+    system_load_typeinfo(0x79bd);
     MethodInfo* mi = (
             *Dpr::UI::SelectLanguageWindow::Method$$SelectLanguageWindow__OpenConfirmMessageWindow__b__18_1)->
             copyWith((Il2CppMethodPointer) &OpenConfirmMessageWindowHandler2);
@@ -217,6 +219,7 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
 
         auto buttonA = Dpr::UI::UIManager::getClass()->static_fields->ButtonA;
         if (uiWindow->IsPushButton(buttonA, false)) {
+            Logger::log("[BoxWindow$$OnUpdate] Pressed A\n");
             Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
             //__this->fields._cursor->Play()
             __this->fields._input->fields._inputEnabled = false;
@@ -228,17 +231,21 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
             msgWindowParam->fields.inputEnabled = true;
             msgWindowParam->fields.inputCloseEnabled = false;
 
+            Dpr::Message::MessageWordSetHelper::SetDigitWord(0, 0);
+            Dpr::Message::MessageWordSetHelper::SetDigitWord(1, 0);
 
+            system_load_typeinfo(0x79b7);
             MethodInfo* mi = (
                     *Dpr::UI::SelectLanguageWindow::Method$$SelectLanguageWindow__OpenConfirmMessageWindow__b__18_0)->
                             copyWith((Il2CppMethodPointer) &OpenConfirmMessageWindowHandler);
             auto onFinishedShowAllMessage = System::Action::getClass(
                     System::Action::void_TypeInfo)->newInstance(uiWindow, mi);
+            Logger::log("[BoxWindow$$OnUpdate] Created action\n");
 
             msgWindowParam->fields.onFinishedShowAllMessage = onFinishedShowAllMessage;
 
-
             uiWindow->OpenMessageWindow(msgWindowParam);
+            Logger::log("[BoxWindow$$OnUpdate] Opened window\n");
         }
 
         UpdateSelect(__this, deltaTime);
