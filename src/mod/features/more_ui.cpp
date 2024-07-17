@@ -30,6 +30,7 @@
 const int32_t typeSelectorRowNum = 5;
 const int32_t typeSelectorColNum = 4;
 const uint32_t AK_EVENTS_UI_COMMON_DONE = 0x4491b890;
+const uint32_t AK_EVENTS_UI_COMMON_SELECT = 0xb7533038;
 
 HOOK_DEFINE_REPLACE(EvCmdBoxSetProc) {
     static bool Callback(Dpr::EvScript::EvDataManager::Object* manager) {
@@ -105,14 +106,14 @@ void UpdateSelect(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
     if (uiWindow->IsPushButton(Dpr::UI::UIManager::getClass()->static_fields->StickLRight, false)) {
         x = Dpr::UI::UIManager::Repeat(x + 1, 0, typeSelectorColNum - 1);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
 
     else if (uiWindow->IsRepeatButton(Dpr::UI::UIManager::getClass()->static_fields->StickLRight, false)) {
         x = UnityEngine::Mathf::Min(x + 1, typeSelectorColNum - 1);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
 
@@ -120,14 +121,14 @@ void UpdateSelect(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
     else if (uiWindow->IsPushButton(Dpr::UI::UIManager::getClass()->static_fields->StickLLeft, false)) {
         x = Dpr::UI::UIManager::Repeat(x - 1, 0, typeSelectorColNum - 1);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
 
     else if (uiWindow->IsRepeatButton(Dpr::UI::UIManager::getClass()->static_fields->StickLLeft, false)) {
         x = UnityEngine::Mathf::Max(x - 1, 0);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
 
@@ -135,14 +136,14 @@ void UpdateSelect(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
     else if (uiWindow->IsPushButton(Dpr::UI::UIManager::getClass()->static_fields->StickLDown, false)) {
         y = Dpr::UI::UIManager::Repeat(y + 1, 0, typeSelectorRowNum - 1);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
 
     else if (uiWindow->IsRepeatButton(Dpr::UI::UIManager::getClass()->static_fields->StickLDown, false)) {
         y = UnityEngine::Mathf::Min(y + 1, typeSelectorRowNum - 1);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
 
@@ -150,73 +151,16 @@ void UpdateSelect(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
     else if (uiWindow->IsPushButton(Dpr::UI::UIManager::getClass()->static_fields->StickLUp, false)) {
         y = Dpr::UI::UIManager::Repeat(y - 1, 0, typeSelectorRowNum - 1);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
 
     else if (uiWindow->IsRepeatButton(Dpr::UI::UIManager::getClass()->static_fields->StickLUp, false)) {
         y = UnityEngine::Mathf::Max(y- 1, 0);
         if (SetSelectIndex(__this, x + y * typeSelectorColNum)) {
-            Audio::AudioManager::instance()->PlaySe(0x0, nullptr);
+            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
         }
     }
-}
-
-
-Dpr::UI::ContextMenuWindow::Param::Object* CreateContextMenuYesNoParam(Dpr::UI::UIWindow::Object* __this) {
-    Dpr::UI::ContextMenuItem::Param::Object* yesParam = Dpr::UI::ContextMenuItem::Param::newInstance();
-    Dpr::UI::ContextMenuItem::Param::Object* noParam = Dpr::UI::ContextMenuItem::Param::newInstance();
-    yesParam->fields.menuId = ContextMenuID::FTR_HALL_YES;
-    noParam->fields.menuId = ContextMenuID::FTR_HALL_NO;
-
-    nn::vector<Dpr::UI::ContextMenuItem::Param::Object*> cMIVector {yesParam, noParam};
-
-    auto cMIArray = (Dpr::UI::ContextMenuItem::Param::Array*) system_array_new(Dpr::UI::ContextMenuItem::Param::ContextMenuItem_Param_TypeInfo(), 2);
-    memcpy(cMIArray->m_Items, &cMIVector[0], sizeof(Dpr::UI::ContextMenuItem::Param::Object) * cMIVector.size());
-
-    Dpr::UI::ContextMenuWindow::Param::Object* windowParam = Dpr::UI::ContextMenuWindow::Param::newInstance();
-    windowParam->fields.itemParams = cMIArray;
-
-    return windowParam;
-
-}
-
-Dpr::UI::ContextMenuWindow::Object* CreateContextMenuYesNo(Dpr::UI::UIWindow::Object* __this, System::Func::Object* onClicked,
-                            Dpr::UI::ContextMenuWindow::Param::Object* contextMenuParam) {
-    system_load_typeinfo(0x9e30);
-    UnityEngine::Events::UnityAction::Object* action;
-    if (contextMenuParam == nullptr) {
-        contextMenuParam = CreateContextMenuYesNoParam(__this);
-    }
-
-    Dpr::UI::UIManager::getClass()->initIfNeeded();
-    auto uiManager = Dpr::UI::UIManager::instance();
-    auto contextMenu = (Dpr::UI::ContextMenuWindow::Object*) uiManager->CreateUIWindow(
-            UIWindowID::CONTEXTMENU, Dpr::UI::UIManager::Method$$CreateUIWindow_ContextMenuWindow_);
-
-    Dpr::UI::UIWindow::__c__::getClass()->initIfNeeded();
-    auto pStaticFields = Dpr::UI::UIWindow::__c__::getClass()->static_fields;
-    action = pStaticFields->__9__54_0;
-
-    if (action == nullptr) {
-        pStaticFields = Dpr::UI::UIWindow::__c__::getClass()->static_fields;
-        auto target = pStaticFields->__9;
-        action = UnityEngine::Events::UnityAction::getClass(
-                UnityEngine::Events::UnityAction::UIWindow_TypeInfo)->newInstance(
-                        target, *UnityEngine::Events::UnityAction::Method$$Dpr_UI_UIWindow__c__CreateContextMenuYesNo__b__54_0);
-
-        auto setAction = &Dpr::UI::UIWindow::__c__::getClass()->static_fields->__9__54_0;
-        *setAction = action;
-    }
-
-    auto parentOnClosed = &(contextMenu->fields).onClosed;
-    *parentOnClosed = action;
-
-    auto setOnClicked = &(contextMenu->fields).onClicked;
-    *setOnClicked = onClicked;
-
-    contextMenu->Open(contextMenuParam);
-    return contextMenu;
 }
 
 bool OpenConfirmMessageWindowHandler2(Dpr::UI::UIWindow::Object* window, Dpr::UI::ContextMenuItem::Object* contextMenuItem) {
@@ -226,7 +170,7 @@ bool OpenConfirmMessageWindowHandler2(Dpr::UI::UIWindow::Object* window, Dpr::UI
     if (contextMenuItem->fields._param->fields.menuId == ContextMenuID::FTR_HALL_YES) {
         reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->Close(window->fields.onClosed, window->fields._prevWindowId);
         Dpr::UI::UIManager::instance()->_ReleaseUIWindow(reinterpret_cast<Il2CppObject*>(window));
-        if (window->fields.onClosed) {
+        if (window->fields.onClosed != nullptr) {
             window->fields.onClosed->Invoke();
         }
     }
@@ -246,8 +190,8 @@ void OpenConfirmMessageWindowHandler(Dpr::UI::UIWindow::Object* window) {
     auto sysFunc = System::Func::getClass(
             System::Func::ContextMenuItem__bool__TypeInfo)->newInstance(window, mi);
 
-    Dpr::UI::ContextMenuWindow::Object* contextMenu = CreateContextMenuYesNo(window, sysFunc, nullptr);
-    reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->fields._contextMenu = contextMenu;
+    Dpr::UI::ContextMenuWindow* contextMenu = window->CreateContextMenuYesNo(sysFunc, 0xb53c8c80);
+    reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->fields._contextMenu = reinterpret_cast<Dpr::UI::ContextMenuWindow::Object*>(contextMenu);
 }
 
 
@@ -272,10 +216,8 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
         auto uiWindow = (Dpr::UI::UIWindow::Object*) __this;
 
         auto buttonA = Dpr::UI::UIManager::getClass()->static_fields->ButtonA;
-        auto onClosed = (UnityEngine::Events::UnityAction::Object*) static_cast<ulong>(buttonA);
         if (uiWindow->IsPushButton(buttonA, false)) {
             Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
-            deltaTime = 0.0f;
             //__this->fields._cursor->Play()
             __this->fields._input->fields._inputEnabled = false;
 
@@ -477,6 +419,28 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Awake) {
     }
 };
 
+HOOK_DEFINE_REPLACE(UIWindow$$OnAddContextMenuYesNoItemParams) {
+    static void Callback(Dpr::UI::UIWindow::Object* __this, System::Collections::Generic::List$$ContextMenuItem_Param::Object* contextMenuItemParams) {
+        switch (__this->fields.instance->fields._windowId) {
+            case UIWindowID::BATTLEHALL_TYPE_SELECT:
+            {
+                Logger::log("[UIWindow$$OnAddContextMenuYesNoItemParams] UIWindowID = BATTLEHALL_TYPE_SELECT.\n");
+                Dpr::UI::ContextMenuItem::Param::Object* yesParam = Dpr::UI::ContextMenuItem::Param::newInstance();
+                Dpr::UI::ContextMenuItem::Param::Object* noParam = Dpr::UI::ContextMenuItem::Param::newInstance();
+                yesParam->fields.menuId = ContextMenuID::FTR_HALL_YES;
+                noParam->fields.menuId = ContextMenuID::FTR_HALL_NO;
+                contextMenuItemParams->Add(yesParam);
+                contextMenuItemParams->Add(noParam);
+            }
+            break;
+
+            default:
+                // Nothing by default
+                break;
+        }
+    }
+};
+
 HOOK_DEFINE_INLINE(OpLoadWindows_b__136_0) {
     static void Callback(exl::hook::nx64::InlineCtx* ctx) {
         auto assetName = (System::String::Object*) ctx->X[1];
@@ -620,6 +584,8 @@ void exl_more_ui_main() {
     BoxWindow$$OnUpdate::InstallAtOffset(0x01cb8b20);
     BoxWindow$$Open::InstallAtOffset(0x01cb6080);
     BoxWindow$$OpOpenMoveNext::InstallAtOffset(0x01a25870);
+
+    UIWindow$$OnAddContextMenuYesNoItemParams::InstallAtOffset(0x01a35e30);
 
     EvCmdBoxSetProc::InstallAtOffset(0x02c699b0);
     //EvCmdBoxSetProc::InstallAtOffset(0x02c69a2c); // Inline Offset

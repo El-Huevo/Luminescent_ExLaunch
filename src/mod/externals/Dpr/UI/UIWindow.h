@@ -9,9 +9,11 @@
 #include "externals/Dpr/UI/UIInputController.h"
 #include "externals/Dpr/MsgWindow/MsgWindow.h"
 #include "externals/Dpr/MsgWindow/MsgWindowParam.h"
-#include "externals/Dpr/UI/ContextMenuItem.h"
 
 namespace Dpr::UI {
+    // Forward declaration
+    struct ContextMenuWindow;
+
     struct UIWindow : ILClass<UIWindow> {
         struct __c__ : ILClass<__c__, 0x04c63288> {
             struct StaticFields {
@@ -63,8 +65,8 @@ namespace Dpr::UI {
             return external<System::Collections::IEnumerator::Object*>(0x01a35390, this, prevWindowId, onOpen);
         }
 
-        inline Dpr::UI::ContextMenuItem::Object* CreateContextMenuYesNo(void* onClicked, uint32_t SeDecide) {
-            return external<Dpr::UI::ContextMenuItem::Object*>(0x01a35ca0, this, onClicked, SeDecide);
+        inline Dpr::UI::ContextMenuWindow* CreateContextMenuYesNo(void* onClicked, uint32_t SeDecide) {
+            return external<Dpr::UI::ContextMenuWindow*>(0x01a35ca0, this, onClicked, SeDecide);
         }
 
         inline void OpenMessageWindow(Dpr::MsgWindow::MsgWindowParam::Object* messageParam) {

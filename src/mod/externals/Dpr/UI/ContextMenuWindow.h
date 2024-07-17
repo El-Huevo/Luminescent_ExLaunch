@@ -2,6 +2,7 @@
 #include "externals/il2cpp-api.h"
 #include "externals/Dpr/UI/UIWindow.h"
 #include "externals/Dpr/UI/Cursor.h"
+#include "externals/Dpr/UI/ContextMenuItem.h"
 
 namespace Dpr::UI {
     struct ContextMenuWindow : ILClass<ContextMenuWindow> {

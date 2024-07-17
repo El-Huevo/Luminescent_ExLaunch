@@ -1,6 +1,7 @@
 #pragma once
 
 #include "externals/il2cpp-api.h"
+#include "externals/Dpr/UI/ContextMenuItem.h"
 #include "externals/Dpr/UI/SelectLanguageItem.h"
 #include "externals/Dpr/UI/SelectOpeningBase.h"
 #include "externals/UnityEngine/Events/UnityAction.h"
