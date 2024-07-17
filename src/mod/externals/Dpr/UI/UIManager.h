@@ -31,6 +31,10 @@ namespace Dpr::UI {
                 UIWindow* _uiWindow;
                 UIWindowID _windowId;
             };
+
+            inline int32_t get_windowId() {
+                return external<int32_t>(0x01a0e370, this);
+            }
         };
 
         struct Fields : SmartPoint::AssetAssistant::SingletonMonoBehaviour::Fields {

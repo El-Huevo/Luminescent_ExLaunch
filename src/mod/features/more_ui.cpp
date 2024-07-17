@@ -27,34 +27,18 @@
 #include "externals/Dpr/UI/SelectLanguageWindow.h"
 #include "externals/System/Func.h"
 #include "externals/Dpr/Message/MessageWordSetHelper.h"
+#include "data/utils.h"
+#include "data/types.h"
 
 const int32_t typeSelectorRowNum = 5;
 const int32_t typeSelectorColNum = 4;
 const uint32_t AK_EVENTS_UI_COMMON_DONE = 0x4491b890;
 const uint32_t AK_EVENTS_UI_COMMON_SELECT = 0xb7533038;
 
-HOOK_DEFINE_REPLACE(EvCmdBoxSetProc) {
-    static bool Callback(Dpr::EvScript::EvDataManager::Object* manager) {
-        UIWindowID windowId = FlagWork::GetFlag(FlagWork_Flag::FLAG_UI_WINDOW_SWITCH)
-                ? UIWindowID::BATTLEHALL_TYPE_SELECT : UIWindowID::BOX;
-        system_load_typeinfo(0x43ea);
-        manager->fields._pc_window_close = false;
-
-        SmartPoint::AssetAssistant::SingletonMonoBehaviour::getClass()->initIfNeeded();
-        Dpr::UI::UIManager::Object* uiManager = Dpr::UI::UIManager::instance();
-        Logger::log("[EvCmdBoxSetProc] Running manager->CreateUIWindow.\n");
-        auto boxWindow = (Dpr::UI::BoxWindow::Object*)
-                uiManager->CreateUIWindow(windowId,
-                                          Dpr::UI::UIManager::Method$$CreateUIWindow_BoxWindow_);
-        MethodInfo* mi = *UnityEngine::Events::UnityAction::Method$$Dpr_EvScript_EvDataManager__EvCmdBoxSetProc__b__742_0;
-        auto onClosed = UnityEngine::Events::UnityAction::getClass(UnityEngine::Events::UnityAction::UIWindow_TypeInfo)->newInstance(manager, mi);
-        auto parentOnClosed = &(boxWindow->fields).onClosed;
-        *parentOnClosed = onClosed;
-        Logger::log("[EvCmdBoxSetProc] UI Window created.\n");
-        boxWindow->Open(-2, true);
-        return true;
-    }
-};
+void RankTextHandler(Dpr::UI::BoxWindow::__c__DisplayClass200_0::Object* __this) {
+    Dpr::Message::MessageWordSetHelper::getClass()->initIfNeeded();
+    Dpr::Message::MessageWordSetHelper::SetDigitWord(0, 3);
+}
 
 bool SetSelectIndex(Dpr::UI::BoxWindow::Object* __this, int32_t index, bool isInitialized = false) {
     system_load_typeinfo(0x79bb);
@@ -65,6 +49,10 @@ bool SetSelectIndex(Dpr::UI::BoxWindow::Object* __this, int32_t index, bool isIn
         int32_t beforeIndex = __this->fields._currentTrayIndex;
         if (beforeIndex == index) {
             return false;
+        }
+
+        else {
+            Logger::log("[SetSelectIndex] SelectIndex: %d.\n", index);
         }
 
         __this->fields._currentTrayIndex = index;
@@ -191,11 +179,9 @@ void OpenConfirmMessageWindowHandler(Dpr::UI::UIWindow::Object* window) {
 
     auto sysFunc = System::Func::getClass(
             System::Func::ContextMenuItem__bool__TypeInfo)->newInstance(window, mi);
-
     Dpr::UI::ContextMenuWindow* contextMenu = window->CreateContextMenuYesNo(sysFunc, 0xb53c8c80);
     reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->fields._contextMenu = reinterpret_cast<Dpr::UI::ContextMenuWindow::Object*>(contextMenu);
 }
-
 
 void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
     Dpr::UI::UIManager::getClass()->initIfNeeded();
@@ -219,7 +205,7 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
 
         auto buttonA = Dpr::UI::UIManager::getClass()->static_fields->ButtonA;
         if (uiWindow->IsPushButton(buttonA, false)) {
-            Logger::log("[BoxWindow$$OnUpdate] Pressed A\n");
+            Logger::log("[BoxWindow$$OnUpdate] Pressed A.\n");
             Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
             //__this->fields._cursor->Play()
             __this->fields._input->fields._inputEnabled = false;
@@ -240,25 +226,16 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
                             copyWith((Il2CppMethodPointer) &OpenConfirmMessageWindowHandler);
             auto onFinishedShowAllMessage = System::Action::getClass(
                     System::Action::void_TypeInfo)->newInstance(uiWindow, mi);
-            Logger::log("[BoxWindow$$OnUpdate] Created action\n");
 
             msgWindowParam->fields.onFinishedShowAllMessage = onFinishedShowAllMessage;
 
             uiWindow->OpenMessageWindow(msgWindowParam);
-            Logger::log("[BoxWindow$$OnUpdate] Opened window\n");
         }
 
         UpdateSelect(__this, deltaTime);
     }
 
 }
-
-
-// Method$Dpr.UI.SelectLanguageWindow.<OpenConfirmMessageWindow>b__18_0()
-// Method$Dpr.UI.SelectLanguageWindow.<OnUpdate>b__16_1()
-// Close Message Window()
-
-
 
 void OpenBoxWindow(Dpr::UI::BoxWindow::Object* __this, Dpr::UI::BoxWindow::OpenParam::Object* param,
                    int32_t prevWindowId, bool isDuckOn) {
@@ -283,6 +260,30 @@ void OpenBoxWindow(Dpr::UI::BoxWindow::Object* __this, Dpr::UI::BoxWindow::OpenP
     auto IEnumerator = SmartPoint::AssetAssistant::Sequencer::Start(
             (System::Collections::IEnumerator::Object*) displayClass);
     __this->fields._coOpen = IEnumerator;
+}
+
+int32_t remapTypeIndex(int32_t selectIndex) {
+    switch (selectIndex) {
+        case 1: return array_index(TYPES, "Fire");
+        case 2: return array_index(TYPES, "Water");
+        case 3: return array_index(TYPES, "Electric");
+        case 4: return array_index(TYPES, "Grass");
+        case 5: return array_index(TYPES, "Ice");
+        case 6: return array_index(TYPES, "Fighting");
+        case 7: return array_index(TYPES, "Poison");
+        case 8: return array_index(TYPES, "Ground");
+        case 9: return array_index(TYPES, "Flying");
+        case 10: return array_index(TYPES, "Psychic");
+        case 11: return array_index(TYPES, "Bug");
+        case 12: return array_index(TYPES, "Rock");
+        case 13: return array_index(TYPES, "Ghost");
+        case 14: return array_index(TYPES, "Dragon");
+        case 15: return array_index(TYPES, "Dark");
+        case 16: return array_index(TYPES, "Steel");
+
+        // Normal & Fairy Type
+        default: return selectIndex;
+    }
 }
 
 HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Open) {
@@ -331,16 +332,32 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                         audioManager->PlaySe(0xb53c8c80, nullptr);
                         audioManager->SetBgmEvent(0x743e45ca, false);
 
+                        UnityEngine::RectTransform::Object* boxTrays = window->fields._boxTrayRoot;
+                        UnityEngine::Transform::Object* traysChild = reinterpret_cast<UnityEngine::Transform::Object*>(boxTrays)->GetChild(0);
+                        UnityEngine::Transform::Object* boxGridPanel = traysChild->GetChild(0);
+                        auto rankText = reinterpret_cast<Dpr::UI::UIText::Object*>(boxGridPanel->GetChild(2));
+                        Logger::log("[OpOpen] rankText UIText retrieved\n");
+
+                        MethodInfo* mi = (
+                                *Dpr::UI::BoxWindow::__c__DisplayClass200_0::Method$$__OpOpen__b__1)->
+                                copyWith((Il2CppMethodPointer) &RankTextHandler);
+                        Logger::log("[OpOpen] MethodInfo created\n");
+                        auto onSet = UnityEngine::Events::UnityAction::getClass(
+                                UnityEngine::Events::UnityAction::void_TypeInfo)->newInstance(__this, mi);
+                        Logger::log("[OpOpen] Action primed\n");
+
+                        rankText->SetFormattedText(onSet, nullptr, nullptr);
+
+                        Logger::log("[OpOpen] rankText set\n");
+
                         (__this->fields).__2__current = reinterpret_cast<Il2CppObject *>(((Dpr::UI::UIWindow::Object *) window)->OpPlayOpenWindowAnimation(
                                 __this->fields.prevWindowId, nullptr));
 
                         (__this->fields).__1__state = 1;
-                        //Logger::log("[BoxWindow...d__200$$MoveNext] Case 0 complete.\n");
                         return true;
                     }
 
                     case 1: {
-                        Logger::log("[BoxWindow...d__200$$MoveNext] Starting Case 1.\n");
                         (__this->fields).__1__state = -1;
                         SmartPoint::AssetAssistant::Sequencer::getClass()->initIfNeeded();
                         SmartPoint::AssetAssistant::Sequencer::TickCallback::Object* update =
@@ -355,12 +372,10 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                                 reinterpret_cast<SmartPoint::AssetAssistant::Sequencer::TickCallback::Object*>(sendUpdate);
                         (__this->fields).__2__current = nullptr;
                         (__this->fields).__1__state = 2;
-                        Logger::log("[BoxWindow...d__200$$MoveNext] Case 1 Complete.\n");
                         return true;
                     }
 
                     case 2: {
-                        Logger::log("[BoxWindow...d__200$$MoveNext] Starting Case 2.\n");
                         (__this->fields).__1__state = -1;
                         window->fields._input->fields._inputEnabled = true;
                         auto cursor = window->fields._cursor;
@@ -369,16 +384,13 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
 
                         (__this->fields).__2__current = nullptr;
                         (__this->fields).__1__state = 3;
-                        Logger::log("[BoxWindow...d__200$$MoveNext] Case 2 Complete.\n");
                         return true;
                     }
 
                     case 3: {
-                        Logger::log("[BoxWindow...d__200$$MoveNext] Starting Case 3.\n");
                         (__this->fields).__1__state = -1;
 
                         window->fields._coOpen = nullptr;
-                        Logger::log("[BoxWindow...d__200$$MoveNext] Case 3 Complete.\n");
                         return false;
                     }
 
@@ -415,11 +427,11 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Awake) {
         switch (FlagWork::GetFlag(FlagWork_Flag::FLAG_UI_WINDOW_SWITCH) ? UIWindowID::BATTLEHALL_TYPE_SELECT : UIWindowID::BOX) {
             case UIWindowID::BOX:
             default:
-                Logger::log("[BoxWindow$$Awake] UIWindowID = BOX.\n");
+                //Logger::log("[BoxWindow$$Awake] UIWindowID = BOX.\n");
                 Orig(__this);
                 break;
             case UIWindowID::BATTLEHALL_TYPE_SELECT:
-                Logger::log("[BoxWindow$$Awake] UIWindowID = BATTLEHALL_TYPE_SELECT.\n");
+                //Logger::log("[BoxWindow$$Awake] UIWindowID = BATTLEHALL_TYPE_SELECT.\n");
                 Orig(__this);
                 break;
         }
@@ -431,11 +443,11 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Close) {
         switch (__this->fields.instance->fields._windowId) {
             case UIWindowID::BOX:
             default:
-                Logger::log("[BoxWindow$$Close] UIWindowID = BOX.\n");
+                //Logger::log("[BoxWindow$$Close] UIWindowID = BOX.\n");
                 Orig(__this, onClosed_, nextWindowId);
                 break;
             case UIWindowID::BATTLEHALL_TYPE_SELECT:
-                Logger::log("[BoxWindow$$Close] UIWindowID = BATTLEHALL_TYPE_SELECT.\n");
+                //Logger::log("[BoxWindow$$Close] UIWindowID = BATTLEHALL_TYPE_SELECT.\n");
 
                 system_load_typeinfo(0x2645);
                 system_load_typeinfo(0x266a);
@@ -479,6 +491,10 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpCloseMoveNext) {
                         __this->fields.__8__1 = Dpr::UI::BoxWindow::__c__DisplayClass204_0::newInstance();
 
                         ((Dpr::UI::UIWindow::Object*)window)->CloseMessageWindow();
+
+                        auto currentTypeIndex = remapTypeIndex(window->fields._currentTrayIndex);
+                        Logger::log("[OpClose] Setting current type to: %s.\n", TYPES[currentTypeIndex]);
+                        FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, currentTypeIndex);
 
                         if (window->fields._coOpen == nullptr)
                         {
@@ -759,8 +775,6 @@ void exl_more_ui_main() {
 
     UIWindow$$OnAddContextMenuYesNoItemParams::InstallAtOffset(0x01a35e30);
 
-    EvCmdBoxSetProc::InstallAtOffset(0x02c699b0);
-    //EvCmdBoxSetProc::InstallAtOffset(0x02c69a2c); // Inline Offset
     EvCmdBTowerAppSetProc::InstallAtOffset(0x02c7cc30);
     //EvCmdBTowerAppSetProc::InstallAtOffset(0x02c7cd64); // Inline Offset
     OpLoadWindows_b__136_0::InstallAtOffset(0x017c7ccc);

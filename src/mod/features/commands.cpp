@@ -73,6 +73,10 @@ HOOK_DEFINE_TRAMPOLINE(RunEvCmdCustom) {
                     return FTR_HALL_SELECTED_MON_NAME(__this);
                 case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_RANK_NUM_NAME:
                     return FTR_HALL_RANK_NUM_NAME(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SELECTOR_SET_PROC:
+                    return FTR_HALL_SELECTOR_SET_PROC(__this);
+                case Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SELECTOR_SEAL_UI_WAIT:
+                    return FTR_HALL_SELECTOR_SEAL_UI_WAIT(__this);
                 case Dpr::EvScript::EvCmdID::NAME::_FTR_SET_CURRENT_FACILITY:
                     return FTR_SET_CURRENT_FACILITY(__this);
                 default:
@@ -118,5 +122,7 @@ void exl_commands_main() {
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_STREAK_MON_NAME);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SELECTED_MON_NAME);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_RANK_NUM_NAME);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SELECTOR_SET_PROC);
+    SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_HALL_SELECTOR_SEAL_UI_WAIT);
     SetActivatedCommand(Dpr::EvScript::EvCmdID::NAME::_FTR_SET_CURRENT_FACILITY);
 }

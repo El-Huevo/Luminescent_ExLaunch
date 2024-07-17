@@ -17,6 +17,8 @@ namespace Dpr::UI {
                 int32_t trayNum;
                 UnityEngine::Events::UnityAction::Object* __9__11;
             };
+
+            static inline StaticILMethod<0x04c7ea18> Method$$__OpOpen__b__1 {};
         };
 
         struct __c__DisplayClass204_0 : ILClass<__c__DisplayClass204_0, 0x04c619b0> {

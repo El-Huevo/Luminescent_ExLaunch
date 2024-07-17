@@ -1266,6 +1266,8 @@ namespace Dpr::EvScript {
             _FTR_HALL_STREAK_MON_NAME = 1307,
             _FTR_HALL_SELECTED_MON_NAME = 1308,
             _FTR_HALL_RANK_NUM_NAME = 1309,
+            _FTR_HALL_SELECTOR_SET_PROC = 1310,
+            _FTR_HALL_SELECTOR_SEAL_UI_WAIT = 1311,
 
             _FTR_SET_CURRENT_FACILITY = 1350,
 

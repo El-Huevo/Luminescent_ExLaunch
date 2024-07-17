@@ -135,3 +135,13 @@ bool FTR_HALL_SELECTED_MON_NAME(Dpr::EvScript::EvDataManager::Object* manager);
 //   [Number] typeIndex: The index of the type to retrieve.
 //   [Number] tagIndex: The value of the tagIndex in the message label to insert the string into.
 bool FTR_HALL_RANK_NUM_NAME(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Opens the custom Battle Hall Type Selector UI.
+// Arguments:
+//   None.
+bool FTR_HALL_SELECTOR_SET_PROC(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Waits for Battle Hall Type Selector UI to be finished before resuming execution.
+// Arguments:
+//   None.
+bool FTR_HALL_SELECTOR_SEAL_UI_WAIT(Dpr::EvScript::EvDataManager::Object* manager);
