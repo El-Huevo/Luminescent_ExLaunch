@@ -66,7 +66,7 @@ namespace Dpr::UI {
         }
 
         inline Dpr::UI::ContextMenuWindow* CreateContextMenuYesNo(void* onClicked, uint32_t SeDecide) {
-            return external<Dpr::UI::ContextMenuWindow*>(0x01a35ca0, this, onClicked, SeDecide);
+            return external<Dpr::UI::ContextMenuWindow*>(0x01a35c50, this, onClicked, SeDecide);
         }
 
         inline void OpenMessageWindow(Dpr::MsgWindow::MsgWindowParam::Object* messageParam) {

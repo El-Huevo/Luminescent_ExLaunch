@@ -168,7 +168,7 @@ bool OpenConfirmMessageWindowHandler2(Dpr::UI::UIWindow::Object* window, Dpr::UI
 
     window->CloseMessageWindow();
 
-    if (contextMenuItem->fields._param->fields.menuId == ContextMenuID::FTR_HALL_YES) {
+    if (contextMenuItem->fields._param->fields.menuId == ContextMenuID::BOX_YES) {
         reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->Close(window->fields.onClosed, window->fields._prevWindowId);
         Dpr::UI::UIManager::instance()->_ReleaseUIWindow(reinterpret_cast<Il2CppObject*>(window));
         if (window->fields.onClosed != nullptr) {
@@ -432,10 +432,12 @@ HOOK_DEFINE_REPLACE(UIWindow$$OnAddContextMenuYesNoItemParams) {
             case UIWindowID::BATTLEHALL_TYPE_SELECT:
             {
                 Logger::log("[UIWindow$$OnAddContextMenuYesNoItemParams] UIWindowID = BATTLEHALL_TYPE_SELECT.\n");
+                system_load_typeinfo(0x5011);
+
                 Dpr::UI::ContextMenuItem::Param::Object* yesParam = Dpr::UI::ContextMenuItem::Param::newInstance();
                 Dpr::UI::ContextMenuItem::Param::Object* noParam = Dpr::UI::ContextMenuItem::Param::newInstance();
-                yesParam->fields.menuId = ContextMenuID::FTR_HALL_YES;
-                noParam->fields.menuId = ContextMenuID::FTR_HALL_NO;
+                yesParam->fields.menuId = ContextMenuID::BOX_YES;
+                noParam->fields.menuId = ContextMenuID::BOX_NO;
                 contextMenuItemParams->Add(yesParam);
                 contextMenuItemParams->Add(noParam);
             }
