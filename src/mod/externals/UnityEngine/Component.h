@@ -17,6 +17,7 @@ namespace System::Collections::Generic {
 
 namespace UnityEngine::UI {
     struct HorizontalLayoutGroup;
+    struct Image;
 }
 
 namespace Dpr::UI {
@@ -46,6 +47,7 @@ namespace UnityEngine {
         static inline StaticILMethod<0x04c66970, UnityEngine::UI::HorizontalLayoutGroup> Method$$HorizontalLayoutGroup$$GetComponent {};
         static inline StaticILMethod<0x04c66918, UnityEngine::RectTransform> Method$$RectTransform$$GetComponent {};
         static inline StaticILMethod<0x04c67050, UnityEngine::BoxCollider> Method$$BoxCollider$$GetComponent {};
+        static inline StaticILMethod<0x04c670c8, UnityEngine::UI::Image> Method$$Image$$GetComponent {};
         static inline StaticILMethod<0x04c66d60, BattleCharacterEntity> Method$$BattleCharacterEntity$$GetComponent {};
         static inline StaticILMethod<0x04c66fc0, FieldCharacterEntity> Method$$FieldCharacterEntity$$GetComponent {};
         static inline StaticILMethod<0x04c669c0, XMenuTopItem> Method$$XMenuTopItem$$GetComponent {};

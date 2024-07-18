@@ -25,19 +25,27 @@
 #include "externals/ContextMenuID.h"
 #include "externals/Dpr/UI/ContextMenuWindow.h"
 #include "externals/Dpr/UI/SelectLanguageWindow.h"
+#include "externals/Dpr/UI/CardBackView.h"
 #include "externals/System/Func.h"
 #include "externals/Dpr/Message/MessageWordSetHelper.h"
 #include "data/utils.h"
 #include "data/types.h"
+#include "save/save.h"
 
 const int32_t typeSelectorRowNum = 5;
 const int32_t typeSelectorColNum = 4;
 const uint32_t AK_EVENTS_UI_COMMON_DONE = 0x4491b890;
 const uint32_t AK_EVENTS_UI_COMMON_SELECT = 0xb7533038;
+const uint32_t AK_EVENTS_UI_COMMON_BEEP = 0x707237C4;
 
 void RankTextHandler(Dpr::UI::BoxWindow::__c__DisplayClass200_0::Object* __this) {
+    system_load_typeinfo(0x96a3);
+    auto saveData = &getCustomSaveData()->battleHall;
+    int32_t typeIndex = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);
+    Rank currentRank = saveData->getRank(TYPES[typeIndex]);
+
     Dpr::Message::MessageWordSetHelper::getClass()->initIfNeeded();
-    Dpr::Message::MessageWordSetHelper::SetDigitWord(0, 3);
+    Dpr::Message::MessageWordSetHelper::SetDigitWord(0, currentRank <= RANK_10 ? currentRank + 1 : RANK_10 + 1);
 }
 
 bool SetSelectIndex(Dpr::UI::BoxWindow::Object* __this, int32_t index, bool isInitialized = false) {
@@ -152,16 +160,80 @@ void UpdateSelect(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
     }
 }
 
+void MatronInboundMessageHandler(Dpr::UI::UIWindow::Object* window) {
+
+    window->CloseMessageWindow();
+
+    auto boxWindow = reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window);
+    UnityEngine::RectTransform::Object* boxTrays = boxWindow->fields._boxTrayRoot;
+    auto traysChild = boxTrays->cast<UnityEngine::Transform>()->GetChild(0);
+
+    UnityEngine::UI::Image::Object* dimmedImage;
+    UnityEngine::GameObject* gameObj;
+    for (int32_t i = 0; i < TYPE_COUNT; ++i) {
+        if (i == 0) {
+            dimmedImage = traysChild->GetChild({i, 3})->GetComponent(
+                    UnityEngine::Component::Method$$Image$$GetComponent);
+        }
+
+        else {
+            dimmedImage = traysChild->GetChild({i, 2})->GetComponent(
+                    UnityEngine::Component::Method$$Image$$GetComponent);
+        }
+
+        gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
+        gameObj->SetActive(true);
+    }
+
+    dimmedImage = traysChild->GetChild({19, 1})->GetComponent(
+            UnityEngine::Component::Method$$Image$$GetComponent);
+    gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
+    gameObj->SetActive(false);
+
+    if (SetSelectIndex(boxWindow, 19)) {
+        Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
+    }
+
+    window->fields._input->fields._inputEnabled = true;
+
+
+}
+
 bool OpenConfirmMessageWindowHandler2(Dpr::UI::UIWindow::Object* window, Dpr::UI::ContextMenuItem::Object* contextMenuItem) {
 
     window->CloseMessageWindow();
 
     if (contextMenuItem->fields._param->fields.menuId == ContextMenuID::BOX_YES) {
-        reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->Close(window->fields.onClosed, window->fields._prevWindowId);
-        Dpr::UI::UIManager::instance()->_ReleaseUIWindow(window);
-        if (window->fields.onClosed != nullptr) {
-            window->fields.onClosed->Invoke();
+
+        if (!FlagWork::GetFlag(FlagWork_Flag::FLAG_FTR_HALL_MATRON_INBOUND)) {
+            reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->Close(window->fields.onClosed, window->fields._prevWindowId);
+            Dpr::UI::UIManager::instance()->_ReleaseUIWindow(window);
+            if (window->fields.onClosed != nullptr) {
+                window->fields.onClosed->Invoke();
+            }
         }
+
+        else {
+            Dpr::MsgWindow::MsgWindowParam::Object* msgWindowParam = Dpr::MsgWindow::MsgWindowParam::newInstance();
+            auto msgManager = Dpr::Message::MessageManager::instance();
+            msgWindowParam->fields.useMsgFile = msgManager->GetMsgFile(System::String::Create("ss_btl_tower_menu_ui_text"));
+            msgWindowParam->fields.labelName = System::String::Create("ftr_hall_stage_typeselect_matron_text");
+            msgWindowParam->fields.inputEnabled = true;
+            msgWindowParam->fields.inputCloseEnabled = false;
+
+            system_load_typeinfo(0x79b7);
+            MethodInfo* mi = (
+                    *Dpr::UI::SelectLanguageWindow::Method$$SelectLanguageWindow__OpenConfirmMessageWindow__b__18_0)->
+                    copyWith((Il2CppMethodPointer) &MatronInboundMessageHandler);
+            auto onFinishedShowAllMessage = System::Action::getClass(
+                    System::Action::void_TypeInfo)->newInstance(window, mi);
+
+            msgWindowParam->fields.onFinishedShowAllMessage = onFinishedShowAllMessage;
+
+            window->OpenMessageWindow(msgWindowParam);
+
+        }
+
     }
 
     else {
@@ -181,6 +253,30 @@ void OpenConfirmMessageWindowHandler(Dpr::UI::UIWindow::Object* window) {
             System::Func::ContextMenuItem__bool__TypeInfo)->newInstance(window, mi);
     Dpr::UI::ContextMenuWindow* contextMenu = window->CreateContextMenuYesNo(sysFunc, 0xb53c8c80);
     reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->fields._contextMenu = reinterpret_cast<Dpr::UI::ContextMenuWindow::Object*>(contextMenu);
+}
+
+int32_t RemapTypeIndex(int32_t selectIndex) {
+    switch (selectIndex) {
+        case 1: return array_index(TYPES, "Fire");
+        case 2: return array_index(TYPES, "Water");
+        case 3: return array_index(TYPES, "Electric");
+        case 4: return array_index(TYPES, "Grass");
+        case 5: return array_index(TYPES, "Ice");
+        case 6: return array_index(TYPES, "Fighting");
+        case 7: return array_index(TYPES, "Poison");
+        case 8: return array_index(TYPES, "Ground");
+        case 9: return array_index(TYPES, "Flying");
+        case 10: return array_index(TYPES, "Psychic");
+        case 11: return array_index(TYPES, "Bug");
+        case 12: return array_index(TYPES, "Rock");
+        case 13: return array_index(TYPES, "Ghost");
+        case 14: return array_index(TYPES, "Dragon");
+        case 15: return array_index(TYPES, "Dark");
+        case 16: return array_index(TYPES, "Steel");
+
+            // Normal & Fairy Type
+        default: return selectIndex;
+    }
 }
 
 void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
@@ -206,35 +302,69 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
         auto buttonA = Dpr::UI::UIManager::getClass()->static_fields->ButtonA;
         if (uiWindow->IsPushButton(buttonA, false)) {
             Logger::log("[BoxWindow$$OnUpdate] Pressed A.\n");
-            Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
-            //__this->fields._cursor->Play()
-            __this->fields._input->fields._inputEnabled = false;
 
-            Dpr::MsgWindow::MsgWindowParam::Object* msgWindowParam = Dpr::MsgWindow::MsgWindowParam::newInstance();
-            auto msgManager = Dpr::Message::MessageManager::instance();
-            msgWindowParam->fields.useMsgFile = msgManager->GetMsgFile(System::String::Create("ss_btl_tower_menu_ui_text"));
-            msgWindowParam->fields.labelName = System::String::Create("ftr_hall_stage_typeselect_confirm");
-            msgWindowParam->fields.inputEnabled = true;
-            msgWindowParam->fields.inputCloseEnabled = false;
+            int32_t selectIndex = __this->fields._currentTrayIndex;
 
-            Dpr::Message::MessageWordSetHelper::SetDigitWord(0, 0);
-            Dpr::Message::MessageWordSetHelper::SetDigitWord(1, 0);
+            UnityEngine::RectTransform::Object* boxTrays = __this->fields._boxTrayRoot;
+            auto traysChild = boxTrays->cast<UnityEngine::Transform>()->GetChild(0);
+            UnityEngine::UI::Image::Object* dimmedImage;
+            bool isDimmed;
+            switch (selectIndex) {
+                case 0: {
+                    dimmedImage = traysChild->GetChild({selectIndex, 3})->GetComponent(
+                            UnityEngine::Component::Method$$Image$$GetComponent);
+                    isDimmed = dimmedImage->cast<UnityEngine::Component>()->get_gameObject()->get_activeSelf();
+                    break;
+                }
 
-            system_load_typeinfo(0x79b7);
-            MethodInfo* mi = (
-                    *Dpr::UI::SelectLanguageWindow::Method$$SelectLanguageWindow__OpenConfirmMessageWindow__b__18_0)->
-                            copyWith((Il2CppMethodPointer) &OpenConfirmMessageWindowHandler);
-            auto onFinishedShowAllMessage = System::Action::getClass(
-                    System::Action::void_TypeInfo)->newInstance(uiWindow, mi);
+                case 17:
+                case 18:
+                case 19:
+                    isDimmed = true;
+                    break;
 
-            msgWindowParam->fields.onFinishedShowAllMessage = onFinishedShowAllMessage;
+                default: {
+                    dimmedImage = traysChild->GetChild({selectIndex, 2})->GetComponent(
+                            UnityEngine::Component::Method$$Image$$GetComponent);
+                    isDimmed = dimmedImage->cast<UnityEngine::Component>()->get_gameObject()->get_activeSelf();
+                    break;
+                }
+            }
 
-            uiWindow->OpenMessageWindow(msgWindowParam);
+            if (!isDimmed) {
+                Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
+                //__this->fields._cursor->Play()
+                __this->fields._input->fields._inputEnabled = false;
+
+                Dpr::MsgWindow::MsgWindowParam::Object* msgWindowParam = Dpr::MsgWindow::MsgWindowParam::newInstance();
+                auto msgManager = Dpr::Message::MessageManager::instance();
+                msgWindowParam->fields.useMsgFile = msgManager->GetMsgFile(System::String::Create("ss_btl_tower_menu_ui_text"));
+                msgWindowParam->fields.labelName = System::String::Create("ftr_hall_stage_typeselect_confirm");
+                msgWindowParam->fields.inputEnabled = true;
+                msgWindowParam->fields.inputCloseEnabled = false;
+
+                Dpr::Message::MessageWordSetHelper::SetDigitWord(0, 0);
+                Dpr::Message::MessageWordSetHelper::SetDigitWord(1, 0);
+
+                system_load_typeinfo(0x79b7);
+                MethodInfo* mi = (
+                        *Dpr::UI::SelectLanguageWindow::Method$$SelectLanguageWindow__OpenConfirmMessageWindow__b__18_0)->
+                        copyWith((Il2CppMethodPointer) &OpenConfirmMessageWindowHandler);
+                auto onFinishedShowAllMessage = System::Action::getClass(
+                        System::Action::void_TypeInfo)->newInstance(uiWindow, mi);
+
+                msgWindowParam->fields.onFinishedShowAllMessage = onFinishedShowAllMessage;
+
+                uiWindow->OpenMessageWindow(msgWindowParam);
+            }
+
+            else {
+                Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_BEEP, nullptr);
+            }
+
         }
-
         UpdateSelect(__this, deltaTime);
     }
-
 }
 
 void OpenBoxWindow(Dpr::UI::BoxWindow::Object* __this, Dpr::UI::BoxWindow::OpenParam::Object* param,
@@ -262,29 +392,6 @@ void OpenBoxWindow(Dpr::UI::BoxWindow::Object* __this, Dpr::UI::BoxWindow::OpenP
     __this->fields._coOpen = IEnumerator;
 }
 
-int32_t remapTypeIndex(int32_t selectIndex) {
-    switch (selectIndex) {
-        case 1: return array_index(TYPES, "Fire");
-        case 2: return array_index(TYPES, "Water");
-        case 3: return array_index(TYPES, "Electric");
-        case 4: return array_index(TYPES, "Grass");
-        case 5: return array_index(TYPES, "Ice");
-        case 6: return array_index(TYPES, "Fighting");
-        case 7: return array_index(TYPES, "Poison");
-        case 8: return array_index(TYPES, "Ground");
-        case 9: return array_index(TYPES, "Flying");
-        case 10: return array_index(TYPES, "Psychic");
-        case 11: return array_index(TYPES, "Bug");
-        case 12: return array_index(TYPES, "Rock");
-        case 13: return array_index(TYPES, "Ghost");
-        case 14: return array_index(TYPES, "Dragon");
-        case 15: return array_index(TYPES, "Dark");
-        case 16: return array_index(TYPES, "Steel");
-
-        // Normal & Fairy Type
-        default: return selectIndex;
-    }
-}
 
 HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Open) {
     static void Callback(Dpr::UI::BoxWindow::Object* __this, int32_t prevWindowId, bool isDuckOn) {
@@ -332,23 +439,48 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                         audioManager->PlaySe(0xb53c8c80, nullptr);
                         audioManager->SetBgmEvent(0x743e45ca, false);
 
+                        system_load_typeinfo(0x870a);
+
                         UnityEngine::RectTransform::Object* boxTrays = window->fields._boxTrayRoot;
-                        UnityEngine::Transform::Object* traysChild = reinterpret_cast<UnityEngine::Transform::Object*>(boxTrays)->GetChild(0);
-                        UnityEngine::Transform::Object* boxGridPanel = traysChild->GetChild(0);
-                        auto rankText = reinterpret_cast<Dpr::UI::UIText::Object*>(boxGridPanel->GetChild(2));
-                        Logger::log("[OpOpen] rankText UIText retrieved\n");
+                        auto traysChild = boxTrays->cast<UnityEngine::Transform>()->GetChild(0);
 
                         MethodInfo* mi = (
                                 *Dpr::UI::BoxWindow::__c__DisplayClass200_0::Method$$__OpOpen__b__1)->
                                 copyWith((Il2CppMethodPointer) &RankTextHandler);
-                        Logger::log("[OpOpen] MethodInfo created\n");
+
+                        auto opOpenDisplayClass = __this->fields.__8__1;
                         auto onSet = UnityEngine::Events::UnityAction::getClass(
-                                UnityEngine::Events::UnityAction::void_TypeInfo)->newInstance(__this, mi);
-                        Logger::log("[OpOpen] Action primed\n");
+                                UnityEngine::Events::UnityAction::void_TypeInfo)->newInstance(opOpenDisplayClass, mi);
 
-                        rankText->SetFormattedText(onSet, nullptr, nullptr);
+                        Dpr::UI::UIText::Object* rankText;
+                        UnityEngine::UI::Image::Object* dimmedImage;
+                        UnityEngine::GameObject* gameObj;
+                        for (int32_t i = 0; i < TYPE_COUNT-1; ++i) {
+                            if (i == 0) {
+                                rankText = traysChild->GetChild({i, 4})->GetComponent(
+                                        UnityEngine::Component::Method$$UIText$$GetComponent);
+                                FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, i);
 
-                        Logger::log("[OpOpen] rankText set\n");
+                                dimmedImage = traysChild->GetChild({i, 3})->GetComponent(
+                                        UnityEngine::Component::Method$$Image$$GetComponent);
+                                gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
+                                gameObj->SetActive(getCustomSaveData()->battleHall.currentRank[i] == RANK_COUNT);
+                            }
+
+                            else {
+                                rankText = traysChild->GetChild({i, 3})->GetComponent(
+                                        UnityEngine::Component::Method$$UIText$$GetComponent);
+                                int32_t typeIndex = RemapTypeIndex(i);
+                                FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, typeIndex);
+
+                                dimmedImage = traysChild->GetChild({i, 2})->GetComponent(
+                                        UnityEngine::Component::Method$$Image$$GetComponent);
+                                gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
+                                gameObj->SetActive(getCustomSaveData()->battleHall.currentRank[typeIndex] == RANK_COUNT);
+                            }
+
+                            rankText->SetFormattedText(onSet, nullptr, nullptr);
+                        }
 
                         (__this->fields).__2__current = reinterpret_cast<Il2CppObject *>(((Dpr::UI::UIWindow::Object *) window)->OpPlayOpenWindowAnimation(
                                 __this->fields.prevWindowId, nullptr));
@@ -492,7 +624,7 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpCloseMoveNext) {
 
                         ((Dpr::UI::UIWindow::Object*)window)->CloseMessageWindow();
 
-                        auto currentTypeIndex = remapTypeIndex(window->fields._currentTrayIndex);
+                        auto currentTypeIndex = RemapTypeIndex(window->fields._currentTrayIndex);
                         Logger::log("[OpClose] Setting current type to: %s.\n", TYPES[currentTypeIndex]);
                         FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, currentTypeIndex);
 

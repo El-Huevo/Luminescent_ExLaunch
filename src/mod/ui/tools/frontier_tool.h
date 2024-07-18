@@ -25,7 +25,7 @@ namespace ui {
                 auto *rank = _.InputInt([](InputInt &_) {
                     _.label = "Rank";
                     _.min = 1;
-                    _.max = 10;
+                    _.max = 11;
                     _.value = 1;
                 });
 
@@ -33,7 +33,7 @@ namespace ui {
                     _.label = "Set Rank";
                     _.onClick = [type, rank]() {
                         Logger::log("Setting type %s to Rank: %d\n", TYPES[type->selected], rank->value);
-                        (&getCustomSaveData()->battleHall)->setRank(TYPES[type->selected], (Rank) rank->value);
+                        (&getCustomSaveData()->battleHall)->setRank(TYPES[type->selected], (Rank) (rank->value-1));
                     };
                 });
 
@@ -41,7 +41,7 @@ namespace ui {
                     _.label = "Get Rank";
                     _.onClick = [type]() {
                         auto currentRank = (&getCustomSaveData()->battleHall)->getRank(TYPES[type->selected]);
-                        Logger::log("Type %s is currently Rank: %d\n", TYPES[type->selected], currentRank);
+                        Logger::log("Type %s is currently Rank: %d\n", TYPES[type->selected], static_cast<int32_t>(currentRank) + 1);
 
                     };
                 });
