@@ -170,19 +170,14 @@ void MatronInboundMessageHandler(Dpr::UI::UIWindow::Object* window) {
 
     UnityEngine::UI::Image::Object* dimmedImage;
     UnityEngine::GameObject* gameObj;
-    for (int32_t i = 0; i < TYPE_COUNT; ++i) {
-        if (i == 0) {
-            dimmedImage = traysChild->GetChild({i, 3})->GetComponent(
-                    UnityEngine::Component::Method$$Image$$GetComponent);
-        }
-
-        else {
+    for (int32_t i = 0; i < TYPE_COUNT+1; ++i) {
+        if (i != 16) {
             dimmedImage = traysChild->GetChild({i, 2})->GetComponent(
                     UnityEngine::Component::Method$$Image$$GetComponent);
+            gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
+            gameObj->SetActive(true);
         }
 
-        gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
-        gameObj->SetActive(true);
     }
 
     dimmedImage = traysChild->GetChild({19, 1})->GetComponent(
@@ -272,9 +267,10 @@ int32_t RemapTypeIndex(int32_t selectIndex) {
         case 13: return array_index(TYPES, "Ghost");
         case 14: return array_index(TYPES, "Dragon");
         case 15: return array_index(TYPES, "Dark");
-        case 16: return array_index(TYPES, "Steel");
+        case 17: return array_index(TYPES, "Steel");
+        case 18: return array_index(TYPES, "Fairy");
 
-            // Normal & Fairy Type
+            // Normal Type
         default: return selectIndex;
     }
 }
@@ -317,7 +313,7 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
                     break;
                 }
 
-                case 17:
+                case 16:
                 case 18:
                 case 19:
                     isDimmed = true;
@@ -455,19 +451,8 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                         Dpr::UI::UIText::Object* rankText;
                         UnityEngine::UI::Image::Object* dimmedImage;
                         UnityEngine::GameObject* gameObj;
-                        for (int32_t i = 0; i < TYPE_COUNT-1; ++i) {
-                            if (i == 0) {
-                                rankText = traysChild->GetChild({i, 4})->GetComponent(
-                                        UnityEngine::Component::Method$$UIText$$GetComponent);
-                                FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, i);
-
-                                dimmedImage = traysChild->GetChild({i, 3})->GetComponent(
-                                        UnityEngine::Component::Method$$Image$$GetComponent);
-                                gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
-                                gameObj->SetActive(getCustomSaveData()->battleHall.currentRank[i] == RANK_COUNT);
-                            }
-
-                            else {
+                        for (int32_t i = 0; i < TYPE_COUNT; ++i) { //Intentionally excludes Fairy for now
+                            if (i != 16) {
                                 rankText = traysChild->GetChild({i, 3})->GetComponent(
                                         UnityEngine::Component::Method$$UIText$$GetComponent);
                                 int32_t typeIndex = RemapTypeIndex(i);
@@ -477,9 +462,8 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                                         UnityEngine::Component::Method$$Image$$GetComponent);
                                 gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
                                 gameObj->SetActive(getCustomSaveData()->battleHall.currentRank[typeIndex] == RANK_COUNT);
+                                rankText->SetFormattedText(onSet, nullptr, nullptr);
                             }
-
-                            rankText->SetFormattedText(onSet, nullptr, nullptr);
                         }
 
                         (__this->fields).__2__current = reinterpret_cast<Il2CppObject *>(((Dpr::UI::UIWindow::Object *) window)->OpPlayOpenWindowAnimation(
