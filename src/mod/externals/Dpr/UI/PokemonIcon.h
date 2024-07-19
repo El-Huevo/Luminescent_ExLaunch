@@ -12,5 +12,7 @@ namespace Dpr::UI {
             UnityEngine::UI::Image::Object* _imageItemIcon;
             UnityEngine::UI::Image::Object* _imageBallDecoIcon;
         };
+
+        static inline StaticILMethod<0x04c7f458> Method$$__Load__b__9_0 {};
     };
 }

@@ -16,9 +16,9 @@ bool FTR_HALL_GET_STREAK_MON(Dpr::EvScript::EvDataManager::Object* manager) {
     EvData::Aregment::Array* args = manager->fields._evArg;
     if (args->max_length >= 2) {
         int32_t savedMonsNo = save->streakPokePID;
-        BattleMatchingWork::getClass()->initIfNeeded();
-        auto pokeParam = BattleMatchingWork::getClass()->static_fields->pokemonParams;
-        auto orderIndexList = BattleMatchingWork::getClass()->static_fields->orderIndexList;
+        Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
+        auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
+        auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
         auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
         int32_t compareMonsNo = playerPoke->fields.m_accessor->GetMonsNo();
 

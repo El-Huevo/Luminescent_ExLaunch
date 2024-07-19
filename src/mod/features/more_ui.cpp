@@ -31,6 +31,10 @@
 #include "data/utils.h"
 #include "data/types.h"
 #include "save/save.h"
+#include "externals/Dpr/UI/PokemonStatusWindow.h"
+#include "externals/Dpr/BattleMatching/BattleMatchingWork.h"
+#include "externals/UnityEngine/Sprite.h"
+#include "externals/Dpr/UI/PokemonIcon.h"
 
 const int32_t typeSelectorRowNum = 5;
 const int32_t typeSelectorColNum = 4;
@@ -46,6 +50,24 @@ void RankTextHandler(Dpr::UI::BoxWindow::__c__DisplayClass200_0::Object* __this)
 
     Dpr::Message::MessageWordSetHelper::getClass()->initIfNeeded();
     Dpr::Message::MessageWordSetHelper::SetDigitWord(0, currentRank <= RANK_10 ? currentRank + 1 : RANK_10 + 1);
+}
+
+void MonsIconTextHandler(Dpr::UI::BoxWindow::__c__DisplayClass200_0::Object* __this) {
+    system_load_typeinfo(0x96a3);
+    auto saveData = &getCustomSaveData()->battleHall;
+
+    Dpr::Message::MessageWordSetHelper::getClass()->initIfNeeded();
+    Dpr::Message::MessageWordSetHelper::SetMonsNameWord(0, saveData->streakPokePID);
+}
+
+void MonsSpriteHandler(Dpr::UI::PokemonIcon::Object* __this, UnityEngine::Sprite::Object* sprite) {
+    system_load_typeinfo(0x6d84);
+    __this->fields._imageMonsIcon->set_sprite(sprite);
+    auto component = reinterpret_cast<UnityEngine::Component::Object*>(__this->fields._imageMonsIcon);
+    auto gameObj = component->get_gameObject();
+    bool inequalityCheck = UnityEngine::_Object::op_Inequality(reinterpret_cast<UnityEngine::_Object::Object*>(sprite),
+                                                               nullptr);
+    gameObj->SetActive(inequalityCheck);
 }
 
 bool SetSelectIndex(Dpr::UI::BoxWindow::Object* __this, int32_t index, bool isInitialized = false) {
@@ -170,27 +192,20 @@ void MatronInboundMessageHandler(Dpr::UI::UIWindow::Object* window) {
 
     UnityEngine::UI::Image::Object* dimmedImage;
     UnityEngine::GameObject* gameObj;
-    for (int32_t i = 0; i < TYPE_COUNT+1; ++i) {
+    for (int32_t i = 0; i < TYPE_COUNT+2; ++i) {
         if (i != 16) {
             dimmedImage = traysChild->GetChild({i, 2})->GetComponent(
                     UnityEngine::Component::Method$$Image$$GetComponent);
             gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
-            gameObj->SetActive(true);
+            gameObj->SetActive(i != 19); // Sets all dimmed images active except 19 which is set inactive.
         }
-
     }
-
-    dimmedImage = traysChild->GetChild({19, 1})->GetComponent(
-            UnityEngine::Component::Method$$Image$$GetComponent);
-    gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
-    gameObj->SetActive(false);
 
     if (SetSelectIndex(boxWindow, 19)) {
         Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
     }
 
     window->fields._input->fields._inputEnabled = true;
-
 
 }
 
@@ -252,82 +267,87 @@ void OpenConfirmMessageWindowHandler(Dpr::UI::UIWindow::Object* window) {
 
 int32_t RemapTypeIndex(int32_t selectIndex) {
     switch (selectIndex) {
-        case 1: return array_index(TYPES, "Fire");
-        case 2: return array_index(TYPES, "Water");
-        case 3: return array_index(TYPES, "Electric");
-        case 4: return array_index(TYPES, "Grass");
-        case 5: return array_index(TYPES, "Ice");
-        case 6: return array_index(TYPES, "Fighting");
-        case 7: return array_index(TYPES, "Poison");
-        case 8: return array_index(TYPES, "Ground");
-        case 9: return array_index(TYPES, "Flying");
-        case 10: return array_index(TYPES, "Psychic");
-        case 11: return array_index(TYPES, "Bug");
-        case 12: return array_index(TYPES, "Rock");
-        case 13: return array_index(TYPES, "Ghost");
-        case 14: return array_index(TYPES, "Dragon");
-        case 15: return array_index(TYPES, "Dark");
-        case 17: return array_index(TYPES, "Steel");
-        case 18: return array_index(TYPES, "Fairy");
+        case TypeSelectorIndex::FIRE: return array_index(TYPES, "Fire");
+        case TypeSelectorIndex::WATER: return array_index(TYPES, "Water");
+        case TypeSelectorIndex::ELECTRIC: return array_index(TYPES, "Electric");
+        case TypeSelectorIndex::GRASS: return array_index(TYPES, "Grass");
+        case TypeSelectorIndex::ICE: return array_index(TYPES, "Ice");
+        case TypeSelectorIndex::FIGHTING: return array_index(TYPES, "Fighting");
+        case TypeSelectorIndex::POISON: return array_index(TYPES, "Poison");
+        case TypeSelectorIndex::GROUND: return array_index(TYPES, "Ground");
+        case TypeSelectorIndex::FLYING: return array_index(TYPES, "Flying");
+        case TypeSelectorIndex::PSYCHIC: return array_index(TYPES, "Psychic");
+        case TypeSelectorIndex::BUG: return array_index(TYPES, "Bug");
+        case TypeSelectorIndex::ROCK: return array_index(TYPES, "Rock");
+        case TypeSelectorIndex::GHOST: return array_index(TYPES, "Ghost");
+        case TypeSelectorIndex::DRAGON: return array_index(TYPES, "Dragon");
+        case TypeSelectorIndex::DARK: return array_index(TYPES, "Dark");
+        case TypeSelectorIndex::STEEL: return array_index(TYPES, "Steel");
+        case TypeSelectorIndex::FAIRY: return array_index(TYPES, "Fairy");
 
             // Normal Type
         default: return selectIndex;
     }
 }
 
+int32_t FindSelectIndex(int32_t currentType) {
+    nn::vector<int32_t> selectIndexMap = {TypeSelectorIndex::NORMAL, TypeSelectorIndex::FIGHTING, TypeSelectorIndex::FLYING,
+                                          TypeSelectorIndex::POISON, TypeSelectorIndex::GROUND, TypeSelectorIndex::ROCK,
+                                          TypeSelectorIndex::BUG, TypeSelectorIndex::GHOST, TypeSelectorIndex::STEEL,
+                                          TypeSelectorIndex::FIRE, TypeSelectorIndex::WATER, TypeSelectorIndex::GRASS,
+                                          TypeSelectorIndex::ELECTRIC, TypeSelectorIndex::PSYCHIC, TypeSelectorIndex::ICE,
+                                          TypeSelectorIndex::DRAGON, TypeSelectorIndex::DARK, TypeSelectorIndex::FAIRY};
+
+    return selectIndexMap.at(currentType);
+}
+
+
 void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
+    // Initialize UI Manager
     Dpr::UI::UIManager::getClass()->initIfNeeded();
     auto uiManager = Dpr::UI::UIManager::instance();
+
+    // Get the current UI window and check if it's different from the current BoxWindow instance
     auto retrievedWindow = (UnityEngine::_Object::Object*) uiManager->GetCurrentUIWindow(Dpr::UI::UIManager::Method$$GetCurrentUIWindow_UIWindow_);
     bool inequalityCheck = UnityEngine::_Object::op_Inequality(retrievedWindow, (UnityEngine::_Object::Object*) __this);
-    if (!inequalityCheck && __this->fields._input->fields._inputEnabled) {
 
+    if (!inequalityCheck && __this->fields._input->fields._inputEnabled) {
         auto msgWindow = __this->fields._messageWindow;
 
+        // Check if there is an active message window
         inequalityCheck = UnityEngine::_Object::op_Inequality((UnityEngine::_Object::Object*) msgWindow, nullptr);
 
-        if (inequalityCheck) {
-            bool inputEnabled = msgWindow->get_isEnabledInput();
-            if (inputEnabled) return;
+        if (inequalityCheck && msgWindow->get_isEnabledInput()) {
+            return;
         }
-
 
         Dpr::UI::UIManager::getClass()->initIfNeeded();
         auto uiWindow = (Dpr::UI::UIWindow::Object*) __this;
-
         auto buttonA = Dpr::UI::UIManager::getClass()->static_fields->ButtonA;
+
+        // Check if A button is pressed
         if (uiWindow->IsPushButton(buttonA, false)) {
             Logger::log("[BoxWindow$$OnUpdate] Pressed A.\n");
 
             int32_t selectIndex = __this->fields._currentTrayIndex;
-
             UnityEngine::RectTransform::Object* boxTrays = __this->fields._boxTrayRoot;
             auto traysChild = boxTrays->cast<UnityEngine::Transform>()->GetChild(0);
-            UnityEngine::UI::Image::Object* dimmedImage;
-            bool isDimmed;
-            switch (selectIndex) {
-                case 0: {
-                    dimmedImage = traysChild->GetChild({selectIndex, 3})->GetComponent(
-                            UnityEngine::Component::Method$$Image$$GetComponent);
-                    isDimmed = dimmedImage->cast<UnityEngine::Component>()->get_gameObject()->get_activeSelf();
-                    break;
-                }
 
-                case 16:
-                case 18:
-                case 19:
-                    isDimmed = true;
-                    break;
+            bool isDimmed = false;
 
-                default: {
-                    dimmedImage = traysChild->GetChild({selectIndex, 2})->GetComponent(
-                            UnityEngine::Component::Method$$Image$$GetComponent);
-                    isDimmed = dimmedImage->cast<UnityEngine::Component>()->get_gameObject()->get_activeSelf();
-                    break;
-                }
+            if (selectIndex != TypeSelectorIndex::SUMMARY) {
+                UnityEngine::UI::Image::Object *dimmedImage = traysChild->GetChild({selectIndex, 2})->GetComponent(
+                        UnityEngine::Component::Method$$Image$$GetComponent);
+                isDimmed = dimmedImage->cast<UnityEngine::Component>()->get_gameObject()->get_activeSelf();
             }
 
-            if (!isDimmed) {
+            if (selectIndex == TypeSelectorIndex::SUMMARY) {
+                Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
+                Dpr::UI::PokemonStatusWindow::Param::Object* windowParam = Dpr::UI::PokemonStatusWindow::Param::newInstance();
+                __this->OpenStatusWindow(windowParam, nullptr);
+            }
+
+            else if (!isDimmed && selectIndex != TypeSelectorIndex::FAIRY) {
                 Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
                 //__this->fields._cursor->Play()
                 __this->fields._input->fields._inputEnabled = false;
@@ -339,8 +359,11 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
                 msgWindowParam->fields.inputEnabled = true;
                 msgWindowParam->fields.inputCloseEnabled = false;
 
-                Dpr::Message::MessageWordSetHelper::SetDigitWord(0, 0);
-                Dpr::Message::MessageWordSetHelper::SetDigitWord(1, 0);
+                int32_t remappedIndex = RemapTypeIndex(selectIndex);
+                Rank currentRank = getCustomSaveData()->battleHall.getRank(TYPES[remappedIndex]);
+
+                Dpr::Message::MessageWordSetHelper::SetWazaTypeWord(0, remappedIndex);
+                Dpr::Message::MessageWordSetHelper::SetDigitWord(1, static_cast<int32_t>(currentRank) + 1);
 
                 system_load_typeinfo(0x79b7);
                 MethodInfo* mi = (
@@ -387,7 +410,6 @@ void OpenBoxWindow(Dpr::UI::BoxWindow::Object* __this, Dpr::UI::BoxWindow::OpenP
             (System::Collections::IEnumerator::Object*) displayClass);
     __this->fields._coOpen = IEnumerator;
 }
-
 
 HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Open) {
     static void Callback(Dpr::UI::BoxWindow::Object* __this, int32_t prevWindowId, bool isDuckOn) {
@@ -440,13 +462,18 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                         UnityEngine::RectTransform::Object* boxTrays = window->fields._boxTrayRoot;
                         auto traysChild = boxTrays->cast<UnityEngine::Transform>()->GetChild(0);
 
-                        MethodInfo* mi = (
-                                *Dpr::UI::BoxWindow::__c__DisplayClass200_0::Method$$__OpOpen__b__1)->
+                        MethodInfo* mi = (*Dpr::UI::BoxWindow::__c__DisplayClass200_0::Method$$__OpOpen__b__1)->
                                 copyWith((Il2CppMethodPointer) &RankTextHandler);
+
+                        MethodInfo* monsIconMI = (*Dpr::UI::BoxWindow::__c__DisplayClass200_0::Method$$__OpOpen__b__1)->
+                                copyWith((Il2CppMethodPointer) &MonsIconTextHandler);
 
                         auto opOpenDisplayClass = __this->fields.__8__1;
                         auto onSet = UnityEngine::Events::UnityAction::getClass(
                                 UnityEngine::Events::UnityAction::void_TypeInfo)->newInstance(opOpenDisplayClass, mi);
+
+                        auto onSetMonsIcon = UnityEngine::Events::UnityAction::getClass(
+                                UnityEngine::Events::UnityAction::void_TypeInfo)->newInstance(opOpenDisplayClass, monsIconMI);
 
                         Dpr::UI::UIText::Object* rankText;
                         UnityEngine::UI::Image::Object* dimmedImage;
@@ -465,6 +492,42 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                                 rankText->SetFormattedText(onSet, nullptr, nullptr);
                             }
                         }
+
+                        system_load_typeinfo(0x73b2);
+
+                        Dpr::UI::UIText::Object* monsIconText = traysChild->GetChild(
+                                {TypeSelectorIndex::SUMMARY, 1})->GetComponent(
+                                        UnityEngine::Component::Method$$UIText$$GetComponent);
+
+                        monsIconText->SetFormattedText(onSetMonsIcon, nullptr, nullptr);
+                        Logger::log("[OnOpen] Set monsIconText.\n");
+                        Dpr::UI::PokemonIcon::Object* monsIcon = traysChild->GetChild(
+                                {TypeSelectorIndex::SUMMARY, 2})->GetComponent(
+                                UnityEngine::Component::Method$$PokemonIcon$$GetComponent);
+                        Logger::log("[OnOpen] Got monsIcon component.\n");
+                        Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
+                        auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
+                        auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
+                        auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
+                        Logger::log("[OnOpen] Retrieved poke params.\n");
+
+                        int32_t monsNo = playerPoke->cast<Pml::PokePara::CoreParam>()->GetMonsNo();
+                        int32_t formNo = playerPoke->cast<Pml::PokePara::CoreParam>()->GetFormNo();
+                        uint8_t sex = playerPoke->cast<Pml::PokePara::CoreParam>()->GetSex();
+                        uint8_t rareType = playerPoke->cast<Pml::PokePara::CoreParam>()->GetRareType();
+
+                        Logger::log("[OnOpen] Retrieved all lookup details.\n");
+
+                        MethodInfo* onCompleteMI = (*Dpr::UI::PokemonIcon::Method$$__Load__b__9_0)->copyWith(
+                                (Il2CppMethodPointer) &MonsSpriteHandler);
+                        auto onComplete = UnityEngine::Events::UnityAction::getClass(
+                                UnityEngine::Events::UnityAction::Sprite_TypeInfo)->newInstance(monsIcon, onCompleteMI);
+
+                        Logger::log("[OnOpen] onComplete primed.\n");
+
+                        Dpr::UI::UIManager::instance()->LoadSpritePokemon(monsNo, formNo, sex, rareType, false, onComplete);
+
+                        Logger::log("[OnOpen] Loaded sprite.\n");
 
                         (__this->fields).__2__current = reinterpret_cast<Il2CppObject *>(((Dpr::UI::UIWindow::Object *) window)->OpPlayOpenWindowAnimation(
                                 __this->fields.prevWindowId, nullptr));
@@ -496,7 +559,10 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                         window->fields._input->fields._inputEnabled = true;
                         auto cursor = window->fields._cursor;
                         cursor->SetActive(true);
-                        SetSelectIndex(window, 0, true);
+
+                        int32_t lastSelected = FindSelectIndex(FlagWork::GetWork(
+                                FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE));
+                        SetSelectIndex(window, lastSelected, true);
 
                         (__this->fields).__2__current = nullptr;
                         (__this->fields).__1__state = 3;
@@ -763,121 +829,24 @@ HOOK_DEFINE_INLINE(OpLoadWindows_b__136_0) {
     }
 };
 
-HOOK_DEFINE_REPLACE(EvCmdBTowerAppSetProc) {
-    static bool Callback(Dpr::EvScript::EvDataManager::Object* manager) {
+HOOK_DEFINE_TRAMPOLINE(OpenStatusWindow__b__0) {
+    static void Callback(Dpr::UI::BoxWindow::__c__DisplayClass282_0::Object* __this) {
+        Logger::log("[OpenStatusWindow__b__0]\n");
+        Orig(__this);
+    }
+};
 
-        system_load_typeinfo(0x43d6);
+HOOK_DEFINE_TRAMPOLINE(OpenStatusWindow__b__1) {
+    static void Callback(void* __this, Dpr::UI::UIWindow::Object* window) {
+        Logger::log("[OpenStatusWindow__b__1]\n");
+        Orig(__this, window);
+    }
+};
 
-        Logger::log("_BHALL_APP_SET_PROC\n");
-
-        EvData::Aregment::Array* args = manager->fields._evArg;
-
-
-        if (args->max_length >= 3) {
-            auto argType1 = args->m_Items[1].fields.argType;
-            auto argData1 = (float)args->m_Items[1].fields.data;
-            auto argType2 = args->m_Items[2].fields.argType;
-            auto argData2 = (float)args->m_Items[2].fields.data;
-            int32_t towerMode;
-            int32_t work1;
-            int32_t work2;
-
-            switch (argType1) {
-                case 2:
-                    work1 = FlagWork::GetWork((int32_t)argData1);
-                    break;
-                case 1:
-                    work1 = (int)argData1;
-                    break;
-                default:
-                    work1 = 0;
-                    break;
-            }
-
-            switch (argType2) {
-                case 2:
-                    work2 = FlagWork::GetWork((int32_t)argData2);
-                    break;
-                case 1:
-                    work2 = (int)argData2;
-                    break;
-                default:
-                    work2 = 0;
-                    break;
-            }
-
-            manager->fields._isOpenBtlTowerRecode = true;
-
-            SmartPoint::AssetAssistant::SingletonMonoBehaviour::getClass()->initIfNeeded();
-            Dpr::UI::UIManager::Object* uiManager = Dpr::UI::UIManager::instance();
-            auto recordWindow = (Dpr::UI::BattleTowerRecordWindow::Object*)
-                    uiManager->CreateUIWindow(UIWindowID::BATTLEHALL_RECORD,
-                                              Dpr::UI::UIManager::Method$$CreateUIWindow_BattleTowerRecordWindow_);
-            MethodInfo* mi = *UnityEngine::Events::UnityAction::Method$$Dpr_EvScript_EvDataManager__EvCmdBTowerAppSetProc__b__1143_0;
-            auto onClosed = UnityEngine::Events::UnityAction::getClass(UnityEngine::Events::UnityAction::UIWindow_TypeInfo)->newInstance(manager, mi);
-            auto parentOnClosed = &(recordWindow->fields).onClosed;
-            *parentOnClosed = onClosed;
-            Dpr::UI::BattleTowerRecordWindow::Param::Object* recordParam = Dpr::UI::BattleTowerRecordWindow::Param::newInstance();
-            recordParam->fields.isSuspended = false;
-
-
-            if (work1 == 1) {
-                if (work2 == 1) {
-                    recordParam->fields.recordType = 0;
-                    towerMode = 0;
-                }
-
-                else {
-                    recordParam->fields.recordType = 2;
-                    towerMode = 2;
-                }
-            }
-
-            else if (work2 == 1) {
-                recordParam->fields.recordType = 1;
-                towerMode = 1;
-            }
-
-            else {
-                recordParam->fields.recordType = 3;
-                towerMode = 3;
-            }
-            BtlTowerWork::getClass()->initIfNeeded();
-
-            uint32_t round = BtlTowerWork::GetRenshou(towerMode);
-            recordParam->fields.isSuspended = (round != 0);
-
-            int32_t index;
-            switch (recordParam->fields.recordType) {
-                case 0:
-                    recordParam->fields.consecutiveWins = (int32_t) RecordWork::Get(7);
-                    recordParam->fields.maxConsecutiveWins = (int32_t) RecordWork::Get(6);
-                    index = 6;
-                    break;
-                case 1:
-                    recordParam->fields.consecutiveWins = (int32_t) RecordWork::Get(9);
-                    recordParam->fields.maxConsecutiveWins = (int32_t) RecordWork::Get(8);
-                    index = 8;
-                    break;
-                case 2:
-                    recordParam->fields.consecutiveWins = (int32_t) RecordWork::Get(11);
-                    recordParam->fields.maxConsecutiveWins = (int32_t) RecordWork::Get(10);
-                    index = 2;
-                    break;
-                case 3:
-                    recordParam->fields.consecutiveWins = (int32_t) RecordWork::Get(13);
-                    recordParam->fields.maxConsecutiveWins = (int32_t) RecordWork::Get(12);
-                    index = 3;
-                    break;
-            }
-
-            if (index == 2 || index == 3) {
-                recordParam->fields.rank = BtlTowerWork::GetRank(index);
-            }
-
-            recordWindow->Open(recordParam, -2);
-        }
-        return true;
+HOOK_DEFINE_TRAMPOLINE(OpenStatusWindow__b__2) {
+    static void Callback(void* __this, Dpr::UI::UIWindow::Object* statusWindow) {
+        Logger::log("[OpenStatusWindow__b__2]\n");
+        Orig(__this, statusWindow);
     }
 };
 
@@ -889,9 +858,9 @@ void exl_more_ui_main() {
     BoxWindow$$Close::InstallAtOffset(0x01cb5cc0);
     BoxWindow$$OpCloseMoveNext::InstallAtOffset(0x01a25310);
 
+
+
     UIWindow$$OnAddContextMenuYesNoItemParams::InstallAtOffset(0x01a35e30);
 
-    EvCmdBTowerAppSetProc::InstallAtOffset(0x02c7cc30);
-    //EvCmdBTowerAppSetProc::InstallAtOffset(0x02c7cd64); // Inline Offset
     OpLoadWindows_b__136_0::InstallAtOffset(0x017c7ccc);
 }

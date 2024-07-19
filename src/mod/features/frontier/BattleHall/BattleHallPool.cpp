@@ -88,7 +88,7 @@ namespace BattleHallPool {
 
     uint16_t calculateEnemyLvl(Rank rank, uint32_t pLvl, int32_t currentTypeIndex, const nn::vector<std::pair<const char *, Rank>>& allTypeRanks) {
         double lvlBase = pLvl - (3 * sqrt(pLvl));
-        int32_t currentTypeRank = rank + 1;
+        int32_t currentTypeRank = static_cast<int32_t>(rank) + 1;
         double types = 0;
 
         for (const auto& typeRank : allTypeRanks) {
@@ -97,7 +97,7 @@ namespace BattleHallPool {
             }
         }
 
-        Logger::log("[EnemyLvl] Types >= Rank 2: %d\n", types);
+        Logger::log("[EnemyLvl] Types >= Rank 2: %f\n", types);
 
         double increment = sqrt(pLvl) / 5;
         double oLvlCalc = lvlBase + (types / 2) + (currentTypeRank - 1) * increment;

@@ -21,6 +21,7 @@ namespace UnityEngine::UI {
 }
 
 namespace Dpr::UI {
+    struct PokemonIcon;
     struct SelectLanguageItem;
     struct SettingMenuItem;
     struct UIText;
@@ -39,6 +40,7 @@ namespace UnityEngine {
 
         };
 
+        static inline StaticILMethod<0x04c66790, Dpr::UI::PokemonIcon> Method$$PokemonIcon$$GetComponent {};
         static inline StaticILMethod<0x04c667c0, Dpr::UI::SelectLanguageItem> Method$$SelectLanguageItem$$GetComponent {};
         static inline StaticILMethod<0x04c667d0, Dpr::UI::SettingMenuItem> Method$$SettingMenuItem$$GetComponent {};
         static inline StaticILMethod<0x04c667d8, Dpr::UI::UINavigator> Method$$UINavigator$$GetComponent {};

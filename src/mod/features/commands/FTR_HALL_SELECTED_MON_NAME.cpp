@@ -15,9 +15,9 @@ bool FTR_HALL_SELECTED_MON_NAME(Dpr::EvScript::EvDataManager::Object* manager) {
     EvData::Aregment::Array* args = manager->fields._evArg;
     if (args->max_length >= 1) {
         auto tagIndex = args->m_Items[1].fields.data;
-        BattleMatchingWork::getClass()->initIfNeeded();
-        auto pokeParam = BattleMatchingWork::getClass()->static_fields->pokemonParams;
-        auto orderIndexList = BattleMatchingWork::getClass()->static_fields->orderIndexList;
+        Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
+        auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
+        auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
         auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
         Dpr::Message::MessageWordSetHelper::SetMonsNameWord(tagIndex, playerPoke->fields.m_accessor->GetMonsNo());
     }

@@ -17,6 +17,7 @@ namespace UnityEngine::Events {
         static const inline long bool_String_TypeInfo = 0x04c5ee10;
         static const inline long void_TypeInfo = 0x04c57230;
         static const inline long UIWindow_TypeInfo = 0x04c59e60;
+        static const inline long Sprite_TypeInfo = 0x04c5e1a0;
 
         static inline StaticILMethod<0x04c7d008> Method$$Dpr_EvScript_EvDataManager__EvCmdBTowerAppSetProc__b__1143_0 {};
         static inline StaticILMethod<0x04c81d88> Method$$__c__DisplayClass9_0__OpenSelectPlayerVisual__b__0 {};

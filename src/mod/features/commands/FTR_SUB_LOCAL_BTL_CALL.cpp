@@ -58,9 +58,9 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     auto currentRank = save->currentRank[currentType];
     auto currentRound = save->currentRound;
 
-    BattleMatchingWork::getClass()->initIfNeeded();
-    auto pokeParam = BattleMatchingWork::getClass()->static_fields->pokemonParams;
-    auto orderIndexList = BattleMatchingWork::getClass()->static_fields->orderIndexList;
+    Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
+    auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
+    auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
     Pml::PokeParty::Object* playerParty = Pml::PokeParty::newInstance();
     auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
     playerParty->AddMember(playerPoke);

@@ -45,5 +45,30 @@ enum HallRound : int32_t {
     ROUND_COUNT
 };
 
+enum TypeSelectorIndex : int32_t {
+    NORMAL,
+    FIRE,
+    WATER,
+    ELECTRIC,
+    GRASS,
+    ICE,
+    FIGHTING,
+    POISON,
+    GROUND,
+    FLYING,
+    PSYCHIC,
+    BUG,
+    ROCK,
+    GHOST,
+    DRAGON,
+    DARK,
+    SUMMARY,
+    STEEL,
+    FAIRY,
+    MATRON,
+    INDEX_COUNT
+};
+
+
 extern const char* frontierFolderPath;
 

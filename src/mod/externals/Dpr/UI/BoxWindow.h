@@ -8,6 +8,7 @@
 #include "externals/Dpr/UI/Cursor.h"
 #include "externals/Dpr/UI/UINavigator.h"
 #include "ContextMenuWindow.h"
+#include "PokemonStatusWindow.h"
 
 namespace Dpr::UI {
     struct BoxWindow : ILClass<BoxWindow, 0x04c5ca38> {
@@ -103,6 +104,14 @@ namespace Dpr::UI {
             inline void ctor() {
                 external<void>(0x01a27970, this);
             }
+        };
+
+        struct __c__DisplayClass282_0 : ILClass<__c__DisplayClass282_0> {
+            struct Fields {
+                BoxWindow::Object* __4__this;
+                BoxWindow::OpenParam::Object* reopenParam;
+                PokemonStatusWindow::Object* statusParams;
+            };
         };
 
         static inline StaticILMethod<0x04c7ecf0> Method$$Dpr_UI_BoxWindow_OnUpdate {};
@@ -287,6 +296,11 @@ namespace Dpr::UI {
 
         inline void SetupKeyguide() {
             external<void>(0x01cb7e30, this);
+        }
+
+        inline void OpenStatusWindow(Dpr::UI::PokemonStatusWindow::Param::Object* statusParams,
+                                     Dpr::UI::BoxWindow::OpenParam::Object* reopenParams) {
+            external<void>(0x01cc5ad0, this, statusParams, reopenParams);
         }
     };
 }

@@ -33,5 +33,9 @@ namespace Dpr::Message {
         static inline void SetGlossaryWord(int32_t index, System::String::Object* msbtName, int32_t labelIndex) {
             external<void>(0x01f9c410, index, msbtName, labelIndex);
         }
+
+        static inline void SetWazaTypeWord(int32_t tagIndex, uint8_t pokeTypeNo) {
+            external<void>(0x01f9a7a0, tagIndex, pokeTypeNo);
+        }
     };
 }
