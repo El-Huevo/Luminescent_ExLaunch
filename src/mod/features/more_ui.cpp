@@ -215,7 +215,7 @@ bool OpenConfirmMessageWindowHandler2(Dpr::UI::UIWindow::Object* window, Dpr::UI
 
     if (contextMenuItem->fields._param->fields.menuId == ContextMenuID::BOX_YES) {
 
-        if (!FlagWork::GetFlag(FlagWork_Flag::FLAG_FTR_HALL_MATRON_INBOUND)) {
+        if (!FlagWork::GetFlag(FlagWork_Flag::FLAG_FTR_HALL_MATRON_INBOUND) || FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE) == -1) {
             reinterpret_cast<Dpr::UI::BoxWindow::Object*>(window)->Close(window->fields.onClosed, window->fields._prevWindowId);
             Dpr::UI::UIManager::instance()->_ReleaseUIWindow(window);
             if (window->fields.onClosed != nullptr) {
@@ -298,6 +298,10 @@ int32_t FindSelectIndex(int32_t currentType) {
                                           TypeSelectorIndex::ELECTRIC, TypeSelectorIndex::PSYCHIC, TypeSelectorIndex::ICE,
                                           TypeSelectorIndex::DRAGON, TypeSelectorIndex::DARK, TypeSelectorIndex::FAIRY};
 
+
+    if (currentType == -2) return 16;
+    else if (currentType == -1) return 19;
+
     return selectIndexMap.at(currentType);
 }
 
@@ -344,6 +348,22 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
             if (selectIndex == TypeSelectorIndex::SUMMARY) {
                 Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
                 Dpr::UI::PokemonStatusWindow::Param::Object* windowParam = Dpr::UI::PokemonStatusWindow::Param::newInstance();
+
+                auto paramList = System::Collections::Generic::List$$PokemonParam::getClass(
+                        System::Collections::Generic::List$$PokemonParam::typeInfo)->newInstance(
+                                *System::Collections::Generic::List$$PokemonParam::Method$$ctor);
+
+                Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
+                auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
+                auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
+                auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
+
+                paramList->Add(playerPoke);
+                windowParam->fields.pokemonParams = paramList;
+                windowParam->fields.selectIndex = 0;
+                windowParam->fields.selectTabIndex = 0;
+                windowParam->fields.limitType = 4;
+
                 __this->OpenStatusWindow(windowParam, nullptr);
             }
 
@@ -355,15 +375,22 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
                 Dpr::MsgWindow::MsgWindowParam::Object* msgWindowParam = Dpr::MsgWindow::MsgWindowParam::newInstance();
                 auto msgManager = Dpr::Message::MessageManager::instance();
                 msgWindowParam->fields.useMsgFile = msgManager->GetMsgFile(System::String::Create("ss_btl_tower_menu_ui_text"));
-                msgWindowParam->fields.labelName = System::String::Create("ftr_hall_stage_typeselect_confirm");
+                msgWindowParam->fields.labelName = System::String::Create(selectIndex ==
+                        TypeSelectorIndex::MATRON ? "ftr_hall_stage_typeselect_matron_text_2" : "ftr_hall_stage_typeselect_confirm");
                 msgWindowParam->fields.inputEnabled = true;
                 msgWindowParam->fields.inputCloseEnabled = false;
 
-                int32_t remappedIndex = RemapTypeIndex(selectIndex);
-                Rank currentRank = getCustomSaveData()->battleHall.getRank(TYPES[remappedIndex]);
+                if (selectIndex != TypeSelectorIndex::MATRON) {
+                    int32_t remappedIndex = RemapTypeIndex(selectIndex);
+                    Rank currentRank = getCustomSaveData()->battleHall.getRank(TYPES[remappedIndex]);
 
-                Dpr::Message::MessageWordSetHelper::SetWazaTypeWord(0, remappedIndex);
-                Dpr::Message::MessageWordSetHelper::SetDigitWord(1, static_cast<int32_t>(currentRank) + 1);
+                    Dpr::Message::MessageWordSetHelper::SetWazaTypeWord(0, remappedIndex);
+                    Dpr::Message::MessageWordSetHelper::SetDigitWord(1, static_cast<int32_t>(currentRank) + 1);
+                }
+
+                else {
+                    FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, -1);
+                }
 
                 system_load_typeinfo(0x79b7);
                 MethodInfo* mi = (
@@ -483,7 +510,6 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                                 rankText = traysChild->GetChild({i, 3})->GetComponent(
                                         UnityEngine::Component::Method$$UIText$$GetComponent);
                                 int32_t typeIndex = RemapTypeIndex(i);
-                                FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, typeIndex);
 
                                 dimmedImage = traysChild->GetChild({i, 2})->GetComponent(
                                         UnityEngine::Component::Method$$Image$$GetComponent);
@@ -674,8 +700,16 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpCloseMoveNext) {
 
                         ((Dpr::UI::UIWindow::Object*)window)->CloseMessageWindow();
 
-                        auto currentTypeIndex = RemapTypeIndex(window->fields._currentTrayIndex);
-                        Logger::log("[OpClose] Setting current type to: %s.\n", TYPES[currentTypeIndex]);
+                        int32_t currentTypeIndex;
+                        if (window->fields._currentTrayIndex == TypeSelectorIndex::MATRON) {
+                            currentTypeIndex = -1;
+                            Logger::log("[OpClose] Setting current type to: %s.\n", "Matron");
+                        }
+                        else {
+                            currentTypeIndex = RemapTypeIndex(window->fields._currentTrayIndex);
+                            Logger::log("[OpClose] Setting current type to: %s.\n", TYPES[currentTypeIndex]);
+                        }
+
                         FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE, currentTypeIndex);
 
                         if (window->fields._coOpen == nullptr)
@@ -829,24 +863,26 @@ HOOK_DEFINE_INLINE(OpLoadWindows_b__136_0) {
     }
 };
 
-HOOK_DEFINE_TRAMPOLINE(OpenStatusWindow__b__0) {
-    static void Callback(Dpr::UI::BoxWindow::__c__DisplayClass282_0::Object* __this) {
-        Logger::log("[OpenStatusWindow__b__0]\n");
-        Orig(__this);
-    }
-};
-
-HOOK_DEFINE_TRAMPOLINE(OpenStatusWindow__b__1) {
-    static void Callback(void* __this, Dpr::UI::UIWindow::Object* window) {
-        Logger::log("[OpenStatusWindow__b__1]\n");
-        Orig(__this, window);
-    }
-};
-
 HOOK_DEFINE_TRAMPOLINE(OpenStatusWindow__b__2) {
     static void Callback(void* __this, Dpr::UI::UIWindow::Object* statusWindow) {
         Logger::log("[OpenStatusWindow__b__2]\n");
-        Orig(__this, statusWindow);
+        //Orig(__this, statusWindow);
+
+        system_load_typeinfo(0x96ab);
+
+        Dpr::UI::UIManager::getClass()->initIfNeeded();
+        auto boxWindow = Dpr::UI::UIManager::instance()->CreateUIWindow(
+                UIWindowID::BATTLEHALL_TYPE_SELECT,Dpr::UI::UIManager::Method$$CreateUIWindow_BoxWindow_);
+
+        Dpr::EvScript::EvDataManager::getClass()->initIfNeeded();
+        auto manager = Dpr::EvScript::EvDataManager::get_Instanse();
+
+        MethodInfo* mi = *UnityEngine::Events::UnityAction::Method$$Dpr_EvScript_EvDataManager__EvCmdBoxSetProc__b__742_0;
+        auto onClosed = UnityEngine::Events::UnityAction::getClass(UnityEngine::Events::UnityAction::UIWindow_TypeInfo)->newInstance(manager, mi);
+        auto parentOnClosed = &(boxWindow->fields).onClosed;
+        *parentOnClosed = onClosed;
+
+        boxWindow->Open(-2, true);
     }
 };
 
@@ -858,7 +894,7 @@ void exl_more_ui_main() {
     BoxWindow$$Close::InstallAtOffset(0x01cb5cc0);
     BoxWindow$$OpCloseMoveNext::InstallAtOffset(0x01a25310);
 
-
+    OpenStatusWindow__b__2::InstallAtOffset(0x01a21db0);
 
     UIWindow$$OnAddContextMenuYesNoItemParams::InstallAtOffset(0x01a35e30);
 

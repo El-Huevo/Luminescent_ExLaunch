@@ -50,7 +50,7 @@ namespace ui {
                     _.label = "Round";
                     _.min = 0;
                     _.max = 169;
-                    _.value = (&getCustomSaveData()->battleHall)->currentRound;
+                    _.value = 49;
                 });
 
                 _.Button([round](Button &_) {

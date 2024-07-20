@@ -65,6 +65,8 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
     playerParty->AddMember(playerPoke);
 
+    std::mt19937 rng = getRNG();
+
     if (MatronCheck()) {
         if (currentRound == 49) {
             IV = rankIVLookup(RANK_10);
@@ -79,6 +81,8 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
 
         level = playerPoke->fields.m_accessor->GetLevel();
         enemy1 = 305;
+        std::uniform_int_distribution<int> typeDistribution(NORMAL, TYPE_COUNT-2);
+        currentType = typeDistribution(rng);
     }
 
     else {
@@ -91,8 +95,6 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
                                   currentType, allTypeRanks);
         enemy1 = 32;
     }
-
-    std::mt19937 rng = getRNG();
 
     auto activePool = getTypePool(TYPES[currentType], groupNo);
     std::uniform_int_distribution<int> distribution(0, activePool.size()-1);

@@ -23,6 +23,12 @@ namespace Pml::PokePara {
 
 namespace System::Collections::Generic {
     struct List$$PokemonParam : List<List$$PokemonParam, Pml::PokePara::PokemonParam> {
+        static inline long typeInfo = 0x04c5e798;
         static inline StaticILMethod<0x04c8a080, Pml::PokePara::PokemonParam> Method$$Add {};
+        static inline StaticILMethod<0x04c8a070> Method$$ctor {};
+
+        inline void ctor(MethodInfo* mi) {
+            external<void>(0x02a3ba70, this, mi);
+        }
     };
 }
