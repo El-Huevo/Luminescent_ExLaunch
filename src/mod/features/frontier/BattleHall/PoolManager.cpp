@@ -1,4 +1,5 @@
 #include "PoolManager.h"
+#include "data/types.h"
 
 namespace BattleHallPool {
     void PoolManager::initializeTypeLists() {

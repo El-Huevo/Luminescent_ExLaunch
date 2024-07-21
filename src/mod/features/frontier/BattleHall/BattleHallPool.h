@@ -1,7 +1,6 @@
 #pragma once
 #include "externals/il2cpp-api.h"
 #include "features/frontier/frontierIndex.h"
-#include "data/typeMapping.h"
 #include "helpers/fsHelper.h"
 #include "data/utils.h"
 #include "data/frontier.h"

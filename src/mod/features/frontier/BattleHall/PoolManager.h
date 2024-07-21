@@ -2,9 +2,9 @@
 #include <array>
 #include "externals/il2cpp-api.h"
 #include "features/frontier/frontierIndex.h"
-#include "data/typeMapping.h"
 #include "helpers/fsHelper.h"
 #include "data/utils.h"
+#include "data/types.h"
 #include "data/frontier.h"
 #include "externals/Pml/PokePara/PokemonParam.h"
 #include "data/species.h"
