@@ -16,5 +16,13 @@
 
 bool FTR_HALL_SELECTOR_SEAL_UI_WAIT(Dpr::EvScript::EvDataManager::Object* manager) {
     //Logger::log("[_FTR_HALL_SELECTOR_SEAL_UI_WAIT] \n"); // Keep this one silent or your logs will suffer
-    return manager->fields._pc_window_close;
+    bool isClosed = manager->fields._pc_window_close;
+
+    if (isClosed) {
+        Logger::log("[SEAL_UI_WAIT] Closed.\n");
+        FlagWork::SetWork(FlagWork_Work::WK_CURRENT_CUSTOM_UI, 0);
+        FlagWork::SetFlag(FlagWork_Flag::MATRON_EVENT_CALLBACK, false);
+    }
+
+    return isClosed;
 }

@@ -9,6 +9,7 @@
 #include "externals/Dpr/UI/UINavigator.h"
 #include "ContextMenuWindow.h"
 #include "PokemonStatusWindow.h"
+#include "Keyguide.h"
 
 namespace Dpr::UI {
     struct BoxWindow : ILClass<BoxWindow, 0x04c5ca38> {
@@ -216,7 +217,7 @@ namespace Dpr::UI {
             UnityEngine::Coroutine::Object* _coClose; // 0x338
             void* _modelView; // 0x340
             void* _messageParam; // 0x348
-            void* _keyguideParam; // 0x350
+            Dpr::UI::Keyguide::Param::Object* _keyguideParam; // 0x350
             UnityEngine::Material::Object* _matSearchButton; // 0x358
             UnityEngine::Material::Object* _matBoxButton; // 0x360
             void* _twSequence; // 0x368

@@ -5,19 +5,14 @@
 #include "externals/FlagWork.h"
 #include "externals/FlagWork_Enums.h"
 #include "externals/UnityEngine/_Object.h"
-#include "externals/BtlTowerWork.h"
-#include "externals/RecordWork.h"
 #include "externals/Dpr/UI/BoxWindow.h"
 #include "externals/SmartPoint/AssetAssistant/Sequencer.h"
 #include "externals/Dpr/UI/SelectPlayerVisualWindow.h"
-#include "externals/OpeningController.h"
 #include "ui/ui.h"
 #include "externals/Dpr/Demo/DemoSceneManager.h"
-#include "externals/Dpr/Demo/Demo_Hakase.h"
 #include "externals/Dpr/UI/UINavigator.h"
 #include "externals/Audio/AudioManager.h"
 #include "externals/UnityEngine/Animator.h"
-#include "externals/Dpr/UI/UIWindowStateMachine.h"
 #include "externals/Dpr/MsgWindow/MsgWindow.h"
 #include "externals/UnityEngine/Mathf.h"
 #include "externals/Dpr/Message/MessageManager.h"
@@ -25,7 +20,6 @@
 #include "externals/ContextMenuID.h"
 #include "externals/Dpr/UI/ContextMenuWindow.h"
 #include "externals/Dpr/UI/SelectLanguageWindow.h"
-#include "externals/Dpr/UI/CardBackView.h"
 #include "externals/System/Func.h"
 #include "externals/Dpr/Message/MessageWordSetHelper.h"
 #include "data/utils.h"
@@ -35,6 +29,8 @@
 #include "externals/Dpr/BattleMatching/BattleMatchingWork.h"
 #include "externals/UnityEngine/Sprite.h"
 #include "externals/Dpr/UI/PokemonIcon.h"
+#include "externals/Dpr/UI/Keyguide.h"
+#include "externals/Dpr/UI/UIPofinCase.h"
 
 const int32_t typeSelectorRowNum = 5;
 const int32_t typeSelectorColNum = 4;
@@ -80,11 +76,6 @@ bool SetSelectIndex(Dpr::UI::BoxWindow::Object* __this, int32_t index, bool isIn
         if (beforeIndex == index) {
             return false;
         }
-
-        else {
-            Logger::log("[SetSelectIndex] SelectIndex: %d.\n", index);
-        }
-
         __this->fields._currentTrayIndex = index;
     }
 
@@ -201,6 +192,7 @@ void MatronInboundMessageHandler(Dpr::UI::UIWindow::Object* window) {
         }
     }
 
+    FlagWork::SetFlag(FlagWork_Flag::MATRON_EVENT_CALLBACK, true);
     if (SetSelectIndex(boxWindow, 19)) {
         Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_SELECT, nullptr);
     }
@@ -365,6 +357,7 @@ void OnUpdate(Dpr::UI::BoxWindow::Object* __this, float deltaTime) {
                 windowParam->fields.limitType = 4;
 
                 __this->OpenStatusWindow(windowParam, nullptr);
+
             }
 
             else if (!isDimmed && selectIndex != TypeSelectorIndex::FAIRY) {
@@ -438,6 +431,15 @@ void OpenBoxWindow(Dpr::UI::BoxWindow::Object* __this, Dpr::UI::BoxWindow::OpenP
     __this->fields._coOpen = IEnumerator;
 }
 
+UIWindowID GetWindowID() {
+    int32_t currentWindow = FlagWork::GetWork(FlagWork_Work::WK_CURRENT_CUSTOM_UI);
+    switch (currentWindow) {
+        default:
+        case 0: return UIWindowID::BOX;
+        case 1: return UIWindowID::BATTLEHALL_TYPE_SELECT;
+    }
+}
+
 HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Open) {
     static void Callback(Dpr::UI::BoxWindow::Object* __this, int32_t prevWindowId, bool isDuckOn) {
         switch (__this->fields.instance->fields._windowId) {
@@ -463,8 +465,7 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Open) {
 HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
     static bool Callback(Dpr::UI::BoxWindow::__OpOpen_d__200::Object* __this) {
         Logger::log("[BoxWindow...d__200$$MoveNext].\n");
-        UIWindowID windowId = FlagWork::GetFlag(FlagWork_Flag::FLAG_UI_WINDOW_SWITCH)
-                              ? UIWindowID::BATTLEHALL_TYPE_SELECT : UIWindowID::BOX;
+        UIWindowID windowId = GetWindowID();
         switch (windowId) {
             case UIWindowID::BOX: {
                 return Orig(__this);
@@ -506,7 +507,7 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                         UnityEngine::UI::Image::Object* dimmedImage;
                         UnityEngine::GameObject* gameObj;
                         for (int32_t i = 0; i < TYPE_COUNT; ++i) { //Intentionally excludes Fairy for now
-                            if (i != 16) {
+                            if (i != TypeSelectorIndex::SUMMARY) {
                                 rankText = traysChild->GetChild({i, 3})->GetComponent(
                                         UnityEngine::Component::Method$$UIText$$GetComponent);
                                 int32_t typeIndex = RemapTypeIndex(i);
@@ -514,7 +515,9 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                                 dimmedImage = traysChild->GetChild({i, 2})->GetComponent(
                                         UnityEngine::Component::Method$$Image$$GetComponent);
                                 gameObj = dimmedImage->cast<UnityEngine::Component>()->get_gameObject();
-                                gameObj->SetActive(getCustomSaveData()->battleHall.currentRank[typeIndex] == RANK_COUNT);
+
+                                gameObj->SetActive(getCustomSaveData()->battleHall.currentRank[typeIndex] ==
+                                    RANK_COUNT || FlagWork::GetFlag(FlagWork_Flag::MATRON_EVENT_CALLBACK));
                                 rankText->SetFormattedText(onSet, nullptr, nullptr);
                             }
                         }
@@ -526,34 +529,26 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpOpenMoveNext) {
                                         UnityEngine::Component::Method$$UIText$$GetComponent);
 
                         monsIconText->SetFormattedText(onSetMonsIcon, nullptr, nullptr);
-                        Logger::log("[OnOpen] Set monsIconText.\n");
                         Dpr::UI::PokemonIcon::Object* monsIcon = traysChild->GetChild(
                                 {TypeSelectorIndex::SUMMARY, 2})->GetComponent(
                                 UnityEngine::Component::Method$$PokemonIcon$$GetComponent);
-                        Logger::log("[OnOpen] Got monsIcon component.\n");
+
                         Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
                         auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
                         auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
                         auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
-                        Logger::log("[OnOpen] Retrieved poke params.\n");
 
                         int32_t monsNo = playerPoke->cast<Pml::PokePara::CoreParam>()->GetMonsNo();
                         int32_t formNo = playerPoke->cast<Pml::PokePara::CoreParam>()->GetFormNo();
                         uint8_t sex = playerPoke->cast<Pml::PokePara::CoreParam>()->GetSex();
                         uint8_t rareType = playerPoke->cast<Pml::PokePara::CoreParam>()->GetRareType();
 
-                        Logger::log("[OnOpen] Retrieved all lookup details.\n");
-
                         MethodInfo* onCompleteMI = (*Dpr::UI::PokemonIcon::Method$$__Load__b__9_0)->copyWith(
                                 (Il2CppMethodPointer) &MonsSpriteHandler);
                         auto onComplete = UnityEngine::Events::UnityAction::getClass(
                                 UnityEngine::Events::UnityAction::Sprite_TypeInfo)->newInstance(monsIcon, onCompleteMI);
 
-                        Logger::log("[OnOpen] onComplete primed.\n");
-
                         Dpr::UI::UIManager::instance()->LoadSpritePokemon(monsNo, formNo, sex, rareType, false, onComplete);
-
-                        Logger::log("[OnOpen] Loaded sprite.\n");
 
                         (__this->fields).__2__current = reinterpret_cast<Il2CppObject *>(((Dpr::UI::UIWindow::Object *) window)->OpPlayOpenWindowAnimation(
                                 __this->fields.prevWindowId, nullptr));
@@ -630,22 +625,6 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OnUpdate) {
     }
 };
 
-HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Awake) {
-    static void Callback(Dpr::UI::BoxWindow::Object* __this) {
-        switch (FlagWork::GetFlag(FlagWork_Flag::FLAG_UI_WINDOW_SWITCH) ? UIWindowID::BATTLEHALL_TYPE_SELECT : UIWindowID::BOX) {
-            case UIWindowID::BOX:
-            default:
-                //Logger::log("[BoxWindow$$Awake] UIWindowID = BOX.\n");
-                Orig(__this);
-                break;
-            case UIWindowID::BATTLEHALL_TYPE_SELECT:
-                //Logger::log("[BoxWindow$$Awake] UIWindowID = BATTLEHALL_TYPE_SELECT.\n");
-                Orig(__this);
-                break;
-        }
-    }
-};
-
 HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Close) {
     static void Callback(Dpr::UI::BoxWindow::Object* __this, UnityEngine::Events::UnityAction::Object* onClosed_, int32_t nextWindowId) {
         switch (__this->fields.instance->fields._windowId) {
@@ -683,9 +662,7 @@ HOOK_DEFINE_TRAMPOLINE(BoxWindow$$Close) {
 HOOK_DEFINE_TRAMPOLINE(BoxWindow$$OpCloseMoveNext) {
     static bool Callback(Dpr::UI::BoxWindow::__OpClose_d__204::Object* __this) {
         Logger::log("[BoxWindow...d__204$$MoveNext].\n");
-        UIWindowID windowId = FlagWork::GetFlag(FlagWork_Flag::FLAG_UI_WINDOW_SWITCH)
-                              ? UIWindowID::BATTLEHALL_TYPE_SELECT : UIWindowID::BOX;
-        switch (windowId) {
+        switch (GetWindowID()) {
             case UIWindowID::BOX: {
                 return Orig(__this);
             }
@@ -866,33 +843,72 @@ HOOK_DEFINE_INLINE(OpLoadWindows_b__136_0) {
 HOOK_DEFINE_TRAMPOLINE(OpenStatusWindow__b__2) {
     static void Callback(void* __this, Dpr::UI::UIWindow::Object* statusWindow) {
         Logger::log("[OpenStatusWindow__b__2]\n");
-        //Orig(__this, statusWindow);
+        switch (GetWindowID()) {
 
-        system_load_typeinfo(0x96ab);
+            case UIWindowID::BOX: {
+                Orig(__this, statusWindow);
+                break;
+            }
 
-        Dpr::UI::UIManager::getClass()->initIfNeeded();
-        auto boxWindow = Dpr::UI::UIManager::instance()->CreateUIWindow(
-                UIWindowID::BATTLEHALL_TYPE_SELECT,Dpr::UI::UIManager::Method$$CreateUIWindow_BoxWindow_);
+            case UIWindowID::BATTLEHALL_TYPE_SELECT: {
+                system_load_typeinfo(0x96ab);
 
-        Dpr::EvScript::EvDataManager::getClass()->initIfNeeded();
-        auto manager = Dpr::EvScript::EvDataManager::get_Instanse();
+                Dpr::UI::UIManager::getClass()->initIfNeeded();
+                auto boxWindow = Dpr::UI::UIManager::instance()->CreateUIWindow(
+                        UIWindowID::BATTLEHALL_TYPE_SELECT,Dpr::UI::UIManager::Method$$CreateUIWindow_BoxWindow_);
 
-        MethodInfo* mi = *UnityEngine::Events::UnityAction::Method$$Dpr_EvScript_EvDataManager__EvCmdBoxSetProc__b__742_0;
-        auto onClosed = UnityEngine::Events::UnityAction::getClass(UnityEngine::Events::UnityAction::UIWindow_TypeInfo)->newInstance(manager, mi);
-        auto parentOnClosed = &(boxWindow->fields).onClosed;
-        *parentOnClosed = onClosed;
+                Dpr::EvScript::EvDataManager::getClass()->initIfNeeded();
+                auto manager = Dpr::EvScript::EvDataManager::get_Instanse();
 
-        boxWindow->Open(-2, true);
+                MethodInfo* mi = *UnityEngine::Events::UnityAction::Method$$Dpr_EvScript_EvDataManager__EvCmdBoxSetProc__b__742_0;
+                auto onClosed = UnityEngine::Events::UnityAction::getClass(UnityEngine::Events::UnityAction::UIWindow_TypeInfo)->newInstance(manager, mi);
+                auto parentOnClosed = &(boxWindow->fields).onClosed;
+                *parentOnClosed = onClosed;
+
+                boxWindow->Open(-2, true);
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
+    }
+};
+
+HOOK_DEFINE_TRAMPOLINE(KeyGuide$$Setup) {
+    static void Callback(Dpr::UI::Keyguide::Object* __this, Dpr::UI::Keyguide::Param::Object* param) {
+        UIWindowID windowID = GetWindowID();
+        switch(windowID) {
+            case UIWindowID::BATTLEHALL_TYPE_SELECT: {
+                param->fields.itemParams->Clear();
+                KeyguideItem::Param::Object* newKeyguide = KeyguideItem::Param::newInstance();
+                newKeyguide->fields.keyguideId = KeyguideID::BOX_TOP_DECIDE;
+                param->fields.itemParams->Add(newKeyguide);
+                Orig(__this, param);
+                break;
+            }
+
+            case UIWindowID::BOX: {
+                Orig(__this, param);
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
     }
 };
 
 void exl_more_ui_main() {
-    BoxWindow$$Awake::InstallAtOffset(0x01cb6020);
+    BoxWindow$$Close::InstallAtOffset(0x01cb5cc0);
     BoxWindow$$OnUpdate::InstallAtOffset(0x01cb8b20);
+    BoxWindow$$OpCloseMoveNext::InstallAtOffset(0x01a25310);
     BoxWindow$$Open::InstallAtOffset(0x01cb6080);
     BoxWindow$$OpOpenMoveNext::InstallAtOffset(0x01a25870);
-    BoxWindow$$Close::InstallAtOffset(0x01cb5cc0);
-    BoxWindow$$OpCloseMoveNext::InstallAtOffset(0x01a25310);
+    KeyGuide$$Setup::InstallAtOffset(0x01c57fd0);
+
 
     OpenStatusWindow__b__2::InstallAtOffset(0x01a21db0);
 
