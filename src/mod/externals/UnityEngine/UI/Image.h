@@ -1,6 +1,7 @@
 #pragma once
 
 #include "externals/il2cpp-api.h"
+#include "externals/UnityEngine/Sprite.h"
 #include "externals/UnityEngine/UI/MaskableGraphic.h"
 #include "externals/UnityEngine/Sprite.h"
 
@@ -23,7 +24,7 @@ namespace UnityEngine::UI {
             float m_CachedReferencePixelsPerUnit;
         };
 
-        inline void set_sprite(Sprite::Object* value) {
+        inline void set_sprite(UnityEngine::Sprite::Object* value) {
             external<void>(0x024b8ed0, this, value);
         }
     };

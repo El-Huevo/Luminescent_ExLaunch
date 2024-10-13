@@ -19,6 +19,9 @@ void exl_save_data_expansion_main();
 // Applies multiple small one-line patches.
 void exl_patches_main();
 
+// Applies new battle functionality.
+void exl_battle_features_main();
+
 // Applies some basic ability changes.
 void exl_ability_changes_main();
 
@@ -85,6 +88,9 @@ void exl_language_select_main();
 // Adds the Level Cap functionality.
 void exl_level_cap_main();
 
+// Uniformizes local trades across languages and allows extending the table in RomFS.
+void exl_local_trades_main();
+
 // Adds audio feedback when "bonking" into NPCs.
 void exl_npc_collision_audio_main();
 
@@ -95,7 +101,7 @@ void exl_pla_context_menu_main();
 void exl_poke_radar_fixes_main();
 
 // Adds support for two-button Pokétch.
-// Requires an edited uiresidentwindow bundle with a second Pokétch button.
+// Requires an edited PoketchWindow prefab with a second Pokétch button.
 void exl_poketch_main();
 
 // Replaces pickup ranges with new ranges abiding by Lumi level caps
@@ -103,6 +109,10 @@ void exl_pickup_main();
 
 // Tweaks the move relearner menu to include owned TMs.
 void exl_relearn_tms_main();
+
+// Adds support for Egg Groups, Abilities, Held Items, etc. to be shown in the Pokédex.
+// Requires an edited Zukan prefab with the required components.
+void exl_relumi_dex_ui();
 
 // Remaps the controls.
 void exl_remap_main();
@@ -121,9 +131,6 @@ void exl_sounds_main();
 
 // Adds support for alternate forms for the field swarm models.
 void exl_swarm_forms_main();
-
-// Deposits items obtained by thief directly into the player's bag.
-void exl_thief_patches_main();
 
 // Allows double battles on trainers.
 void exl_trainer_double_battles_main();

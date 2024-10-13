@@ -18,7 +18,11 @@ void DisableSaveFeatures();
 // Disables all small patches.
 void DisableSmallPatchFeatures();
 
+// Disables all frontier features.
 void DisableFrontierFeatures();
+
+// Disables all battle features.
+void DisableBattleFeatures();
 
 
 // Activate a given feature.
@@ -39,7 +43,11 @@ void SetActivatedSaveFeature(int feature);
 // Activate a given small patch.
 void SetActivatedSmallPatchFeature(int feature);
 
+// Activate a given frontier feature.
 void SetActivatedFrontierFeature(int feature);
+
+// Activate a given battle feature.
+void SetActivatedBattleFeature(int feature);
 
 
 // Check if a given feature is enabled.
@@ -60,4 +68,8 @@ bool IsActivatedSaveFeature(int feature);
 // Check if a given small patch is enabled.
 bool IsActivatedSmallPatchFeature(int feature);
 
+// Check if a given frontier feature is enabled.
 bool IsActivatedFrontierFeature(int feature);
+
+// Check if a given battle feature is enabled.
+bool IsActivatedBattleFeature(int feature);

@@ -4,47 +4,42 @@
 
 #include "logger/logger.h"
 
-const uint64_t VANILLA_DEXSIZE = 493;
-
-
 void migrateFromVanilla(PlayerWork::Object* playerWork) {
     Logger::log("Migrating from Vanilla...\n");
     CustomSaveData* save = getCustomSaveData();
 
     auto& savedata = playerWork->fields._saveData.fields;
-    auto& zukan = playerWork->fields._saveData.fields.zukanData.fields;
     auto& kinomigrow = playerWork->fields._saveData.fields.kinomiGrowSaveData.fields;
     auto& myStatus = playerWork->fields._saveData.fields.playerData.fields.mystatus.fields;
 
+    // Initialize Data Expansions
+    save->dex.Initialize();
+    save->berries.Initialize();
+    save->playerColorVariation.Initialize();
+    save->flags.Initialize();
+    save->sysflags.Initialize();
+    save->works.Initialize();
+    save->trainers.Initialize();
+    save->items.Initialize();
+
     // Copy over vanilla data from PlayerWork into the custom save
-    for (uint64_t i=0; i<VANILLA_DEXSIZE; i++)
-    {
-        save->dex.elements[i].get_status = zukan.get_status->m_Items[i];
-        save->dex.elements[i].male_color_flag = zukan.male_color_flag->m_Items[i];
-        save->dex.elements[i].female_color_flag = zukan.female_color_flag->m_Items[i];
-        save->dex.elements[i].male_flag = zukan.male_flag->m_Items[i];
-        save->dex.elements[i].female_flag = zukan.female_flag->m_Items[i];
-        save->dex.elements[i].female_flag = zukan.female_flag->m_Items[i];
-    }
 
     savedata.boxData.fields.trayName->copyInto(save->boxes.boxNames);
     savedata.boxData.fields.wallPaper->copyInto(save->boxes.wallpapers);
     savedata.boxTray->copyInto(save->boxes.pokemonParams);
 
-    auto spfCls = Pml::PokePara::SerializedPokemonFull_array_TypeInfo();
+    System::String::Object* nullTest = save->boxes.boxNames[0].fields.str;
+    int32_t index = (strcmp(nullTest->asCString().c_str(), "") == 0) ? 0 : VANILLA_BOXSIZE;
 
-    const nn::vector<const char*> boxDefaultStrings {
-            "Box 41", "Box 42", "Box 43", "Box 44", "Box 45", "Box 46", "Box 47", "Box 48", "Box 49", "Box 50",
-            "Box 51", "Box 52", "Box 53", "Box 54", "Box 55", "Box 56", "Box 57", "Box 58", "Box 59", "Box 60",
-            "Box 61", "Box 62", "Box 63", "Box 64", "Box 65", "Box 66", "Box 67", "Box 68", "Box 69", "Box 70",
-            "Box 71", "Box 72", "Box 73", "Box 74", "Box 75", "Box 76", "Box 77", "Box 78", "Box 79", "Box 80"
-    };
+    for (uint64_t i=index; i < BoxCount; i++) {
+        nn::string boxString("Box ");
+        save->boxes.boxNames[i].fields.str = System::String::Create(boxString.append(nn::to_string(i+1)));
+    }
 
     // Initializes boxes 41-80, 1-40 are copied directly from Vanilla.
     for (uint64_t i=VANILLA_BOXSIZE; i < BoxCount; i++) {
-        save->boxes.boxNames[i].fields.str = System::String::Create(boxDefaultStrings[i-VANILLA_BOXSIZE]);
         save->boxes.wallpapers[i] = save->boxes.wallpapers[i-VANILLA_BOXSIZE+INIT_WALLPAPER_OFFSET]; // Follows exact pattern of Vanilla 1-40
-        auto serializedPokemon = (Pml::PokePara::SerializedPokemonFull::Array*) system_array_new(spfCls, 30);
+        auto serializedPokemon = Pml::PokePara::SerializedPokemonFull::newArray(30);
         save->boxes.pokemonParams[i].fields.pokemonParam = serializedPokemon;
         for (uint64_t j=0; j < serializedPokemon->max_length; j++) {
             serializedPokemon->m_Items[j].CreateWorkIfNeed();
@@ -83,6 +78,18 @@ void migrateFromVanilla(PlayerWork::Object* playerWork) {
 
     // Set amount of boxes unlocked to 80
     playerWork->fields._saveData.fields.boxData.fields.trayMax = BoxCount;
+
+
+    Logger::log("Gigantamaxing PlayerWork...\n");
+
+    linkWorks(playerWork);
+    linkFlags(playerWork);
+    linkSysFlags(playerWork);
+    linkZukan(playerWork);
+    linkItems(playerWork);
+    linkTrainers(playerWork);
+    linkBerries(playerWork);
+    linkBoxes(playerWork);
 
     Logger::log("Migration from Vanilla done!\n");
 }

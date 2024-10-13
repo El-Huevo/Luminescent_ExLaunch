@@ -1,5 +1,7 @@
 #pragma once
+
 #include "externals/il2cpp-api.h"
+#include "externals/XLSXContent/BattleSetupEffectLots.h"
 
 namespace Dpr::Battle::Logic {
     struct BgComponentData : ILClass<BgComponentData> {
@@ -13,7 +15,7 @@ namespace Dpr::Battle::Logic {
             bool isIndoor;
             int32_t reflectionResolution;
             int32_t shadowResolution;
-            void* arenaEffTable;
+            XLSXContent::BattleSetupEffectLots::SheetArenaEffTable::Object* arenaEffTable;
         };
 
         inline void SetUpBgComponentData(int32_t id) {

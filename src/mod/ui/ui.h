@@ -16,5 +16,7 @@ void setArenaSettings(bool enabled, int id);
 void showAreaName();
 void setFlyOverride(bool enabled);
 void OpenSelectPlayerVisual();
+void setDexGetStatusOverride(bool enabled);
+void setFullDex(int32_t getStatus);
 
 #define ROOT getRootElement()

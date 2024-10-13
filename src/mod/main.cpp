@@ -53,6 +53,12 @@ void logFeatures() {
     for (int i=0; i<FRONTIER_FEATURE_COUNT; i++)
         if (IsActivatedFrontierFeature(i))
             Logger::log(" %s\n", FRONTIER_FEATURES[i]);
+    Logger::log("\n"); 
+    
+    Logger::log("Battle Features:\n");
+    for (int i=0; i<BATTLE_FEATURE_COUNT; i++)
+        if (IsActivatedBattleFeature(i))
+            Logger::log(" %s\n", BATTLE_FEATURES[i]);
     Logger::log("\n");
 }
 
@@ -74,6 +80,11 @@ HOOK_DEFINE_TRAMPOLINE(MainInitHook){
         nn::oe::DisplayVersion display_version{};
         nn::oe::GetDisplayVersion(&display_version);
         Logger::log("Detected version: %s\n", display_version.name);
+
+
+        // Load activated features
+        exl_save_main();
+        exl_features_main(); // Features JSON is read here
 
         if (IsActivatedDebugFeature(array_index(DEBUG_FEATURES, "Feature Logging")))
             logFeatures();
@@ -113,8 +124,6 @@ extern "C" void exl_main(void* x0, void* x1) {
     exl_imgui_main();
     exl_debug_menu_main();
 #endif
-    exl_save_main();
-    exl_features_main();
 }
 
 extern "C" NORETURN void exl_exception_entry() {

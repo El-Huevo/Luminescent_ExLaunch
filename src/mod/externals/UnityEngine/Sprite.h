@@ -4,8 +4,7 @@
 
 namespace UnityEngine {
     struct Sprite : ILClass<Sprite> {
-        struct Fields : _Object::Fields {
-
+        struct Fields : UnityEngine::_Object::Fields {
         };
     };
 }

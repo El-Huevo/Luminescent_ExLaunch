@@ -16,6 +16,7 @@
 #include "save/data/work/work.h"
 #include "save/data/frontier/frontier.h"
 #include "save/data/frontier/battle_factory.h"
+#include "save/data/ayou/ayou.h"
 
 #include "logger/logger.h"
 
@@ -29,6 +30,9 @@ constexpr int32_t BerryCount = 1000;
 constexpr int32_t BoxCount = 80;
 
 struct CustomSaveData {
+    static constexpr const char* mainSaveName = "SaveData:/SaveData.bin";
+    static constexpr const char* backupSaveName = "SaveData:/Backup.bin";
+    static constexpr const char* saveMountName = "SaveData";
     MainSaveData main;
     // ONLY MAKE MODIFICATIONS TO THE SIZE/COUNT ARGUMENTS, OTHERWISE YOU WILL BREAK SAVE COMPATIBILITY
     DexSaveData<DexSize> dex;
@@ -42,7 +46,7 @@ struct CustomSaveData {
     ColorVariationSaveData playerColorVariation;
     HallSaveData battleHall;
     FactorySaveData battleFactory;
-
+    AYouSaveData ayou;
 };
 
 CustomSaveData* getCustomSaveData();

@@ -25,7 +25,6 @@ static constexpr const char* FEATURES[] = {
     "Party Context Menu",
     "Pickup Changes",
     "Poké Radar Fixes",
-    "Thief Deposits to Bag",
     "Two-Button Pokétch",
     "Relearn TMs",
     "Controls Remap",
@@ -43,6 +42,8 @@ static constexpr const char* FEATURES[] = {
     "Visible Shiny Eggs",
     "Contest NPC Forms",
     "More UI",
+    "Re:Lumi Pokédex UI",
+    "Local Trades Extension",
 };
 
 constexpr int FEATURE_COUNT = sizeof(FEATURES) / sizeof(FEATURES[0]);
@@ -78,7 +79,6 @@ static constexpr const char* KEY_ITEM_FEATURES[] = {
 
 constexpr int KEY_ITEM_FEATURE_COUNT = sizeof(KEY_ITEM_FEATURES) / sizeof(KEY_ITEM_FEATURES[0]);
 
-
 static constexpr const char* SMALL_PATCH_FEATURES[] = {
     "Affection Toggle",
     "Global Exp. Share Toggle",
@@ -97,6 +97,16 @@ constexpr int SAVE_FEATURE_COUNT = sizeof(SAVE_FEATURES) / sizeof(SAVE_FEATURES[
 
 static constexpr const char* FRONTIER_FEATURES[] = {
         "Battle Hall",
+        "Battle Factory"
 };
 
 constexpr int FRONTIER_FEATURE_COUNT = sizeof(FRONTIER_FEATURES) / sizeof(FRONTIER_FEATURES[0]);
+
+static constexpr const char* BATTLE_FEATURES[] = {
+    "Move Handlers",
+    "Ability Handlers",
+    "Field Handlers",
+    "Side Handlers",
+};
+
+constexpr int BATTLE_FEATURE_COUNT = sizeof(BATTLE_FEATURES) / sizeof(BATTLE_FEATURES[0]);
