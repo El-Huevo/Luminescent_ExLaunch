@@ -1,13 +1,7 @@
 #pragma once
 
-#include "data/clip_names.h"
-#include "data/utils.h"
-#include "externals/FlagWork.h"
 #include "ui/base/collapsing_header.h"
 #include "ui/base/element.h"
-#include "data/types.h"
-#include "data/frontier.h"
-#include "save/save.h"
 
 namespace ui {
     ELEMENT(FrontierTool) {
@@ -77,6 +71,44 @@ namespace ui {
                         //auto typeList = activePool->getActivePool("Normal", 1);
                         //Logger::log("Type Normal activePool element 0: %d\n", typeList.at(0));
 //                        Logger::log("Type %s activePool element 0: %d\n", TYPES[type->selected], typeList.at(0));
+
+                    };
+                });
+
+                _.Button([](Button &_) {
+                    _.label = "Serialize Party";
+                    _.onClick = []() {
+                        PlayerWork::getClass()->initIfNeeded();
+                        auto party = PlayerWork::get_playerParty();
+                        Logger::log("Got Player Party\n");
+
+                        Pml::PokeParty::Object* newParty = Pml::PokeParty::newInstance();
+                        Logger::log("New Instance\n");
+                        Pml::PokePara::PokemonParam::Object* pp = party->GetMemberPointer(0);
+                        Logger::log("Member Pointer\n");
+                        newParty->AddMember(pp);
+                        Logger::log("Added Member\n");
+                        (&getCustomSaveData()->battleFactory)->SerializePokeParty(newParty);
+                        Logger::log("Serialized Poke Party\n");
+                    };
+                });
+
+                _.Button([](Button &_) {
+                    _.label = "Deserialize Party";
+                    _.onClick = []() {
+                        PlayerWork::getClass()->initIfNeeded();
+                        auto party = PlayerWork::get_playerParty();
+                        Logger::log("Got Player Party\n");
+
+                        Pml::PokeParty::Object* newParty = Pml::PokeParty::newInstance();
+                        Logger::log("New Instance\n");
+
+                        (&getCustomSaveData()->battleFactory)->DeserializePokeParty(newParty);
+                        Logger::log("Deserialized Poke Party\n");
+
+                        for (uint64_t i=0; i < newParty->fields.m_memberCount; i++) {
+                            Logger::log("Position %d Mons No: %d\n", i, party->GetMemberPointer(i)->fields.m_accessor->GetMonsNo());
+                        }
 
                     };
                 });

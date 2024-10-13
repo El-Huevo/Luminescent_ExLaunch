@@ -1268,6 +1268,8 @@ namespace Dpr::EvScript {
             _FTR_HALL_RANK_NUM_NAME = 1309,
             _FTR_HALL_SELECTOR_SET_PROC = 1310,
             _FTR_HALL_SELECTOR_SEAL_UI_WAIT = 1311,
+            _FTR_FACTORY_SELECTOR_SET_PROC = 1312,
+            _FTR_FACTORY_SELECTOR_SEAL_UI_WAIT = 1313,
 
             _FTR_SET_CURRENT_FACILITY = 1350,
 

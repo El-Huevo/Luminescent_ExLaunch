@@ -48,6 +48,7 @@ HOOK_DEFINE_TRAMPOLINE(PatchExistingSaveData__Load) {
             loadBerries(isBackup);
             loadColorVariations(isBackup);
             loadHallData(isBackup);
+            loadFactoryData(isBackup);
             if (migrationRequired) loadBoxes(isBackup);
 
 
@@ -113,6 +114,7 @@ HOOK_DEFINE_TRAMPOLINE(PatchExistingSaveData__Save) {
         saveBerries(isMain, isBackup);
         saveColorVariations(isMain, isBackup);
         saveHallData(isMain, isBackup);
+        saveFactoryData(isMain, isBackup);
         saveBoxes(isMain, isBackup);
 #endif
 

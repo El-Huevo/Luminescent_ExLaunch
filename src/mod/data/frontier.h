@@ -32,6 +32,20 @@ enum Group : int32_t {
 };
 
 enum HallRound : int32_t {
+    HALL_ROUND_1,
+    HALL_ROUND_2,
+    HALL_ROUND_3,
+    HALL_ROUND_4,
+    HALL_ROUND_5,
+    HALL_ROUND_6,
+    HALL_ROUND_7,
+    HALL_ROUND_8,
+    HALL_ROUND_9,
+    HALL_ROUND_10,
+    HALL_ROUND_COUNT
+};
+
+enum FrontierRound : int32_t {
     ROUND_1,
     ROUND_2,
     ROUND_3,
@@ -39,10 +53,19 @@ enum HallRound : int32_t {
     ROUND_5,
     ROUND_6,
     ROUND_7,
-    ROUND_8,
-    ROUND_9,
-    ROUND_10,
     ROUND_COUNT
+};
+
+enum FrontierSet : int32_t {
+    SET_1,
+    SET_2,
+    SET_3,
+    SET_4,
+    SET_5,
+    SET_6,
+    SET_7,
+    SET_8,
+    SET_COUNT
 };
 
 enum TypeSelectorIndex : int32_t {
@@ -68,6 +91,32 @@ enum TypeSelectorIndex : int32_t {
     MATRON,
     INDEX_COUNT
 };
+
+enum FactoryLevel : int32_t {
+    NOT_SET,
+    LEVEL_50,
+    OPEN_LEVEL,
+    MODE_COUNT
+};
+
+enum FactoryIndex : int32_t {
+    POKEMON_1,
+    POKEMON_2,
+    POKEMON_3,
+    POKEMON_4,
+    POKEMON_5,
+    POKEMON_6,
+    POKEMON_COUNT
+};
+
+enum FactoryDisplayState : int32_t {
+    NO_MON_SELECTED,
+    FIRST_MON_SELECTED,
+    SECOND_MON_SELECTED,
+    THIRD_MON_SELECTED,
+    DISPLAY_STATE_COUNT
+};
+
 
 
 extern const char* frontierFolderPath;

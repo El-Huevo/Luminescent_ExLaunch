@@ -33,6 +33,19 @@ namespace Dpr::UI {
             }
         };
 
+        struct __c__DisplayClass296_0 : ILClass<__c__DisplayClass296_0, 0x04c61880> {
+            struct Fields {
+                UnityEngine::Events::UnityAction::Object* onClosed;
+                BoxWindow::Object* __4__this;
+            };
+
+            static inline StaticILMethod<0x04c7eaf0> Method$$__OpenContextMenu__b__0 {};
+
+            inline void ctor() {
+                external<void>(0x01a22910, this);
+            }
+        };
+
         struct __OpOpen_d__200 : ILClass<__OpOpen_d__200, 0x04c617c0> {
             struct Fields {
                 int32_t __1__state;

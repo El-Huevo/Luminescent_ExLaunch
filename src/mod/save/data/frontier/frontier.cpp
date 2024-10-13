@@ -1,4 +1,3 @@
-#include "frontier.h"
 #include "helpers/fsHelper.h"
 #include "save/save.h"
 
@@ -81,7 +80,7 @@ nn::vector<std::pair<const char *, Rank>> HallSaveData::getAllTypeRanks() {
 }
 
 HallRound HallSaveData::getNowRound() const {
-    return static_cast<HallRound>(currentRound % ROUND_COUNT);
+    return static_cast<HallRound>(currentRound % HALL_ROUND_COUNT);
 }
 
 void loadHallData(bool isBackup)

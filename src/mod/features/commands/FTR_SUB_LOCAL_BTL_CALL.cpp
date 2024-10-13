@@ -8,6 +8,7 @@
 #include "externals/GameManager.h"
 #include "externals/FieldManager.h"
 #include "features/frontier/BattleHall/BattleHallPool.h"
+#include "features/frontier/BattleFactory/BattleFactoryPool.h"
 #include "externals/Dpr/Battle/Logic/BTL_FIELD_SITUATION.h"
 #include "externals/Dpr/Battle/Logic/Setup.h"
 #include "externals/FlagWork_Enums.h"
@@ -52,65 +53,108 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     int32_t IV;
     Group groupNo;
     int32_t enemy1;
-
-    auto save = &getCustomSaveData()->battleHall;
-    auto currentType = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);
-    auto currentRank = save->currentRank[currentType];
-    auto currentRound = save->currentRound;
-
-    Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
-    auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
-    auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
+    frontierIndex selectedPoke;
     Pml::PokeParty::Object* playerParty = Pml::PokeParty::newInstance();
-    auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
-    playerParty->AddMember(playerPoke);
-
-    std::mt19937 rng = getRNG();
-
-    if (MatronCheck()) {
-        if (currentRound == 49) {
-            IV = rankIVLookup(RANK_10);
-            groupNo = calculateMatronGroup(playerPoke->fields.m_accessor->GetMonsNo());
-        }
-
-        else if (currentRound == 169) {
-            IV = rankIVLookup(RANK_10);
-            groupNo = GROUP_4;
-
-        }
-
-        level = playerPoke->fields.m_accessor->GetLevel();
-        enemy1 = 305;
-        std::uniform_int_distribution<int> typeDistribution(NORMAL, TYPE_COUNT-2);
-        currentType = typeDistribution(rng);
-    }
-
-    else {
-        IV = rankIVLookup(currentRank);
-        groupNo = calculateGroup(currentRank);
-
-        nn::vector<std::pair<const char *, Rank>> allTypeRanks = save->getAllTypeRanks();
-
-        level = calculateEnemyLvl(currentRank, playerPoke->fields.m_accessor->GetLevel(),
-                                  currentType, allTypeRanks);
-        enemy1 = 32;
-    }
-
-    auto activePool = getTypePool(TYPES[currentType], groupNo);
-    std::uniform_int_distribution<int> distribution(0, activePool.size()-1);
-    int index = distribution(rng);
-
-    while (duplicateCheck(&save->poolManager, activePool[index], currentType)) {
-        Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Re-rolling RNG - MonsNo duplicate: %d.\n", activePool[index]);
-        index = distribution(rng);
-    }
-
-    FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_SELECTED_MON, activePool[index]);
-    auto selectedPoke = indexLookup(activePool[index], groupNo);
-    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generated Pokemon = %d | %s.\n", activePool[index], SPECIES[activePool[index]]);
-
     Pml::PokeParty::Object* trainerParty = Pml::PokeParty::newInstance();
-    trainerParty->AddMember(Frontier::GeneratePokemon(selectedPoke, IV, level));
+    Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Parties generated.\n");
+
+    switch ((FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY))) {
+        case Facility::BATTLE_FACTORY: {
+            Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] BATTLE_FACTORY.\n");
+            auto save = &getCustomSaveData()->battleFactory;
+            Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got PlayerParty.\n");
+            std::mt19937 rng = getRNG();
+            Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got RNG.\n");
+            FrontierSet currentSet = BattleFactoryPool::GetCurrentSet();
+            Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got currentSet.\n");
+            IV = BattleFactoryPool::IVLookup(currentSet);
+            Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got IV.\n");
+            auto distribution = BattleFactoryPool::GetDistributionRange(OPEN_LEVEL, currentSet,
+                                                                        static_cast<FrontierRound>(save->currentRound));
+
+            Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got distribution.\n");
+
+            int index = distribution(rng);
+
+            for (int32_t i = 0; i < 3; i++) {
+                Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Entering clause check %d.\n", i);
+                while (BattleFactoryPool::ClausesCheck(BattleFactoryPool::IndexLookup(index, GROUP_2))) {
+                    index = distribution(rng);
+                }
+                auto pp = Frontier::GeneratePokemon(
+                        BattleFactoryPool::IndexLookup(index, GROUP_2), IV, 100);
+                int32_t monsNo = pp->fields.m_accessor->GetMonsNo();
+                Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generated Pokemon = %d | %s.\n", monsNo, SPECIES[monsNo]);
+                trainerParty->AddMember(pp);
+                playerParty->AddMember(pp);
+                index = distribution(rng);
+            }
+
+            enemy1 = 32;
+
+            break;
+        }
+        case Facility::BATTLE_HALL: {
+            auto save = &getCustomSaveData()->battleHall;
+            auto currentType = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);
+            auto currentRank = save->currentRank[currentType];
+            auto currentRound = save->currentRound;
+
+            Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
+            auto pokeParam = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
+            auto orderIndexList = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->orderIndexList;
+            auto playerPoke = pokeParam->m_Items[orderIndexList->m_Items[0]];
+            playerParty->AddMember(playerPoke);
+
+            std::mt19937 rng = getRNG();
+
+            if (MatronCheck()) {
+                if (currentRound == 49) {
+                    IV = rankIVLookup(RANK_10);
+                    groupNo = calculateMatronGroup(playerPoke->fields.m_accessor->GetMonsNo());
+                }
+
+                else if (currentRound == 169) {
+                    IV = rankIVLookup(RANK_10);
+                    groupNo = GROUP_4;
+
+                }
+
+                level = playerPoke->fields.m_accessor->GetLevel();
+                enemy1 = 305;
+                std::uniform_int_distribution<int> typeDistribution(NORMAL, TYPE_COUNT-2);
+                currentType = typeDistribution(rng);
+            }
+
+            else {
+                IV = rankIVLookup(currentRank);
+                groupNo = calculateGroup(currentRank);
+
+                nn::vector<std::pair<const char *, Rank>> allTypeRanks = save->getAllTypeRanks();
+
+                level = calculateEnemyLvl(currentRank, playerPoke->fields.m_accessor->GetLevel(),
+                                          currentType, allTypeRanks);
+                enemy1 = 32;
+            }
+
+            auto activePool = getTypePool(TYPES[currentType], groupNo);
+            std::uniform_int_distribution<int> distribution(0, activePool.size()-1);
+            int index = distribution(rng);
+
+            while (duplicateCheck(&save->poolManager, activePool[index], currentType)) {
+                Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Re-rolling RNG - MonsNo duplicate: %d.\n", activePool[index]);
+                index = distribution(rng);
+            }
+
+            FlagWork::SetWork(FlagWork_Work::WK_BATTLE_HALL_SELECTED_MON, activePool[index]);
+            selectedPoke = indexLookup(activePool[index], groupNo);
+            Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generated Pokemon = %d | %s.\n", activePool[index], SPECIES[activePool[index]]);
+
+            trainerParty->AddMember(Frontier::GeneratePokemon(selectedPoke, IV, level));
+
+            break;
+        }
+    }
 
     GameManager::getClass()->initIfNeeded();
     auto mapInfo = GameManager::get_mapInfo();

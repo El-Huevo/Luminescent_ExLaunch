@@ -14,5 +14,6 @@ namespace Dpr::UI {
         };
 
         static inline StaticILMethod<0x04c7f458> Method$$__Load__b__9_0 {};
+        static inline StaticILMethod<0x04c7f450> Method$$__Load__b__10_1 {};
     };
 }

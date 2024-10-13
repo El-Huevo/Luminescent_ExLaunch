@@ -1,6 +1,7 @@
 #pragma once
 
 #include "externals/Pml/PokePara/PokemonParam.h"
+#include "externals/Pml/PokePara/SavePokeParty.h"
 #include "externals/il2cpp-api.h"
 
 namespace Pml {
@@ -29,6 +30,14 @@ namespace Pml {
 
         inline bool CheckPokeExist(int32_t monsno) {
             return external<bool>(0x02053170, this, monsno);
+        }
+
+        inline void SerializeFull(Pml::PokePara::SavePokeParty::Object* save) {
+            external<void>(0x02057350, this, save);
+        }
+
+        inline void DeserializeFull(Pml::PokePara::SavePokeParty::Object* save) {
+            external<void>(0x02057360, this, save);
         }
     };
 }

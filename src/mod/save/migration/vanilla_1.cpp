@@ -60,6 +60,8 @@ void migrateFromVanilla(PlayerWork::Object* playerWork) {
 
     save->battleHall.Clear();
 
+    save->battleFactory.Clear();
+
     // Set player color to the one in the vanilla save
     save->playerColorVariation.playerColorID = myStatus.body_type;
 

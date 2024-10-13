@@ -145,3 +145,13 @@ bool FTR_HALL_SELECTOR_SET_PROC(Dpr::EvScript::EvDataManager::Object* manager);
 // Arguments:
 //   None.
 bool FTR_HALL_SELECTOR_SEAL_UI_WAIT(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Opens the custom Battle Factory Selector UI.
+// Arguments:
+//   None.
+bool FTR_FACTORY_SELECTOR_SET_PROC(Dpr::EvScript::EvDataManager::Object* manager);
+
+// Waits for Battle Factory Selector UI to be finished before resuming execution.
+// Arguments:
+//   None.
+bool FTR_FACTORY_SELECTOR_SEAL_UI_WAIT(Dpr::EvScript::EvDataManager::Object* manager);

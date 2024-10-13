@@ -145,6 +145,10 @@ namespace Dpr::UI {
             return external<void>(0x017c3ef0, this, monsNo, formNo, sex, rareType, isEgg, onComplete);
         }
 
+        inline void LoadSpriteItem(uint16_t itemNo, UnityEngine::Events::UnityAction::Object* onComplete) {
+            external<void>(0x017c48b0, this, itemNo, onComplete);
+        }
+
         inline System::Collections::IEnumerator::Object* OpLoadWindows(
                 System::Collections::Generic::List$$int32_t::Object* windowIDs, bool isVariant) {
             return external<System::Collections::IEnumerator::Object*>(0x017b0380, this, windowIDs, isVariant);

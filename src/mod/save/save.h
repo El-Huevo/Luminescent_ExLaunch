@@ -15,6 +15,7 @@
 #include "save/data/trainer/trainer.h"
 #include "save/data/work/work.h"
 #include "save/data/frontier/frontier.h"
+#include "save/data/frontier/battle_factory.h"
 
 #include "logger/logger.h"
 
@@ -40,6 +41,8 @@ struct CustomSaveData {
     BerrySaveData<BerryCount> berries;
     ColorVariationSaveData playerColorVariation;
     HallSaveData battleHall;
+    FactorySaveData battleFactory;
+
 };
 
 CustomSaveData* getCustomSaveData();
