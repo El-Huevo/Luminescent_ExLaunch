@@ -61,7 +61,7 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
     switch ((FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY))) {
         case Facility::BATTLE_FACTORY: {
             Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] BATTLE_FACTORY.\n");
-            auto save = &getCustomSaveData()->battleFactory;
+            auto& save = getCustomSaveData()->battleFactory;
             Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got PlayerParty.\n");
             std::mt19937 rng = getRNG();
             Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got RNG.\n");
@@ -70,7 +70,7 @@ bool FTR_SUB_LOCAL_BTL_CALL(Dpr::EvScript::EvDataManager::Object* manager) {
             IV = BattleFactoryPool::IVLookup(currentSet);
             Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got IV.\n");
             auto distribution = BattleFactoryPool::GetDistributionRange(OPEN_LEVEL, currentSet,
-                                                                        static_cast<FrontierRound>(save->currentRound));
+                                                                        static_cast<FrontierRound>(save.currentRound));
 
             Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Got distribution.\n");
 

@@ -16,7 +16,6 @@
 #include "save/data/work/work.h"
 #include "save/data/frontier/frontier.h"
 #include "save/data/frontier/battle_factory.h"
-#include "save/data/ayou/ayou.h"
 
 #include "logger/logger.h"
 
@@ -46,7 +45,6 @@ struct CustomSaveData {
     ColorVariationSaveData playerColorVariation;
     HallSaveData battleHall;
     FactorySaveData battleFactory;
-    AYouSaveData ayou;
 };
 
 CustomSaveData* getCustomSaveData();

@@ -13,12 +13,12 @@ long HallSaveData::GetByteCount() const {
 }
 
 void HallSaveData::setRank(const char* type, Rank rank) {
-    int32_t typeIndex = array_index(TYPES, type);
+    int32_t typeIndex = 0;//array_index(TYPES, type);
     currentRank[typeIndex] = rank;
 }
 
 Rank HallSaveData::getRank(const char* type) {
-    int32_t typeIndex = array_index(TYPES, type);
+    int32_t typeIndex = 0;//array_index(TYPES, type);
     return currentRank[typeIndex];
 }
 

@@ -97,10 +97,10 @@ void RankTextHandler(Dpr::UI::BoxWindow::__c__DisplayClass200_0::Object* __this)
 
 void MonsIconTextHandler(Dpr::UI::BoxWindow::__c__DisplayClass200_0::Object* __this) {
     system_load_typeinfo(0x96a3);
-    auto saveData = &getCustomSaveData()->battleHall;
+    auto& saveData = getCustomSaveData()->battleHall;
 
     Dpr::Message::MessageWordSetHelper::getClass()->initIfNeeded();
-    Dpr::Message::MessageWordSetHelper::SetMonsNameWord(0, saveData->streakPokePID);
+    Dpr::Message::MessageWordSetHelper::SetMonsNameWord(0, saveData.streakPokePID);
 }
 
 FactoryDisplayState GetDisplayState() {
@@ -109,8 +109,7 @@ FactoryDisplayState GetDisplayState() {
 
 UnityEngine::Events::UnityAction::Object* FactoryDisplayTextCallback(int32_t index) {
     system_load_typeinfo(0x260d);
-    PlayerWork::getClass()->initIfNeeded();
-    Pml::PokePara::CoreParam::Object* coreParam = PlayerWork::get_playerParty()->GetMemberPointer(index)->cast<Pml::PokePara::CoreParam>();
+    Pml::PokePara::CoreParam::Object* coreParam = getCustomSaveData()->battleFactory.rentalParty->GetMemberPointer(index)->cast<Pml::PokePara::CoreParam>();
 
     Dpr::UI::BoxStatusPanel::DisplayClass35_0::Object* dispClass = Dpr::UI::BoxStatusPanel::DisplayClass35_0::newInstance();
     MethodInfo* mi = *Dpr::UI::BoxStatusPanel::DisplayClass35_0::Method$$__SetUp__b__1;
@@ -130,10 +129,9 @@ void UpdateDisplaySprite(Dpr::UI::BoxWindow::Object* __this, int32_t index) {
     UnityEngine::Transform::Object* displayObj = boxTrays->cast<UnityEngine::Transform>()->GetParent()->GetChild(2);
     UnityEngine::GameObject* gameObj;
 
-    PlayerWork::getClass()->initIfNeeded();
-    Pml::PokePara::PokemonParam::Object* param = PlayerWork::get_playerParty()->GetMemberPointer(index);
+    Pml::PokePara::PokemonParam::Object* param = getCustomSaveData()->battleFactory.rentalParty->GetMemberPointer(index);
 
-    for (int32_t i=0; i < FactoryIndex::POKEMON_COUNT; ++i) {
+    for (int32_t i=0; i < FactoryIndex::RENTAL_COUNT; ++i) {
         Dpr::UI::PokemonIcon::Object* iconObj = displayObj->GetChild({3,i})->GetComponent(
                 UnityEngine::Component::Method$$PokemonIcon$$GetComponent);
         iconObj->fields._imageItemIcon = nullptr;

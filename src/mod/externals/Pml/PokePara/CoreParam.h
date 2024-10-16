@@ -189,7 +189,7 @@ namespace Pml::PokePara {
             external<void>(0x02044da0, this, powerId, value);
         }
 
-        inline void ChangeTalentPower(int32_t powerId, uint32_t value) {
+        inline void ChangeTalentPower(Pml::PokePara::PowerID powerId, uint32_t value) {
             external<void>(0x020446e0, this, powerId, value);
         }
 

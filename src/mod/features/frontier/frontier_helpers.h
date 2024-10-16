@@ -38,10 +38,9 @@ namespace Frontier {
         for (int i = 0; i < 4; i++) {
             core->SetWaza(i, pokeInfo.moves[i]);
         }
-
-        for (int i = 0; i < 6; i++) {
-            core->ChangeEffortPower(i, pokeInfo.effort[i]);
-            core->ChangeTalentPower(i, IV);
+        for (int i = 0; i < static_cast<int>(Pml::PokePara::PowerID::NUM); i++) {
+            core->ChangeEffortPower(static_cast<Pml::PokePara::PowerID>(i), pokeInfo.effort[i]);
+            core->ChangeTalentPower(static_cast<Pml::PokePara::PowerID>(i), IV);
         }
 
         core->SetItem(pokeInfo.item);

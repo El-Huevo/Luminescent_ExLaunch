@@ -112,6 +112,13 @@ namespace ui {
 
                     };
                 });
+
+                _.Button([](Button &_) {
+                    _.label = "Generate Rental Party";
+                    _.onClick = []() {
+                    getCustomSaveData()->battleFactory.GenerateSixRentalMons();
+                    };
+                });
             });
 
             addChild(header);

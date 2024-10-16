@@ -1,8 +1,7 @@
-#include "BattleFactoryPool.h"
+
 #include "externals/FlagWork.h"
 #include "externals/FlagWork_Enums.h"
 #include "save/save.h"
-
 
 static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 static std::mt19937 rng(seed);
@@ -75,42 +74,24 @@ namespace BattleFactoryPool {
     }
 
     int32_t IVLookup(FrontierSet set) {
-        int32_t IVs = 31;
         switch (set) {
-            case SET_1: {
-                IVs = 0;
-                break;
-            }
-            case SET_2: {
-                IVs = 4;
-                break;
-            }
-            case SET_3: {
-                IVs = 8;
-                break;
-            }
-            case SET_4: {
-                IVs = 12;
-                break;
-            }
-            case SET_5: {
-                IVs = 16;
-                break;
-            }
-            case SET_6: {
-                IVs = 20;
-                break;
-            }
-            case SET_7: {
-                IVs = 24;
-                break;
-            }
-            default: {
-                break;
-            }
+            case SET_1:
+                return 0;
+            case SET_2:
+                return 4;
+            case SET_3:
+                return 8;
+            case SET_4:
+                return 12;
+            case SET_5:
+                return 16;
+            case SET_6:
+                return 20;
+            case SET_7:
+                return 24;
+            default:
+                return 31;
         }
-
-        return IVs;
     }
 
     int32_t GetStrongerRange(int32_t tradedAmount) {
@@ -133,7 +114,7 @@ namespace BattleFactoryPool {
         return static_cast<FrontierSet>(getCustomSaveData()->battleFactory.currentRound / 7);
     }
 
-    bool ClausesCheck(frontierIndex selectedPoke) {
+    bool ClausesCheck(const frontierIndex& selectedPoke) {
         auto playerTeam = PlayerWork::get_playerParty();
 
         for (int32_t i = 0; i < 3; i++) {

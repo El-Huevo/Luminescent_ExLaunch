@@ -100,13 +100,13 @@ enum FactoryLevel : int32_t {
 };
 
 enum FactoryIndex : int32_t {
-    POKEMON_1,
-    POKEMON_2,
-    POKEMON_3,
-    POKEMON_4,
-    POKEMON_5,
-    POKEMON_6,
-    POKEMON_COUNT
+    RENTAL_1,
+    RENTAL_2,
+    RENTAL_3,
+    RENTAL_4,
+    RENTAL_5,
+    RENTAL_6,
+    RENTAL_COUNT
 };
 
 enum FactoryDisplayState : int32_t {

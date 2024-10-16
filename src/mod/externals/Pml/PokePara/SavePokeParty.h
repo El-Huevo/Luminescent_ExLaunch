@@ -17,14 +17,6 @@ namespace Pml::PokePara {
             uint8_t markingIndex;
         };
 
-        static long GetByteCount() {
-            long count = 0;
-            count += Pml::PokePara::SerializedPokemonFull::GetByteCount()*6;
-            count += sizeof(uint8_t)*2;
-
-            return count;
-        }
-
         inline void Serialize_Full(Pml::PokeParty* party) {
             external<void>(0x02055490, this, party);
         }

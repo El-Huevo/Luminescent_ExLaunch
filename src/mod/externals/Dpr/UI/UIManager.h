@@ -12,6 +12,7 @@
 #include "externals/XLSXContent/UIDatabase.h"
 #include "externals/UIWindowID.h"
 #include "externals/System/Collections/IEnumerator.h"
+#include "externals/UnityEngine/Sprite.h"
 
 namespace Dpr::UI {
     struct UIWindow;

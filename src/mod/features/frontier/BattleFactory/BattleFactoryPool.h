@@ -18,11 +18,12 @@ namespace BattleFactoryPool {
 
     FrontierSet GetCurrentSet();
 
-    bool ClausesCheck(frontierIndex selectedPoke);
+    bool ClausesCheck(const frontierIndex& selectedPoke);
 
     frontierIndex IndexLookup(int32_t index, Group groupNo);
 
     std::mt19937 getRNG();
 
+    void GenerateSixRentalMons();
 
 }

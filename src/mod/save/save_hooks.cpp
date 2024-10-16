@@ -67,7 +67,7 @@ void LoadCustomSaveData(bool isBackup) {
 
 nn::json WriteCustomSaveData() {
     nn::json lumiObject = nn::json::object();
-    nn::vector<nn::json> saveFunctions = {saveMain()};
+    nn::vector<nn::json> saveFunctions = {saveMain(), saveFactory()};
 
     for (const auto& jsonStructure : saveFunctions) {
         lumiObject.update(jsonStructure);
