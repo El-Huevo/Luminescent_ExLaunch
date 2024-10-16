@@ -26,6 +26,7 @@ namespace UnityEngine::Events {
 
         static inline StaticILMethod<0x04c8e658, Dpr::UI::UIWindow> Method$$Invoke$$UIWindow {};
 
+        static const inline long Sprite_TypeInfo = 0x04c5e1a0;
 
         template <typename T, typename... Args>
         inline void ctor(T* owner, ILMethod<T, Args...>& mi) {

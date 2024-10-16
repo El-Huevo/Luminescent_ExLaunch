@@ -10,6 +10,7 @@
 // These are all to avoid cyclical definitions
 struct BattleCharacterEntity;
 struct FieldCharacterEntity;
+struct PokemonCustomNodeAnim;
 
 namespace System::Collections::Generic {
     struct List$$Component;
@@ -51,6 +52,7 @@ namespace UnityEngine {
         static inline StaticILMethod<0x04c670c8, UnityEngine::UI::Image> Method$$Image$$GetComponent {};
         static inline StaticILMethod<0x04c66d60, BattleCharacterEntity> Method$$BattleCharacterEntity$$GetComponent {};
         static inline StaticILMethod<0x04c66fc0, FieldCharacterEntity> Method$$FieldCharacterEntity$$GetComponent {};
+        static inline StaticILMethod<0x04c66840, PokemonCustomNodeAnim> Method$$PokemonCustomNodeAnim$$GetComponent {};
         static inline StaticILMethod<0x04c669c0, XMenuTopItem> Method$$XMenuTopItem$$GetComponent {};
 
         static inline StaticILMethod<0x04c66a18, Dpr::UI::UIText> Method$$UIText$$GetComponentInChildren {};

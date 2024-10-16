@@ -5,6 +5,7 @@
 #include "externals/Dpr/UI/UIModelViewController.h"
 
 #include "externals/SmartPoint/AssetAssistant/SingletonMonoBehaviour.h"
+#include "externals/SpriteAtlasID.h"
 #include "externals/System/Action.h"
 #include "externals/System/Func.h"
 #include "externals/UnityEngine/Events/UnityAction.h"
@@ -146,11 +147,15 @@ namespace Dpr::UI {
             external<void>(0x017c3ef0, this, monsNo, formNo, sex, rareType, isEgg, onComplete);
         }
 
+        inline void LoadSpritePokemon(Pml::PokePara::PokemonParam::Object* pokemonParam, UnityEngine::Events::UnityAction::Object* onComplete) {
+            external<void>(0x017c3e40, this, pokemonParam, onComplete);
+        }
+
         inline UnityEngine::Sprite::Object* GetSpritePokemonTypeZukan(int32_t typeNo, int32_t langId) {
             return external<UnityEngine::Sprite::Object*>(0x017c2650, this, typeNo, langId);
         }
 
-        inline UnityEngine::Sprite::Object* GetAtlasSprite(int32_t spriteAtlasId, System::String::Object* name) {
+        inline UnityEngine::Sprite::Object* GetAtlasSprite(SpriteAtlasID spriteAtlasId, System::String::Object* name) {
             return external<UnityEngine::Sprite::Object*>(0x017a9080, this, spriteAtlasId, name);
         }
 
@@ -165,8 +170,11 @@ namespace Dpr::UI {
 
         inline void _ReleaseUIWindow(UIWindow* window) {
             external<void>(0x017a58a0, this, window);
+        inline XLSXContent::UIDatabase::SheetPokemonIcon::Object* GetPokemonIconData(int32_t monsNo, uint16_t formNo, Pml::Sex sex, Pml::PokePara::RareType rareType, bool isEgg) {
+            return external<XLSXContent::UIDatabase::SheetPokemonIcon::Object*>(0x017c1250, this, monsNo, formNo, sex, rareType, isEgg);
         }
     };
+}
 }
 
 static_assert(offsetof(Dpr::UI::UIManager::Fields, _mdUis) == 0x20);

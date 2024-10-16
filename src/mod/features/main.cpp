@@ -96,6 +96,14 @@ void CallFeatureHooks()
         exl_relumi_dex_ui();
     if (IsActivatedFeature(array_index(FEATURES, "Local Trades Extension")))
         exl_local_trades_main();
+    if (IsActivatedFeature(array_index(FEATURES, "Spinda Hijacking")))
+        exl_spinda_hijacking_main();
+    if (IsActivatedFeature(array_index(FEATURES, "Form Argument Pokémon Icons")))
+        exl_form_arg_icons_main();
+    if (IsActivatedFeature(array_index(FEATURES, "Form Argument Generation")))
+        exl_form_arg_generation_main();
+    if (IsActivatedFeature(array_index(FEATURES, "Pokédex Form Flags")))
+        exl_dex_form_flags_main();
 
     exl_debug_features_main();
     exl_items_changes_main();
