@@ -8,7 +8,7 @@
 
 HOOK_DEFINE_TRAMPOLINE(GetPokemonNumMax) {
     static int32_t Callback(int32_t type) {
-        if (FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY) == BATTLE_HALL)
+        if (static_cast<Facility>(FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY)) == Facility::BATTLE_HALL)
             return 1;
 
         return Orig(type);
@@ -17,7 +17,7 @@ HOOK_DEFINE_TRAMPOLINE(GetPokemonNumMax) {
 
 HOOK_DEFINE_TRAMPOLINE(GetPokemonNumMin) {
     static int32_t Callback(int32_t type) {
-        if (FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY) == BATTLE_HALL)
+        if (static_cast<Facility>(FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY)) == Facility::BATTLE_HALL)
             return 1;
 
         return Orig(type);
@@ -26,7 +26,7 @@ HOOK_DEFINE_TRAMPOLINE(GetPokemonNumMin) {
 
 HOOK_DEFINE_TRAMPOLINE(ModifyLevelPokeParam) {
     static void Callback(Pml::PokePara::PokemonParam::Object* pp, uint8_t levelRangeType, uint32_t modify_level) {
-        if (FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY) != BATTLE_HALL) {
+        if (static_cast<Facility>(FlagWork::GetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY)) != Facility::BATTLE_HALL) {
             Orig(pp, levelRangeType, modify_level);
         }
     }

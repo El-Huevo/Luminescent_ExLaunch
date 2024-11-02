@@ -207,10 +207,6 @@ namespace Pml::PokePara {
             external<void>(0x024a9ea0, this, flag);
         }
 
-        inline void SetSeikaku(uint32_t seikaku) {
-            external<void>(0x024a9ca0, this, seikaku);
-        }
-        
         inline void SetTokusei3Flag(bool flag) {
             external<void>(0x024a9f40, this, flag);
         }

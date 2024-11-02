@@ -12,7 +12,6 @@ struct FactorySaveData {
     int32_t currentStreakTrades;
     Pml::PokePara::SavePokeParty::Object currentTeam;
     Pml::PokePara::SavePokeParty::Object lastEnemyTeam;
-    Pml::PokeParty::Object* rentalParty;
 
     void Clear();
 
@@ -30,9 +29,9 @@ struct FactorySaveData {
 
     [[nodiscard]] static nn::json PartyToJson(Pml::PokePara::SavePokeParty::Object party);
 
-    void GenerateSixRentalMons();
+    void GenerateSixRentalMons() const;
 };
 
 void loadFactory(bool isBackup);
 
-nn::json saveFactory();
+nn::json getFactoryAsJson();

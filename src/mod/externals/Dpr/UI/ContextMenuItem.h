@@ -11,7 +11,7 @@
 
 namespace Dpr::UI {
     struct ContextMenuItem : ILClass<ContextMenuItem, 0x04c61bc8> {
-        struct Param : ILClass<Param, 0x04c5e788> {
+        struct Param : ILClass<Param, 0x04c5e788, 0x04c5e780> {
             struct Fields {
                 ContextMenuID menuId;
                 System::String::Object* messageFile;
@@ -23,10 +23,6 @@ namespace Dpr::UI {
 
             inline void ctor() {
                 external<void>(0x01ebee30, this);
-            }
-
-            static Il2CppClass* ContextMenuItem_Param_TypeInfo() {
-                return *reinterpret_cast<Il2CppClass**>(exl::util::modules::GetTargetOffset(0x04c5e788));
             }
         };
 
@@ -40,7 +36,17 @@ namespace Dpr::UI {
 }
 
 namespace System::Collections::Generic {
-    struct List$$ContextMenuItem_Param : List<List$$ContextMenuItem_Param, Dpr::UI::ContextMenuItem::Param> {
+    struct List$$ContextMenuItem_Param : List<List$$ContextMenuItem_Param, Dpr::UI::ContextMenuItem::Param, 0x04c5efb8> {
         static inline StaticILMethod<0x04c896c0, Dpr::UI::ContextMenuItem::Param> Method$$Add {};
+        static inline StaticILMethod<0x04c896b8> Method$$ctor {};
+        static inline StaticILMethod<0x04c68940> Method$$ToArray {};
+
+        inline Dpr::UI::ContextMenuItem::Param::Array* ToArray() {
+            return external<Dpr::UI::ContextMenuItem::Param::Array*>(0x02a3e720, this, *Method$$ToArray);
+        }
+
+        inline void ctor() {
+            external<void>(0x02a3ba70, this, *Method$$ctor);
+        }
     };
 }

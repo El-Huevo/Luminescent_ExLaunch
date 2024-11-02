@@ -39,5 +39,13 @@ namespace Pml {
         inline void DeserializeFull(Pml::PokePara::SavePokeParty::Object* save) {
             external<void>(0x02057360, this, save);
         }
+
+        inline uint32_t GetMemberIndex(Pml::PokePara::PokemonParam::Object* pokeParam) {
+            return external<uint32_t>(0x02056b10, this, pokeParam);
+        }
+
+        inline void RemoveMember(uint32_t idx) {
+            external<void>(0x02056390, this, idx);
+        }
     };
 }

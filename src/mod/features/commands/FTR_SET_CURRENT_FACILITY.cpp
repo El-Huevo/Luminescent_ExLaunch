@@ -12,7 +12,7 @@ bool FTR_SET_CURRENT_FACILITY(Dpr::EvScript::EvDataManager::Object* manager) {
 
     if (args->max_length >= 2) {
         FlagWork::SetWork(FlagWork_Work::WK_FTR_CURRENT_FACILITY,
-                          static_cast<Facility>(GetWorkOrIntValue(args->m_Items[1])));
+                          GetWorkOrIntValue(args->m_Items[1]));
     }
 
     return true;

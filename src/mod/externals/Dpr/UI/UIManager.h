@@ -40,6 +40,26 @@ namespace Dpr::UI {
             }
         };
 
+        struct __OpLoad_d__101 : ILClass<__OpLoad_d__101> {
+            struct Fields {
+                int32_t __1__state;
+                Il2CppObject* __2__current;
+                int32_t type;
+                Dpr::UI::UIManager::Object* __4__this;
+                bool isOpening;
+            };
+        };
+
+        enum class InitializeStateBit : int32_t {
+            EntrySpriteAtlas = 1 << 0, // 1
+            LoadedSpriteAtlas = 1 << 1, // 2
+            EntryWindows = 1 << 2, // 4
+            LoadedWindows = 1 << 3, // 8
+            EntryAterLang = 1 << 4, // 16
+            LoadAterLang = 1 << 5, // 32
+            Loaded = (1 << 1) | (1 << 3) // 10 (Combination of LoadedSpriteAtlas and LoadedWindows)
+        };
+
         struct Fields : SmartPoint::AssetAssistant::SingletonMonoBehaviour::Fields {
             UnityEngine::Transform::Object* _activeRoot;
             Dpr::UI::UIModelViewController::Object* _modelView;
@@ -57,7 +77,7 @@ namespace Dpr::UI {
             void* _spriteMonsterBallIllegal;
             void* _spriteAtlasParams;
             void* _keyguide;
-            int32_t _InitializeStateBits;
+            InitializeStateBit _InitializeStateBits;
             UnityEngine::Events::UnityAction::Object* onXMenuClosed;
             bool _fureaiLimit;
             void* _objectPool;
@@ -143,7 +163,7 @@ namespace Dpr::UI {
             return external<int32_t>(0x017c4990, value, start, end);
         }
 
-        inline void LoadSpritePokemon(int32_t monsNo, uint16_t formNo, uint8_t sex, uint8_t rareType, bool isEgg, UnityEngine::Events::UnityAction::Object* onComplete) {
+        inline void LoadSpritePokemon(int32_t monsNo, uint16_t formNo, Pml::Sex sex, Pml::PokePara::RareType  rareType, bool isEgg, UnityEngine::Events::UnityAction::Object* onComplete) {
             external<void>(0x017c3ef0, this, monsNo, formNo, sex, rareType, isEgg, onComplete);
         }
 
@@ -170,12 +190,27 @@ namespace Dpr::UI {
 
         inline void _ReleaseUIWindow(UIWindow* window) {
             external<void>(0x017a58a0, this, window);
+        }
+
         inline XLSXContent::UIDatabase::SheetPokemonIcon::Object* GetPokemonIconData(int32_t monsNo, uint16_t formNo, Pml::Sex sex, Pml::PokePara::RareType rareType, bool isEgg) {
             return external<XLSXContent::UIDatabase::SheetPokemonIcon::Object*>(0x017c1250, this, monsNo, formNo, sex, rareType, isEgg);
         }
+
+        friend UIManager::InitializeStateBit operator&(UIManager::InitializeStateBit lhs, UIManager::InitializeStateBit rhs) {
+            return static_cast<UIManager::InitializeStateBit>(
+                    static_cast<int32_t>(lhs) & static_cast<int32_t>(rhs)
+            );
+        }
+
+        friend UIManager::InitializeStateBit operator|(UIManager::InitializeStateBit lhs, UIManager::InitializeStateBit rhs) {
+            return static_cast<UIManager::InitializeStateBit>(
+                    static_cast<int32_t>(lhs) | static_cast<int32_t>(rhs)
+            );
+        }
+
     };
-}
 }
 
 static_assert(offsetof(Dpr::UI::UIManager::Fields, _mdUis) == 0x20);
 static_assert(sizeof(Dpr::UI::UIManager::Fields) == 280);
+

@@ -129,6 +129,7 @@ namespace Dpr::UI {
         };
 
         static inline StaticILMethod<0x04c7ecf0> Method$$Dpr_UI_BoxWindow_OnUpdate {};
+        static inline StaticILMethod<0x04c6bd48, Dpr::UI::ContextMenuItem::Object*> Method$$Dpr_UI_BoxWindow_OnContextMenu {};
 
         struct Fields : Dpr::UI::UIWindow::Fields {
             UnityEngine::UI::Image::Object* _displayTitle; // 0x70
@@ -315,6 +316,13 @@ namespace Dpr::UI {
         inline void OpenStatusWindow(Dpr::UI::PokemonStatusWindow::Param::Object* statusParams,
                                      Dpr::UI::BoxWindow::OpenParam::Object* reopenParams) {
             external<void>(0x01cc5ad0, this, statusParams, reopenParams);
+        }
+
+        inline void OpenContextMenu(System::Collections::Generic::List$$ContextMenuItem_Param::Object* menuItems,
+                                    System::Func::Object* onClicked, UnityEngine::Events::UnityAction::Object* onClosed,
+                                    int32_t selectIndex, uint32_t seDecide) {
+            external<void>(0x01cc4ab0, this, menuItems, onClicked, onClosed, selectIndex, seDecide);
+
         }
     };
 }

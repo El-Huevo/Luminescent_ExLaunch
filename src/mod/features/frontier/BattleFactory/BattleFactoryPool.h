@@ -24,6 +24,4 @@ namespace BattleFactoryPool {
 
     std::mt19937 getRNG();
 
-    void GenerateSixRentalMons();
-
 }

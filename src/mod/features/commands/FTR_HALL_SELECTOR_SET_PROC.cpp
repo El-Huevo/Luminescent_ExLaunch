@@ -27,7 +27,7 @@ bool FTR_HALL_SELECTOR_SET_PROC(Dpr::EvScript::EvDataManager::Object* manager) {
     auto onClosed = UnityEngine::Events::UnityAction::getClass(UnityEngine::Events::UnityAction::UIWindow_TypeInfo)->newInstance(manager, mi);
     auto parentOnClosed = &(boxWindow->fields).onClosed;
     *parentOnClosed = onClosed;
-    FlagWork::SetWork(FlagWork_Work::WK_CURRENT_CUSTOM_UI, 1);
+    FlagWork::SetWork(FlagWork_Work::WK_CURRENT_CUSTOM_UI, static_cast<int32_t>(UIWindowID::BATTLEHALL_TYPE_SELECT));
     boxWindow->Open(-2, true);
     return true;
 }

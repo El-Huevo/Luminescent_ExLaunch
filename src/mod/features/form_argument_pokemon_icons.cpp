@@ -42,7 +42,7 @@ HOOK_DEFINE_REPLACE(UIManager$$LoadSpritePokemon_PokemonParam) {
         }
 
         auto sprite = __this->GetAtlasSprite(SpriteAtlasID::TEXTUREMASS, assetName);
-        onComplete->Invoke((Il2CppObject*)sprite);
+        onComplete->Invoke<UnityEngine::Sprite>(sprite, UnityEngine::Events::UnityAction::Method$$_Sprite_$$Invoke);
     }
 };
 

@@ -4,8 +4,8 @@
 #include "externals/System/Primitives.h"
 
 namespace System::Collections::Generic {
-    template <typename T, typename E>
-    struct List : ILClass<T> {
+    template <typename T, typename E, long typeInfo = 0>
+    struct List : ILClass<T, typeInfo> {
         struct Fields {
             E::Array* _items;
             int32_t _size;
@@ -40,7 +40,7 @@ namespace System::Collections::Generic {
 
     };
 
-    struct List$$int32_t : ILClass<List$$int32_t> {
+    struct List$$int32_t : ILClass<List$$int32_t, 0x04c56ea0> {
         struct Fields {
             System::Int32_array* _items;
             int32_t _size;
@@ -49,14 +49,29 @@ namespace System::Collections::Generic {
         };
 
         static inline StaticILMethod<0x04c8a3a8> Method$$Add {};
+        static inline StaticILMethod<0x04c6fa08> Method$$Remove {};
         static inline StaticILMethod<0x04c8a3b8> Method$$Clear {};
+        static inline StaticILMethod<0x04c8a390> Method$$ctor {};
+        static inline StaticILMethod<0x04c945d0> Method$$ToArray {};
 
         inline void Add(int32_t item) {
-            external<void>(0x02a70aa0, this, item, Method$$Add);
+            external<void>(0x02a70aa0, this, item, *Method$$Add);
+        }
+
+        inline bool Remove(int32_t item) {
+            return external<bool>(0x02a722c0, this, item, *Method$$Remove);
         }
 
         inline void Clear() {
-            external<void>(0x02a70e40, this, Method$$Clear);
+            external<void>(0x02a70e40, this, *Method$$Clear);
+        }
+
+        inline System::Int32_array* ToArray() {
+            return external<System::Int32_array*>(0x02a72af0, this, *Method$$ToArray);
+        }
+
+        inline void ctor() {
+            external<void>(0x02a6fde0, this, *Method$$ctor);
         }
     };
 }

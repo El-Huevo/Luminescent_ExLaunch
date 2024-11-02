@@ -5,11 +5,6 @@
 #include "save/data/color_variation/color_variation.h"
 #include "save/data/dex_form/dex_form.h"
 #include "save/data/main/main.h"
-#include "save/data/item/item.h"
-#include "save/data/string/string.h"
-#include "save/data/sysflag/sysflag.h"
-#include "save/data/trainer/trainer.h"
-#include "save/data/work/work.h"
 #include "save/data/frontier/frontier.h"
 #include "save/data/frontier/battle_factory.h"
 

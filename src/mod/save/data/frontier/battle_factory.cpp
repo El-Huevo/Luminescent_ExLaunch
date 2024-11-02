@@ -2,6 +2,8 @@
 #include "save/save.h"
 #include "externals/UnityEngine/JsonUtility.h"
 #include "features/frontier/BattleFactory/BattleFactoryPool.h"
+#include "features/frontier/frontier_ptr.h"
+#include "externals/Dpr/BattleMatching/BattleMatchingWork.h"
 
 int32_t FactorySaveData::getRound() const {
     return currentRound;
@@ -73,19 +75,22 @@ void FactorySaveData::FromJson(const nn::json &factory) {
     lastEnemyTeam = {};
 }
 
-void FactorySaveData::GenerateSixRentalMons() {
-    Pml::PokeParty::Object* genParty = Pml::PokeParty::newInstance();
-    auto& save = getCustomSaveData()->battleFactory;
+void FactorySaveData::GenerateSixRentalMons() const {
+    Pml::PokeParty::Object* newParty = Pml::PokeParty::newInstance();
     frontierIndex selectedPoke;
     std::mt19937 rng = BattleFactoryPool::getRNG();
     FrontierSet currentSet = BattleFactoryPool::GetCurrentSet();
     int32_t IV = BattleFactoryPool::IVLookup(currentSet);
+
+    auto pokeParamsList = Pml::PokePara::PokemonParam::newArray(6);
+    auto joinIndexList = System::Collections::Generic::List$$int32_t::newInstance();
+
     auto distribution = BattleFactoryPool::GetDistributionRange(OPEN_LEVEL, currentSet,
-                                                                static_cast<FrontierRound>(save.currentRound));
+                                                                static_cast<FrontierRound>(currentRound));
 
     int index = distribution(rng);
 
-    for (int32_t i = 0; i < 6; i++) {
+    for (int32_t i = 0; i < pokeParamsList->max_length; i++) {
         Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Entering clause check %d.\n", i);
         while (BattleFactoryPool::ClausesCheck(BattleFactoryPool::IndexLookup(index, GROUP_2))) {
             index = distribution(rng);
@@ -94,11 +99,15 @@ void FactorySaveData::GenerateSixRentalMons() {
                 BattleFactoryPool::IndexLookup(index, GROUP_2), IV, 100);
         int32_t monsNo = pp->fields.m_accessor->GetMonsNo();
         Logger::log("[_FTR_SUB_LOCAL_BTL_CALL] Generated Pokemon = %d | %s.\n", monsNo, SPECIES[monsNo]);
-        genParty->AddMember(pp);
+        pokeParamsList->m_Items[i] = pp;
         index = distribution(rng);
     }
 
-    rentalParty = genParty;
+
+    GetFrontierPtr()->currentTeam = newParty;
+    GetFrontierPtr()->joinIndexList = joinIndexList;
+    Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
+    Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams = pokeParamsList;
 }
 
 void loadFactory(bool isBackup) {
@@ -120,6 +129,6 @@ void loadFactory(bool isBackup) {
     }
 }
 
-nn::json saveFactory() {
+nn::json getFactoryAsJson() {
     return getCustomSaveData()->battleFactory.ToJson();
 }

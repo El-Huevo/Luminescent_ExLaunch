@@ -24,7 +24,6 @@ template <typename T>
 inline void il2cpp_runtime_class_init(typename T::Class* klass) { reinterpret_cast<void(*)(Il2CppClass*)>(il2cpp_runtime_class_init_raw)(klass); }
 inline void il2cpp_runtime_class_init(Il2CppClass* klass) { reinterpret_cast<void(*)(Il2CppClass*)>(il2cpp_runtime_class_init_raw)(klass); }
 
-
 struct _ILExternal {
     char _zeroSizedFilled[0];
 

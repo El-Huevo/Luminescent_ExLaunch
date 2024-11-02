@@ -8,6 +8,10 @@ namespace Dpr::UI {
     struct UIWindow;
 }
 
+namespace UnityEngine {
+    struct Sprite;
+}
+
 namespace UnityEngine::Events {
     struct UnityAction : ILClass<UnityAction> {
         struct Fields : System::MulticastDelegate::Fields {
@@ -25,8 +29,7 @@ namespace UnityEngine::Events {
         static inline StaticILMethod<0x04c80cf0> Method$$Dpr_UI_UIWindow__c__CreateContextMenuYesNo__b__54_0 {};
 
         static inline StaticILMethod<0x04c8e658, Dpr::UI::UIWindow> Method$$Invoke$$UIWindow {};
-
-        static const inline long Sprite_TypeInfo = 0x04c5e1a0;
+        static inline StaticILMethod<0x04c8e750, UnityEngine::Sprite> Method$$_Sprite_$$Invoke {};
 
         template <typename T, typename... Args>
         inline void ctor(T* owner, ILMethod<T, Args...>& mi) {

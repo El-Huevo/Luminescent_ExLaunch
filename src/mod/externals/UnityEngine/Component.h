@@ -34,6 +34,7 @@ namespace UnityEngine {
     struct RectTransform;
     struct BoxCollider;
     struct GameObject;
+    struct Animator;
     struct XMenuTopItem;
 
     struct Component : ILClass<Component, 0x04c57e88> {
@@ -41,6 +42,7 @@ namespace UnityEngine {
 
         };
 
+        static inline StaticILMethod<0x04c67048, UnityEngine::Animator> Method$$Animator$$GetComponent {};
         static inline StaticILMethod<0x04c66790, Dpr::UI::PokemonIcon> Method$$PokemonIcon$$GetComponent {};
         static inline StaticILMethod<0x04c667c0, Dpr::UI::SelectLanguageItem> Method$$SelectLanguageItem$$GetComponent {};
         static inline StaticILMethod<0x04c667d0, Dpr::UI::SettingMenuItem> Method$$SettingMenuItem$$GetComponent {};

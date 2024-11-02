@@ -1,6 +1,6 @@
 #pragma once
 
-enum Facility : int32_t {
+enum class Facility : int32_t {
     BATTLE_TOWER,
     BATTLE_FACTORY,
     BATTLE_ARCADE,
@@ -109,7 +109,7 @@ enum FactoryIndex : int32_t {
     RENTAL_COUNT
 };
 
-enum FactoryDisplayState : int32_t {
+enum class FactoryDisplayState : int32_t {
     NO_MON_SELECTED,
     FIRST_MON_SELECTED,
     SECOND_MON_SELECTED,

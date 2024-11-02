@@ -29,6 +29,7 @@ void migrate(PlayerWork::Object* playerWork)
             case ModVersion::Future: {
                 // Insert currently WIP migration code here before moving it to the new version (once it's ready to release)
                 // This code will migrate to the "Dev" version
+                getCustomSaveData()->dexForms.Initialize();
 
                 getCustomSaveData()->main.version = ModVersion::Dev;
                 break;

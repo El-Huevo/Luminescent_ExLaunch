@@ -17,6 +17,14 @@
 #include "externals/XLSXContent/MapInfo.h"
 
 struct GameManager : ILClass<GameManager, 0x04c59b50> {
+    struct __OnetimeInitializeOperation_d__75 : ILClass<__OnetimeInitializeOperation_d__75> {
+        struct Fields {
+            int32_t __1__state;
+            Il2CppObject* __2__current;
+            bool _isOpening_5__2;
+        };
+    };
+
     struct Fields : SmartPoint::AssetAssistant::SingletonMonoBehaviour::Fields {
         UnityEngine::Transform::Object* _fieldObjectHolder;
         UnityEngine::Transform::Object* _battleObjectHolder;

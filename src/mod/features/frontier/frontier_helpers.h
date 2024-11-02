@@ -48,21 +48,7 @@ namespace Frontier {
         return pokeParam;
     }
 
-    const char* getNowRoundName(HallRound round) {
-        switch (round) {
-            case HALL_ROUND_1: return "Round 1";
-            case HALL_ROUND_2: return "Round 2";
-            case HALL_ROUND_3: return "Round 3";
-            case HALL_ROUND_4: return "Round 4";
-            case HALL_ROUND_5: return "Round 5";
-            case HALL_ROUND_6: return "Round 6";
-            case HALL_ROUND_7: return "Round 7";
-            case HALL_ROUND_8: return "Round 8";
-            case HALL_ROUND_9: return "Round 9";
-            case HALL_ROUND_10: return "Round 10";
-            default: return "UNKNOWN_ROUND";
-        }
-    }
+
 
 }
 

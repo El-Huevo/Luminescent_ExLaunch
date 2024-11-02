@@ -74,9 +74,10 @@ nn::json WriteCustomSaveData() {
     Logger::log("[WriteCustomSaveData] Converting custom data...\n");
     nn::json lumiObject = nn::json::object();
     nn::vector<nn::json> saveFunctions = {
-        getMainAsJson(),
-        getPlayerColorVariationAsJson(),
-        getDexFormsAsJson(),
+            getMainAsJson(),
+            getPlayerColorVariationAsJson(),
+            getDexFormsAsJson(),
+            getFactoryAsJson()
     };
     Logger::log("[WriteCustomSaveData] Custom data converted successfully.\n");
 
