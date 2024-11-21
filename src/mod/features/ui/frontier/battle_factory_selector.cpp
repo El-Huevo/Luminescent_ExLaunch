@@ -29,36 +29,46 @@ namespace FactorySelector {
         return menuIDs;
     }
 
-    void OnContextMenu(Dpr::UI::BoxWindow::Object* window, Dpr::UI::ContextMenuItem::Object* menuItem) {
+    bool OnContextMenu(Dpr::UI::BoxWindow::Object* window, Dpr::UI::ContextMenuItem::Object* menuItem) {
         int32_t currentSelectedMon = window->fields._currentTrayIndex;
         auto currentDisplayState = static_cast<FactoryDisplayState>(
                 FlagWork::GetWork(FlagWork_Work::WK_BATTLE_FACTORY_DISPLAY_STATE));
 
         switch(menuItem->fields._param->fields.menuId) {
             case ContextMenuID::FTR_FACTORY_DISPLAY_SUMMARY: {
-                //ToDo - Implement
-                Dpr::UI::UIManager::getClass()->initIfNeeded();
-                auto statusUI = Dpr::UI::UIManager::instance()->CreateUIWindow(
-                        UIWindowID::POKEMON_STATUS,Dpr::UI::UIManager::Method$$CreateUIWindow_PokemonStatusWindow_);
+                system_load_typeinfo(0x2665);
+                Logger::log("[Summary]\n");
+                Audio::AudioManager::instance()->PlaySe(AK_EVENTS_UI_COMMON_DONE, nullptr);
+                Logger::log("[Summary] Audio\n");
+//                Dpr::UI::PokemonStatusWindow::Param::Object* windowParam = Dpr::UI::PokemonStatusWindow::Param::newInstance();
+//                Logger::log("[Summary] New Instance\n");
 
-                auto statusParam = Dpr::UI::PokemonStatusWindow::Param::newInstance();
-                statusParam->fields.limitType = 4;
-                statusParam->fields.selectIndex = currentSelectedMon;
+
+                auto paramList = System::Collections::Generic::List$$PokemonParam::newInstance();
+                Logger::log("[Summary] List New Instance\n");
+
                 Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
                 auto pokeParams = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
 
                 for (uint64_t i = 0; i < pokeParams->max_length; i++) {
-                    statusParam->fields.pokemonParams->Add(pokeParams->m_Items[i]);
+                    Logger::log("[Summary] Adding Param\n");
+                    paramList->Add(pokeParams->m_Items[i]);
                 }
 
-                statusUI->Open(statusParam, -2);
+//                windowParam->fields.pokemonParams = paramList;
+//                windowParam->fields.selectIndex = currentSelectedMon;
+//                windowParam->fields.selectTabIndex = 0;
+//                windowParam->fields.limitType = 4;
 
+                Logger::log("[Summary] Opening Status Window\n");
+//                window->OpenStatusWindow(windowParam, nullptr);
                 break;
             }
             case ContextMenuID::FTR_FACTORY_DISPLAY_RENT: {
                 if (currentDisplayState < FactoryDisplayState::THIRD_MON_SELECTED) {
                     GetFrontierPtr()->joinIndexList->Add(currentSelectedMon);
-                    Logger::log("[Rent] Added %d to the list\n", GetFrontierPtr()->joinIndexList->fields._items->m_Items[0]);
+                    size_t size = GetFrontierPtr()->joinIndexList->fields._size;
+                    Logger::log("[Rent] Added %d to the list\n", GetFrontierPtr()->joinIndexList->fields._items->m_Items[size-1]);
                     FlagWork::SetWork(FlagWork_Work::WK_BATTLE_FACTORY_DISPLAY_STATE,
                                       static_cast<int32_t>(currentDisplayState) + 1);
                     auto animator = window->cast<Dpr::UI::UIWindow>()->fields._animator;
@@ -68,14 +78,24 @@ namespace FactorySelector {
                 break;
             }
             case ContextMenuID::FTR_FACTORY_DISPLAY_REMOVE: {
-                if (GetFrontierPtr()->joinIndexList->Remove(currentSelectedMon)) {
+                if (currentDisplayState > FactoryDisplayState::NO_MON_SELECTED) {
+
+                    auto joinListIndex = GetFrontierPtr()->joinIndexList;
+                    Logger::log("[Remove] Pre-Remove.\n");
+                    for (int32_t i = 0; i < joinListIndex->fields._size; i++) {
+                        auto listIndex = joinListIndex->fields._items->m_Items[i];
+                        if (listIndex == currentSelectedMon) {
+                            GetFrontierPtr()->joinIndexList->RemoveAt(i);
+                            Logger::log("[Remove] Removed Member %d from List.\n", currentSelectedMon);
+                            break;
+                        }
+                    }
+
                     auto animator = window->cast<Dpr::UI::UIWindow>()->fields._animator;
-                    Logger::log("[Rent] Removed Member from List.\n");
                     nn::string selectedBall("isSelected" + nn::to_string(currentSelectedMon));
                     animator->SetInteger(System::String::Create(selectedBall), 0);
-                }
+                        Logger::log("[Remove] Set %s to 0.\n", selectedBall.c_str());
 
-                if (currentDisplayState > FactoryDisplayState::NO_MON_SELECTED) {
                     FlagWork::SetWork(FlagWork_Work::WK_BATTLE_FACTORY_DISPLAY_STATE,
                                       static_cast<int32_t>(currentDisplayState) - 1);
                 }
@@ -101,6 +121,8 @@ namespace FactorySelector {
                 break;
             }
         }
+
+        return true;
     }
 
     UnityEngine::Events::UnityAction::Object* FactoryDisplayTextCallback(int32_t index) {
@@ -190,8 +212,6 @@ namespace FactorySelector {
 
         targetMale->cast<UnityEngine::Component>()->get_gameObject()->SetActive(sex == Pml::Sex::MALE);
         targetFemale->cast<UnityEngine::Component>()->get_gameObject()->SetActive(sex == Pml::Sex::FEMALE);
-
-
     }
 
     void UpdateConfirmDisplaySprite(Dpr::UI::BoxWindow::Object* __this) {
@@ -202,7 +222,7 @@ namespace FactorySelector {
         UnityEngine::Transform::Object* displayObj = boxTrays->cast<UnityEngine::Transform>()->GetParent()->GetChild(2);
 
         Dpr::BattleMatching::BattleMatchingWork::getClass()->initIfNeeded();
-        auto pokeParams = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
+        //auto pokeParams = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams;
 
         for (int32_t i = 0; i < 3; i++) {
             Logger::log("[UpdateConfirmDisplaySprite] Loop\n");
@@ -212,7 +232,7 @@ namespace FactorySelector {
             iconObj->fields._imageItemIcon = nullptr;
             int32_t index = GetFrontierPtr()->joinIndexList->fields._items->m_Items[i];
             Logger::log("[UpdateConfirmDisplaySprite] Got index\n");
-            auto param = pokeParams->m_Items[index];
+            auto param = Dpr::BattleMatching::BattleMatchingWork::getClass()->static_fields->pokemonParams->m_Items[index];
             Logger::log("[UpdateConfirmDisplaySprite] Got Param\n");
 
             uiHelper::RetrievePokemonSprite(param, iconObj);

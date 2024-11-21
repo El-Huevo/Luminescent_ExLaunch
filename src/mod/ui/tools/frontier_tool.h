@@ -27,14 +27,14 @@ namespace ui {
                     _.label = "Set Rank";
                     _.onClick = [type, rank]() {
                         Logger::log("Setting type %s to Rank: %d\n", TYPES[type->selected], rank->value);
-                        (&getCustomSaveData()->battleHall)->setRank(TYPES[type->selected], (Rank) (rank->value-1));
+                        (&getCustomSaveData()->battleHall)->setRank(type->selected, (Rank) (rank->value-1));
                     };
                 });
 
                 _.Button([type](Button &_) {
                     _.label = "Get Rank";
                     _.onClick = [type]() {
-                        auto currentRank = (&getCustomSaveData()->battleHall)->getRank(TYPES[type->selected]);
+                        auto currentRank = (&getCustomSaveData()->battleHall)->getRank(type->selected);
                         Logger::log("Type %s is currently Rank: %d\n", TYPES[type->selected], static_cast<int32_t>(currentRank) + 1);
 
                     };

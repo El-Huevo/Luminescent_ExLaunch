@@ -5,7 +5,7 @@
 #include "save/data/color_variation/color_variation.h"
 #include "save/data/dex_form/dex_form.h"
 #include "save/data/main/main.h"
-#include "save/data/frontier/frontier.h"
+#include "save/data/frontier/battle_hall.h"
 #include "save/data/frontier/battle_factory.h"
 
 #include "logger/logger.h"

@@ -155,6 +155,7 @@ void exl_features_main() {
     DisableSmallPatchFeatures();
     DisableFrontierFeatures();
     DisableBattleFeatures();
+    DisableFrontierFeatures();
 
     MountRomAndReadJSON();
 

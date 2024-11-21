@@ -20,7 +20,7 @@ namespace BattleHallPool {
         std::array<int32_t, RANK_COUNT> getBlackListedMons(int32_t typeIndex);
         void addBlackListedMonsNo(int32_t typeIndex, Rank rank, int32_t monsNo);
         void initializeTypeLists();
-
+        [[nodiscard]] nn::json toJson() const;
 
     private:
         std::array<TypeMonsNo, TYPE_COUNT> usedMonsNos;

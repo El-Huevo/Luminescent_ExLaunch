@@ -56,7 +56,7 @@ namespace HallSelector {
 
             if (selectIndex != TypeSelectorIndex::MATRON) {
                 int32_t remappedIndex = RemapTypeIndex(selectIndex);
-                Rank currentRank = getCustomSaveData()->battleHall.getRank(TYPES[remappedIndex]);
+                Rank currentRank = getCustomSaveData()->battleHall.getRank(remappedIndex);
 
                 Dpr::Message::MessageWordSetHelper::SetWazaTypeWord(0, remappedIndex);
                 Dpr::Message::MessageWordSetHelper::SetDigitWord(1, static_cast<int32_t>(currentRank) + 1);
@@ -84,7 +84,7 @@ namespace HallSelector {
         system_load_typeinfo(0x96a3);
         auto &saveData = getCustomSaveData()->battleHall;
         int32_t typeIndex = FlagWork::GetWork(FlagWork_Work::WK_BATTLE_HALL_CURRENT_TYPE);
-        Rank currentRank = saveData.getRank(TYPES[typeIndex]);
+        Rank currentRank = saveData.getRank(typeIndex);
 
         Dpr::Message::MessageWordSetHelper::getClass()->initIfNeeded();
         Dpr::Message::MessageWordSetHelper::SetDigitWord(0, currentRank <= RANK_10 ? currentRank + 1 : RANK_10 + 1);

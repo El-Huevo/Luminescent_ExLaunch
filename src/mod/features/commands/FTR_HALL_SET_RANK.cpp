@@ -19,7 +19,7 @@ bool FTR_HALL_SET_RANK(Dpr::EvScript::EvDataManager::Object* manager) {
     if (currentRank < RANK_COUNT) {
         Rank newRank = static_cast<Rank>(static_cast<int>(currentRank) + 1);
         Logger::log("[_FTR_HALL_SET_RANK] Increasing %s rank to %d.\n", TYPES[currentType], newRank + 1);
-        save->setRank(TYPES[currentType], newRank);
+        save->setRank(currentType, newRank);
     }
     return true;
 }

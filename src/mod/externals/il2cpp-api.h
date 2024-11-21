@@ -136,12 +136,21 @@ public:
         T::StaticFields* static_fields;
         T::RGCTXs* rgctx_data;
         Il2CppClass_2 _2;
-        T::VTable* vtable;
+        T::VTable vtable;
 
         inline void initIfNeeded() {
             if ((_2.bitflags2 >> 1 & 1) && (_2.cctor_finished == 0)) {
                 il2cpp_runtime_class_init((Il2CppClass*)this);
             }
+        }
+
+        bool isOfClass(Il2CppClass* otherKlass) {
+            if ((otherKlass->_2).typeHierarchyDepth > (this->_2).typeHierarchyDepth) // Hierarchy depth is not deep enough
+                return false;
+            if ((this->_2).typeHierarchy[(otherKlass->_2).typeHierarchyDepth - 1] != otherKlass) // Class at same depth doesn't match
+                return false;
+            else
+                return true;
         }
 
         template <typename... Args>

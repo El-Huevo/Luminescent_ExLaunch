@@ -32,7 +32,7 @@ namespace FactorySelector {
 
     nn::vector<ContextMenuID> GetFactoryMenuIDs(Dpr::UI::BoxWindow::Object* window);
 
-    void OnContextMenu(Dpr::UI::BoxWindow::Object* window, Dpr::UI::ContextMenuItem::Object* menuItem);
+    bool OnContextMenu(Dpr::UI::BoxWindow::Object* window, Dpr::UI::ContextMenuItem::Object* menuItem);
 
     UnityEngine::Events::UnityAction::Object* FactoryDisplayTextCallback(int32_t index);
 

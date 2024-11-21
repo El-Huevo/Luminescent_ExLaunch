@@ -64,4 +64,12 @@ void LoadFeaturesFromJSON(nn::json j) {
             }
         }
     }
+
+    for (int i = 0; i < FRONTIER_FEATURE_COUNT; i++) {
+        if (j.at("FrontierFeatures").contains(BATTLE_FEATURES[i])) {
+            if (j.at("FrontierFeatures")[BATTLE_FEATURES[i]].get<bool>()) {
+                SetActivatedFrontierFeature(i);
+            }
+        }
+    }
 }

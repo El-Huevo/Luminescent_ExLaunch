@@ -49,10 +49,10 @@ namespace System::Collections::Generic {
         };
 
         static inline StaticILMethod<0x04c8a3a8> Method$$Add {};
-        static inline StaticILMethod<0x04c6fa08> Method$$Remove {};
+        static inline StaticILMethod<0x04c6fa08, bool> Method$$Remove {};
+        static inline StaticILMethod<0x04c8a3c8> Method$$RemoveAt {};
         static inline StaticILMethod<0x04c8a3b8> Method$$Clear {};
         static inline StaticILMethod<0x04c8a390> Method$$ctor {};
-        static inline StaticILMethod<0x04c945d0> Method$$ToArray {};
 
         inline void Add(int32_t item) {
             external<void>(0x02a70aa0, this, item, *Method$$Add);
@@ -62,12 +62,12 @@ namespace System::Collections::Generic {
             return external<bool>(0x02a722c0, this, item, *Method$$Remove);
         }
 
-        inline void Clear() {
-            external<void>(0x02a70e40, this, *Method$$Clear);
+        inline void RemoveAt(int32_t index) {
+            external<void>(0x02a72620, this, index, *Method$$RemoveAt);
         }
 
-        inline System::Int32_array* ToArray() {
-            return external<System::Int32_array*>(0x02a72af0, this, *Method$$ToArray);
+        inline void Clear() {
+            external<void>(0x02a70e40, this, *Method$$Clear);
         }
 
         inline void ctor() {
