@@ -43,8 +43,8 @@ namespace SmartPoint::AssetAssistant {
         struct StaticFields {
             void* _editorProxy;
             void* _orderableList;
-            System::Collections::Generic::Dictionary$$Coroutine::Object* _subToOwner;
-            System::Collections::Generic::Dictionary$$Coroutine::Object* _ownerToSub;
+            void* _subToOwner;
+            void* _ownerToSub;
             UnityEngine::Coroutine::Object* _referenceCoroutine;
             void* _trashObjects;
             void* _messageList;

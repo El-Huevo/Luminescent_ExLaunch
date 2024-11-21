@@ -165,16 +165,6 @@ public:
             system_array_init(array, nullptr);
             return array;
         }
-
-        bool isOfClass(Il2CppClass* otherKlass) {
-            if ((otherKlass->_2).typeHierarchyDepth > (this->_2).typeHierarchyDepth) // Hierarchy depth is not deep enough
-                return false;
-
-            if ((this->_2).typeHierarchy[(otherKlass->_2).typeHierarchyDepth - 1] != otherKlass) // Class at same depth doesn't match
-                return false;
-            else
-                return true;
-        }
     };
 
     struct Object : T {

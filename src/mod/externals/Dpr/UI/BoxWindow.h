@@ -232,8 +232,8 @@ namespace Dpr::UI {
             void* _modelView; // 0x340
             void* _messageParam; // 0x348
             Dpr::UI::Keyguide::Param::Object* _keyguideParam; // 0x350
-            UnityEngine::Material::Object* _matSearchButton; // 0x358
-            UnityEngine::Material::Object* _matBoxButton; // 0x360
+            void* _matSearchButton; // 0x358
+            void* _matBoxButton; // 0x360
             void* _twSequence; // 0x368
             ContextMenuWindow::Object* _contextMenu; // 0x370
             float _waitSave; // 0x378

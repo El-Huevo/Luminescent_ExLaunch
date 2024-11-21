@@ -352,10 +352,7 @@ namespace Dpr::EvScript {
         static inline StaticILMethod<0x04c2afe0, int32_t, int32_t> PTR_Method$$EvDataManager_EvCmdCallWazaOmoidashiUi {};
         static inline StaticILMethod<0x04c2b028, int32_t, int32_t> PTR_Method$$EvDataManager_EvCmdCallWazaOshieUi {};
 
-        static inline StaticILMethod<0x04c77ce0, int32_t, int32_t> Method$$EvDataManager_EvCmdNameInPoke_OnInputCheck {};
-        static inline StaticILMethod<0x04c7cf70, int32_t, int32_t> Method$$EvDataManager_EvCmdNameInPoke_OnComplete {};
-        static inline StaticILMethod<0x04c7cfd0>                   Method$$EvDataManager_CmdFirstPokeSelectProc {};
-        static inline StaticILMethod<0x04c7d190>                   Method$$EvDataManager_BTWR_SUB_SELECT_POKE {};
+        static inline StaticILMethod<0x04c7d190>                                   Method$$EvDataManager_BTWR_SUB_SELECT_POKE {};
         static inline StaticILMethod<0x04c77ce0, System::String::Object*, int32_t> Method$$EvDataManager_EvCmdNameInPoke_OnInputCheck {};
         static inline StaticILMethod<0x04c7cf70, bool, System::String::Object*>    Method$$EvDataManager_EvCmdNameInPoke_OnComplete {};
         static inline StaticILMethod<0x04c7cfd0>                                   Method$$EvDataManager_CmdFirstPokeSelectProc {};
