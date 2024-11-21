@@ -2,6 +2,7 @@
 
 #include "externals/PlayerWork.h"
 
+#include "save/data/ayou/ayou.h"
 #include "save/data/color_variation/color_variation.h"
 #include "save/data/dex_form/dex_form.h"
 #include "save/data/main/main.h"
@@ -29,6 +30,7 @@ struct CustomSaveData {
     HallSaveData battleHall;
     FactorySaveData battleFactory;
     DexFormSaveData<DexSize> dexForms;
+    AYouSaveData ayou;
 };
 
 CustomSaveData* getCustomSaveData();

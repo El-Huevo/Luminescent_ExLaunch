@@ -12,6 +12,8 @@ void migrateToReLease(PlayerWork::Object* playerWork) {
 
     // Initialize Data Expansions
     save->playerColorVariation.Initialize();
+    save->dexForms.Initialize();
+    save->ayou.Initialize();
 
     save->battleHall.Clear();
 

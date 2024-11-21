@@ -4,10 +4,16 @@
 
 #include "externals/Pml/PokePara/CoreParam.h"
 #include "externals/System/String.h"
+#include "externals/Dpr/Message/MessageMsgFile.h"
+#include "externals/Dpr/Message/MessageManager.h"
 
 namespace Dpr::Message {
     struct MessageWordSetHelper : ILClass<MessageWordSetHelper, 0x04c5ac68> {
         struct Fields {
+        };
+
+        struct StaticFields {
+            Dpr::Message::MessageManager::Object* manager;
         };
 
         static inline void SetPokemonNickNameWord(int32_t tagIndex, Pml::PokePara::CoreParam::Object* pp, bool isShowNickName) {
@@ -36,6 +42,13 @@ namespace Dpr::Message {
 
         static inline void SetWazaTypeWord(int32_t tagIndex, uint8_t pokeTypeNo) {
             external<void>(0x01f9a7a0, tagIndex, pokeTypeNo);
+        static inline void SetStringWordFromMsgFile(int32_t index, Dpr::Message::MessageMsgFile::Object* msgFile,
+                                                    int32_t labelIndex) {
+            external<void>(0x01f9f8e0, index, msgFile, labelIndex);
+        }
+
+        static inline void SetTrainerNameWord(int32_t tagIndex, System::String::Object* labelName) {
+            external<void>(0x01f9bf50, tagIndex, labelName);
         }
     };
 }

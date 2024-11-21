@@ -31,11 +31,17 @@ void exl_alt_starters_main();
 // Overrides calls to C#'s Enum.GetName on AreaID and ZoneID enums.
 void exl_area_zone_codes_main();
 
+// Provides functionality for AYou's custom name.
+void exl_ayou_patches_main();
+
 // Swaps the badges to the Platinum order.
 void exl_badge_check_main();
 
 // Adds support for new Poké Balls.
 void exl_balls_main();
+
+// Removes the automatic switch to the default battle camera on certain actions.
+void exl_battle_camera_fix_main();
 
 // Makes it possible to set a flag to prevent escape from a wild encounter.
 // Defaults to flag 2591, as Luminescent does it.
@@ -46,9 +52,6 @@ void exl_battle_frontier_main();
 
 // Makes the battle menu scroll instead of the cursor.
 void exl_battle_revolver_main();
-
-// Removes the automatic switch to the default battle camera on certain actions.
-void exl_battle_camera_fix_main();
 
 // Adds support for custom color variations for player and NPCs.
 void exl_color_variations_main();
@@ -97,6 +100,12 @@ void exl_language_select_main();
 // Adds the Level Cap functionality.
 void exl_level_cap_main();
 
+//
+void exl_madrid_ui_main();
+
+//
+void exl_mega_evolution_main();
+
 // Uniformizes local trades across languages and allows extending the table in RomFS.
 void exl_local_trades_main();
 
@@ -143,6 +152,9 @@ void exl_sounds_main();
 
 // Adds support for alternate forms for the field swarm models.
 void exl_swarm_forms_main();
+
+// Changes the defaulkt text color for dialog boxes.
+void exl_text_color_main();
 
 // Allows double battles on trainers.
 void exl_trainer_double_battles_main();

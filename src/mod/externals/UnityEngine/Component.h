@@ -29,6 +29,10 @@ namespace Dpr::UI {
     struct UINavigator;
 }
 
+namespace TMPro {
+    struct TextMeshProUGUI;
+}
+
 namespace UnityEngine {
     struct Transform;
     struct RectTransform;
@@ -36,6 +40,10 @@ namespace UnityEngine {
     struct GameObject;
     struct Animator;
     struct XMenuTopItem;
+
+    namespace UI {
+        struct Image;
+    }
 
     struct Component : ILClass<Component, 0x04c57e88> {
         struct Fields : public UnityEngine::_Object::Fields {
@@ -48,7 +56,9 @@ namespace UnityEngine {
         static inline StaticILMethod<0x04c667d0, Dpr::UI::SettingMenuItem> Method$$SettingMenuItem$$GetComponent {};
         static inline StaticILMethod<0x04c667d8, Dpr::UI::UINavigator> Method$$UINavigator$$GetComponent {};
         static inline StaticILMethod<0x04c667e0, Dpr::UI::UIText> Method$$UIText$$GetComponent {};
+        static inline StaticILMethod<0x04c66890, TMPro::TextMeshProUGUI> Method$$TextMeshProUGUI$$GetComponent {};
         static inline StaticILMethod<0x04c66970, UnityEngine::UI::HorizontalLayoutGroup> Method$$HorizontalLayoutGroup$$GetComponent {};
+        static inline StaticILMethod<0x04c66980, UnityEngine::UI::Image> Method$$Image$$GetComponent {};
         static inline StaticILMethod<0x04c66918, UnityEngine::RectTransform> Method$$RectTransform$$GetComponent {};
         static inline StaticILMethod<0x04c67050, UnityEngine::BoxCollider> Method$$BoxCollider$$GetComponent {};
         static inline StaticILMethod<0x04c670c8, UnityEngine::UI::Image> Method$$Image$$GetComponent {};

@@ -37,6 +37,10 @@ namespace Dpr::Message {
         inline System::String::Object* GetNameMessage(System::String::Object* fileName, System::String::Object* label) {
             return external<System::String::Object*>(0x0210ce50, this, fileName, label);
         }
+
+        inline Dpr::Message::MessageMsgFile::Object* GetMsgFile(System::String::Object* fileName) {
+            return external<Dpr::Message::MessageMsgFile::Object*>(0x0210c050, this, fileName);
+        }
     };
 }
 
